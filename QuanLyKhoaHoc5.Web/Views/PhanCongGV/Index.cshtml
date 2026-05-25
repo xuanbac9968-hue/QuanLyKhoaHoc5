@@ -1,0 +1,268 @@
+@model List<QuanLyKhoaHoc5.Web.Models.Entities.LopHoc>
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = "Phân công Giảng viên";
+    var giangViens = ViewBag.GiangViens as List<GiangVien> ?? new List<GiangVien>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-person-check me-2 text-primary"></i>Phân công Giảng viên</h4>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index:9999"></div>
+@Html.AntiForgeryToken()
+
+<div class="row g-4">
+    <!-- Cột trái: Danh sách lớp học -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-door-open me-2 text-primary"></i>Danh sách lớp học</span>
+                <span class="badge bg-primary rounded-pill">@Model.Count lớp</span>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.Any())
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        Không có lớp học nào
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tên lớp / Khóa học</th>
+                                    <th>Khai giảng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Giảng viên hiện tại</th>
+                                    <th style="min-width:220px">Phân công</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var lop in Model)
+                                {
+                                    var trangThaiClass = lop.TrangThai switch {
+                                        "DangHoc" => "bg-success",
+                                        "DangTuyenSinh" => "bg-primary",
+                                        "ChuaMo" => "bg-warning text-dark",
+                                        _ => "bg-secondary"
+                                    };
+                                    var trangThaiText = lop.TrangThai switch {
+                                        "DangHoc" => "Đang học",
+                                        "DangTuyenSinh" => "Đang tuyển sinh",
+                                        "ChuaMo" => "Chưa mở",
+                                        _ => lop.TrangThai
+                                    };
+                                    <tr id="row-lop-@lop.Id">
+                                        <td>
+                                            <div class="fw-semibold">@lop.TenLop</div>
+                                            <span class="small text-muted">@lop.KhoaHoc?.TenKhoaHoc</span>
+                                        </td>
+                                        <td class="small">
+                                            @(lop.NgayKhaiGiang?.ToString("dd/MM/yyyy") ?? "—")
+                                        </td>
+                                        <td>
+                                            <span class="badge @trangThaiClass">@trangThaiText</span>
+                                        </td>
+                                        <td id="gv-cell-@lop.Id">
+                                            @if (lop.GiangVien != null)
+                                            {
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="fw-semibold small">@lop.GiangVien.HoTen</span>
+                                                    <button class="btn btn-sm btn-outline-danger btn-huy-pc"
+                                                            data-lop-id="@lop.Id" title="Hủy phân công">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Chưa phân công</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-select form-select-sm gv-select" id="gv-select-@lop.Id">
+                                                    <option value="">-- Chọn giảng viên --</option>
+                                                    @foreach (var gv in giangViens)
+                                                    {
+                                                        var soLop = gv.LopHocs.Count(l => l.TrangThai is "DangHoc" or "DangTuyenSinh");
+                                                        if (lop.GiangVienId == gv.Id)
+                                                        {
+                                                            <option value="@gv.Id" selected>@gv.HoTen (@(gv.ChuyenMon ?? "—"), @soLop lớp)</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@gv.Id">@gv.HoTen (@(gv.ChuyenMon ?? "—"), @soLop lớp)</option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <button class="btn btn-primary btn-phan-cong" data-lop-id="@lop.Id">
+                                                    <i class="bi bi-check-lg me-1"></i>Phân công
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột phải: Danh sách giảng viên -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-person-workspace me-2 text-success"></i>Danh sách Giảng viên
+            </div>
+            <div class="list-group list-group-flush">
+                @if (!giangViens.Any())
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-person-x fs-2 d-block mb-2"></i>
+                        Chưa có giảng viên
+                    </div>
+                }
+                else
+                {
+                    @foreach (var gv in giangViens)
+                    {
+                        var soLopDang = gv.LopHocs.Count(l => l.TrangThai is "DangHoc" or "DangTuyenSinh");
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="fw-semibold">@gv.HoTen</div>
+                                    <div class="small text-muted">@(gv.ChuyenMon ?? "Chưa có chuyên môn")</div>
+                                </div>
+                                <span class="badge bg-info-subtle text-info border border-info-subtle">@soLopDang lớp</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(gv.BangCap))
+                            {
+                                <div class="small text-muted mt-1"><i class="bi bi-mortarboard me-1"></i>@gv.BangCap</div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showToast(msg, type) {
+    var id = 'toast_' + Date.now();
+    var bg = type === 'success' ? 'bg-success' : 'bg-danger';
+    var html = `<div id="${id}" class="toast align-items-center text-white ${bg} border-0 show" role="alert">
+        <div class="d-flex"><div class="toast-body">${msg}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`;
+    document.getElementById('toast-container').insertAdjacentHTML('beforeend', html);
+    setTimeout(() => { var el = document.getElementById(id); if (el) el.remove(); }, 4000);
+}
+
+var token = document.querySelector('input[name="__RequestVerificationToken"]');
+var antiForgery = token ? token.value : '';
+
+// Phân công
+document.querySelectorAll('.btn-phan-cong').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var lopId = parseInt(this.dataset.lopId);
+        var sel = document.getElementById('gv-select-' + lopId);
+        var gvId = parseInt(sel.value);
+        if (!gvId) { showToast('Vui lòng chọn giảng viên', 'error'); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang xử lý...';
+
+        fetch('/PhanCongGV/PhanCong', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': antiForgery
+            },
+            body: JSON.stringify({ lopHocId: lopId, giangVienId: gvId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Phân công';
+            if (data.success) {
+                showToast(data.message, 'success');
+                var cell = document.getElementById('gv-cell-' + lopId);
+                cell.innerHTML = `<div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold small">${data.tenGiangVien}</span>
+                    <button class="btn btn-sm btn-outline-danger btn-huy-pc" data-lop-id="${lopId}" title="Hủy phân công">
+                        <i class="bi bi-x"></i>
+                    </button></div>`;
+                attachHuyEvents();
+            } else {
+                showToast(data.message, 'error');
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Phân công';
+            showToast('Lỗi kết nối máy chủ', 'error');
+        });
+    });
+});
+
+function attachHuyEvents() {
+    document.querySelectorAll('.btn-huy-pc').forEach(function(btn) {
+        btn.onclick = function() {
+            var lopId = parseInt(this.dataset.lopId);
+            if (!confirm('Bạn có chắc muốn hủy phân công giảng viên cho lớp này?')) return;
+
+            var self = this;
+            self.disabled = true;
+
+            fetch('/PhanCongGV/HuyPhanCong/' + lopId, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': antiForgery }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    var cell = document.getElementById('gv-cell-' + lopId);
+                    cell.innerHTML = '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Chưa phân công</span>';
+                    // Reset select
+                    var sel = document.getElementById('gv-select-' + lopId);
+                    if (sel) sel.value = '';
+                } else {
+                    showToast(data.message, 'error');
+                    self.disabled = false;
+                }
+            })
+            .catch(() => {
+                showToast('Lỗi kết nối máy chủ', 'error');
+                self.disabled = false;
+            });
+        };
+    });
+}
+
+attachHuyEvents();
+</script>
+}

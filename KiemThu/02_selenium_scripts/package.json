@@ -1,0 +1,23 @@
+{
+  "name": "quanlykhoahoc-selenium-tests",
+  "version": "1.0.0",
+  "description": "Playwright automated tests for QuanLyKhoaHoc5",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/run_all.js",
+    "test:login": "node tests/01_login_test.js",
+    "test:khoahoc": "node tests/02_khoa_hoc_test.js",
+    "test:lophoc": "node tests/03_lop_hoc_test.js",
+    "test:dangky": "node tests/04_dang_ky_test.js",
+    "test:diem": "node tests/05_diem_test.js",
+    "test:thanhtoan": "node tests/06_thanh_toan_test.js",
+    "test:taikhoan": "node tests/07_tai_khoan_test.js",
+    "test:phancong": "node tests/08_phan_cong_test.js"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

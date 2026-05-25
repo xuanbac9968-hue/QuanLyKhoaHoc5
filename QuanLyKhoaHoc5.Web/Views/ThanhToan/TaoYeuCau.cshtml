@@ -1,0 +1,172 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.ThanhToanCreateViewModel
+@{
+    ViewData["Title"] = "Tạo yêu cầu thanh toán";
+    const string ACCOUNT_NO = "1234567890";
+    const string ACCOUNT_NAME = "TRUNG TAM NGOAI NGU ABC";
+    long amount = (long)Model.HocPhi;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header fw-bold">
+                <i class="bi bi-credit-card me-2 text-primary"></i>Tạo yêu cầu thanh toán học phí
+            </div>
+            <div class="card-body">
+                <!-- Thông tin khóa học + học phí -->
+                <div class="alert alert-secondary mb-4">
+                    <div class="fw-semibold fs-6">@Model.TenKhoaHoc</div>
+                    <div class="fs-4 text-success fw-bold mt-1">@Model.HocPhi.ToString("N0") VNĐ</div>
+                </div>
+
+                <form asp-action="TaoYeuCau" method="post">
+                    <input type="hidden" asp-for="KhoaHocId" />
+                    <input type="hidden" asp-for="HoTenHocVien" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Chọn phương thức -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Phương thức thanh toán <span class="text-danger">*</span></label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="PhuongThuc" id="ptTienMat" value="TienMat" checked />
+                                <label class="form-check-label" for="ptTienMat">
+                                    <i class="bi bi-cash-coin me-1 text-secondary"></i>Tiền mặt
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="PhuongThuc" id="ptChuyenKhoan" value="ChuyenKhoan" />
+                                <label class="form-check-label" for="ptChuyenKhoan">
+                                    <i class="bi bi-bank me-1 text-primary"></i>Chuyển khoản
+                                </label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="PhuongThuc" class="text-danger small"></span>
+                    </div>
+
+                    <!-- TIỀN MẶT -->
+                    <div id="info-tien-mat">
+                        <div class="alert alert-info d-flex align-items-start gap-2">
+                            <i class="bi bi-info-circle-fill fs-5 flex-shrink-0 mt-1 text-info"></i>
+                            <div>
+                                Vui lòng nộp tiền <strong>trực tiếp tại văn phòng</strong>.<br />
+                                Giờ làm việc: <strong>8h – 17h</strong> các ngày trong tuần (Thứ 2 – Thứ 6).<br />
+                                <span class="text-muted small">Sau khi nộp, Admin sẽ xác nhận thanh toán cho bạn.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHUYỂN KHOẢN -->
+                    <div id="info-chuyen-khoan" class="d-none">
+                        <!-- QR Code VietQR -->
+                        <div class="text-center mb-3">
+                            <div class="fw-semibold mb-2 text-primary">
+                                <i class="bi bi-qr-code me-1"></i>Quét mã QR để thanh toán
+                            </div>
+                            <div id="qr-wrapper" class="d-inline-block p-2 border rounded-3 bg-white shadow-sm">
+                                <img id="vietqr-img" src="" alt="QR Code thanh toán"
+                                     width="250" height="250"
+                                     style="display:block; border-radius:8px;"
+                                     onerror="this.src='/img/qr-placeholder.png'" />
+                                <div id="qr-loading" class="text-muted small mt-1 text-center" style="display:none;">
+                                    <span class="spinner-border spinner-border-sm me-1"></span>Đang tải QR...
+                                </div>
+                            </div>
+                            <div class="text-muted small mt-2">
+                                <i class="bi bi-phone me-1"></i>Quét mã QR bằng app ngân hàng bất kỳ để thanh toán
+                            </div>
+                        </div>
+
+                        <!-- Thông tin tài khoản -->
+                        <div class="card border-primary mb-3">
+                            <div class="card-body py-2 px-3">
+                                <div class="row g-1 small">
+                                    <div class="col-5 text-muted fw-semibold">Ngân hàng:</div>
+                                    <div class="col-7 fw-bold">VietcomBank (VCB)</div>
+                                    <div class="col-5 text-muted fw-semibold">Số tài khoản:</div>
+                                    <div class="col-7 fw-bold">
+                                        @ACCOUNT_NO
+                                        <button type="button" class="btn btn-sm btn-link p-0 ms-1"
+                                                onclick="navigator.clipboard.writeText('@ACCOUNT_NO')" title="Copy STK">
+                                            <i class="bi bi-clipboard text-primary"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-5 text-muted fw-semibold">Chủ tài khoản:</div>
+                                    <div class="col-7 fw-bold">@ACCOUNT_NAME</div>
+                                    <div class="col-5 text-muted fw-semibold">Số tiền:</div>
+                                    <div class="col-7 fw-bold text-success">@Model.HocPhi.ToString("N0") VNĐ</div>
+                                    <div class="col-5 text-muted fw-semibold">Nội dung CK:</div>
+                                    <div class="col-7" id="addInfoDisplay">—</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info d-flex gap-2 align-items-start py-2">
+                            <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+                            <div class="small">Vui lòng chuyển khoản đúng nội dung. Admin sẽ xác nhận sau khi nhận được tiền.</div>
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú -->
+                    <div class="mb-3">
+                        <label asp-for="GhiChu" class="form-label fw-semibold">Ghi chú (không bắt buộc)</label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="2"
+                                  placeholder="Ghi chú thêm nếu cần..."></textarea>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a asp-action="CuaToi" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>Gửi yêu cầu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+(function() {
+    var radios = document.querySelectorAll('input[name="PhuongThuc"]');
+    var infoTienMat = document.getElementById('info-tien-mat');
+    var infoCK = document.getElementById('info-chuyen-khoan');
+    var qrImg = document.getElementById('vietqr-img');
+    var addInfoDisplay = document.getElementById('addInfoDisplay');
+
+    // Build VietQR URL
+    var amount = @amount;
+    var tenKhoaHoc = '@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TenKhoaHoc).Trim('"'))';
+    var hoTen = '@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.HoTenHocVien).Trim('"'))';
+
+    function buildQrUrl() {
+        var addInfo = 'Thanh toan hoc phi ' + tenKhoaHoc + ' - ' + hoTen;
+        addInfoDisplay.textContent = addInfo;
+        var url = 'https://img.vietqr.io/image/VCB-1234567890-compact2.png'
+            + '?amount=' + amount
+            + '&addInfo=' + encodeURIComponent(addInfo)
+            + '&accountName=' + encodeURIComponent('TRUNG TAM NGOAI NGU ABC');
+        qrImg.src = url;
+    }
+
+    function toggle() {
+        var val = document.querySelector('input[name="PhuongThuc"]:checked')?.value;
+        if (val === 'ChuyenKhoan') {
+            infoTienMat.classList.add('d-none');
+            infoCK.classList.remove('d-none');
+            buildQrUrl();
+        } else {
+            infoTienMat.classList.remove('d-none');
+            infoCK.classList.add('d-none');
+        }
+    }
+
+    radios.forEach(r => r.addEventListener('change', toggle));
+    toggle();
+})();
+</script>
+}

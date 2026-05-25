@@ -1,0 +1,1 @@
+KR>D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Web\QuanLyKhoaHoc5.Web.csprojòCSharp14

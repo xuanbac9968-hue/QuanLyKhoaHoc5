@@ -1,0 +1,230 @@
+@model QuanLyKhoaHoc5.Web.Models.Entities.GiangVien
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@using QuanLyKhoaHoc5.Web.Models.ViewModels
+@{
+    ViewData["Title"] = "Chi tiết giảng viên";
+    var lichDay = ViewBag.LichDay as List<LichHocItemViewModel> ?? new List<LichHocItemViewModel>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="bi bi-person-workspace me-2 text-primary"></i>Chi tiết Giảng viên</h4>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning">
+            <i class="bi bi-pencil me-1"></i>Chỉnh sửa
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Thông tin cá nhân -->
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="bi bi-person-circle me-2"></i>Thông tin cá nhân
+            </div>
+            <div class="card-body text-center">
+                @if (!string.IsNullOrEmpty(Model.NguoiDung.AnhDaiDien))
+                {
+                    <img src="@Model.NguoiDung.AnhDaiDien" alt="@Model.HoTen"
+                         class="rounded-circle mb-3" style="width:100px;height:100px;object-fit:cover;">
+                }
+                else
+                {
+                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width:100px;height:100px;">
+                        <i class="bi bi-person-fill text-white fs-2"></i>
+                    </div>
+                }
+                <h5 class="fw-bold mb-1">@Model.HoTen</h5>
+                <code class="text-muted">@Model.MaGiangVien</code>
+
+                @if (!Model.NguoiDung.IsActive)
+                {
+                    <div class="mt-2">
+                        <span class="badge bg-danger">Ngừng hoạt động</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-2">
+                        <span class="badge bg-success">Đang hoạt động</span>
+                    </div>
+                }
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <i class="bi bi-envelope me-2 text-muted"></i>
+                    <span class="small">@Model.NguoiDung.Email</span>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.NguoiDung.SoDienThoai))
+                {
+                    <li class="list-group-item">
+                        <i class="bi bi-telephone me-2 text-muted"></i>
+                        <span class="small">@Model.NguoiDung.SoDienThoai</span>
+                    </li>
+                }
+                @if (!string.IsNullOrEmpty(Model.ChuyenMon))
+                {
+                    <li class="list-group-item">
+                        <i class="bi bi-star me-2 text-muted"></i>
+                        <span class="small"><strong>Chuyên môn:</strong> @Model.ChuyenMon</span>
+                    </li>
+                }
+                @if (!string.IsNullOrEmpty(Model.BangCap))
+                {
+                    <li class="list-group-item">
+                        <i class="bi bi-mortarboard me-2 text-muted"></i>
+                        <span class="small"><strong>Bằng cấp:</strong> @Model.BangCap</span>
+                    </li>
+                }
+                @if (Model.KinhNghiem.HasValue)
+                {
+                    <li class="list-group-item">
+                        <i class="bi bi-briefcase me-2 text-muted"></i>
+                        <span class="small"><strong>Kinh nghiệm:</strong> @Model.KinhNghiem năm</span>
+                    </li>
+                }
+                @if (!string.IsNullOrEmpty(Model.MoTa))
+                {
+                    <li class="list-group-item">
+                        <i class="bi bi-info-circle me-2 text-muted"></i>
+                        <span class="small">@Model.MoTa</span>
+                    </li>
+                }
+                <li class="list-group-item">
+                    <i class="bi bi-calendar-check me-2 text-muted"></i>
+                    <span class="small"><strong>Ngày tham gia:</strong> @Model.NguoiDung.NgayTao.ToString("dd/MM/yyyy")</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Danh sách lớp phụ trách -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-journal-text me-2"></i>Lớp học phụ trách</span>
+                <span class="badge bg-primary rounded-pill">@Model.LopHocs.Count lớp</span>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.LopHocs.Any())
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
+                        Chưa phụ trách lớp học nào
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tên lớp</th>
+                                    <th>Khóa học</th>
+                                    <th class="text-center">Khai giảng</th>
+                                    <th class="text-center">Sĩ số</th>
+                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-center">Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var lop in Model.LopHocs.OrderByDescending(l => l.NgayTao))
+                                {
+                                    var trangThaiClass = lop.TrangThai switch {
+                                        "DangHoc" => "bg-success",
+                                        "DangTuyenSinh" => "bg-info text-dark",
+                                        "DaKetThuc" => "bg-secondary",
+                                        "ChuaMo" => "bg-warning text-dark",
+                                        _ => "bg-light text-dark"
+                                    };
+                                    var trangThaiText = lop.TrangThai switch {
+                                        "DangHoc" => "Đang học",
+                                        "DangTuyenSinh" => "Đang tuyển sinh",
+                                        "DaKetThuc" => "Đã kết thúc",
+                                        "ChuaMo" => "Chưa mở",
+                                        _ => lop.TrangThai
+                                    };
+                                    var siSoHienTai = lop.DangKys.Count(d => d.TrangThai == "DaDuyet");
+                                    <tr>
+                                        <td class="fw-semibold">@lop.TenLop</td>
+                                        <td class="small text-muted">@lop.KhoaHoc.TenKhoaHoc</td>
+                                        <td class="text-center small">
+                                            @(lop.NgayKhaiGiang.HasValue ? lop.NgayKhaiGiang.Value.ToString("dd/MM/yyyy") : "—")
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary">@siSoHienTai / @lop.SiSoToiDa</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge @trangThaiClass">@trangThaiText</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a asp-controller="LopHoc" asp-action="Details" asp-route-id="@lop.Id"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Lịch dạy sắp tới -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-calendar-week me-2"></i>Lịch dạy sắp tới</span>
+                <span class="badge bg-info text-dark rounded-pill">@lichDay.Count buổi</span>
+            </div>
+            <div class="card-body p-0">
+                @if (!lichDay.Any())
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
+                        Không có lịch dạy sắp tới
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ngày học</th>
+                                    <th>Thứ</th>
+                                    <th>Lớp / Khóa học</th>
+                                    <th class="text-center">Giờ học</th>
+                                    <th>Phòng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var lich in lichDay)
+                                {
+                                    <tr>
+                                        <td class="small fw-semibold">@lich.NgayHoc.ToString("dd/MM/yyyy")</td>
+                                        <td><span class="badge bg-secondary">@lich.TenThu</span></td>
+                                        <td class="small">
+                                            @if (!string.IsNullOrEmpty(lich.TenLop))
+                                            { <div>@lich.TenLop</div> }
+                                            <span class="text-muted">@(lich.TenKhoaHoc ?? "-")</span>
+                                        </td>
+                                        <td class="text-center small">
+                                            @lich.GioBatDau.ToString("HH:mm") – @lich.GioKetThuc.ToString("HH:mm")
+                                        </td>
+                                        <td class="small">@(lich.PhongHoc ?? "—")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

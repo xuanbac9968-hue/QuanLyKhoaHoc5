@@ -1,0 +1,116 @@
+@model List<QuanLyKhoaHoc5.Web.Models.ViewModels.HocVienThanhToanViewModel>
+@{
+    ViewData["Title"] = "Thanh toán học phí";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-credit-card me-2 text-primary"></i>Thanh toán học phí
+    </h4>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-5">
+        <i class="bi bi-credit-card-2-front fs-1 d-block mb-3"></i>
+        <h5>Chưa có khóa học nào cần thanh toán</h5>
+        <p class="text-muted mb-0">Hãy đăng ký và được duyệt vào một khóa học trước.</p>
+        <a asp-controller="DangKy" asp-action="Index" class="btn btn-primary mt-3">
+            <i class="bi bi-book me-1"></i>Xem khóa học
+        </a>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <i class="bi bi-list-check me-2 text-primary"></i>Danh sách học phí các khóa đang theo học
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Khóa học</th>
+                            <th>Ngôn ngữ</th>
+                            <th class="text-end">Học phí</th>
+                            <th class="text-center">Phương thức</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Ngày tạo</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-semibold">@item.TenKhoaHoc</span>
+                                    <br /><small class="text-muted">@item.TrinhDo</small>
+                                </td>
+                                <td>@item.NgonNgu</td>
+                                <td class="text-end fw-semibold text-success">
+                                    @item.HocPhi.ToString("N0") đ
+                                </td>
+                                <td class="text-center">
+                                    @if (item.PhuongThuc != null)
+                                    {
+                                        <span class="badge @(item.PhuongThuc == "ChuyenKhoan" ? "bg-info text-dark" : "bg-secondary")">
+                                            @(item.PhuongThuc == "ChuyenKhoan" ? "Chuyển khoản" : "Tiền mặt")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @{
+                                        var (badgeCls, badgeText) = item.TrangThaiThanhToan switch
+                                        {
+                                            "ChoPheduyet" => ("bg-warning text-dark", "Chờ phê duyệt"),
+                                            "DaThanhToan"  => ("bg-success", "Đã thanh toán"),
+                                            "TuChoi"       => ("bg-danger", "Từ chối"),
+                                            _              => ("bg-light text-muted border", "Chưa nộp")
+                                        };
+                                    }
+                                    <span class="badge @badgeCls">@badgeText</span>
+                                </td>
+                                <td class="text-center small text-muted">
+                                    @(item.NgayTaoThanhToan.HasValue ? item.NgayTaoThanhToan.Value.ToString("dd/MM/yyyy") : "—")
+                                </td>
+                                <td class="text-center">
+                                    @if (item.TrangThaiThanhToan == null || item.TrangThaiThanhToan == "TuChoi")
+                                    {
+                                        <a asp-action="TaoYeuCau" asp-route-khoaHocId="@item.KhoaHocId"
+                                           class="btn btn-sm btn-primary">
+                                            <i class="bi bi-send me-1"></i>Nộp học phí
+                                        </a>
+                                    }
+                                    else if (item.TrangThaiThanhToan == "ChoPheduyet")
+                                    {
+                                        <span class="text-warning small"><i class="bi bi-hourglass-split me-1"></i>Đang chờ</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success small"><i class="bi bi-check-circle me-1"></i>Hoàn tất</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3 border-info">
+        <div class="card-body">
+            <h6 class="fw-bold mb-2"><i class="bi bi-info-circle me-2 text-info"></i>Thông tin thanh toán</h6>
+            <ul class="mb-0 small">
+                <li><strong>Chuyển khoản:</strong> Ngân hàng VietcomBank – STK: <strong>1234567890</strong> – Chủ TK: <strong>TRUNG TÂM NGOẠI NGỮ ABC</strong>. Nội dung: [Mã HV] – [Tên khóa học]</li>
+                <li class="mt-1"><strong>Tiền mặt:</strong> Vui lòng nộp trực tiếp tại văn phòng, giờ làm việc <strong>8h – 17h</strong> các ngày trong tuần.</li>
+            </ul>
+        </div>
+    </div>
+}

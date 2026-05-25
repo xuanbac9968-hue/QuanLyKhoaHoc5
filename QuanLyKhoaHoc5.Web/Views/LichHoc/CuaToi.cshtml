@@ -1,0 +1,785 @@
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = "Lịch học";
+    var role       = ViewBag.Role as string ?? "HocVien";
+    bool isAdmin   = role == "Admin";
+    bool isGV      = role == "GiangVien";
+    var khoaHocs   = ViewBag.KhoaHocs   as List<KhoaHoc>   ?? [];
+    var giangViens = ViewBag.GiangViens as List<GiangVien> ?? [];
+    var lopHocs    = ViewBag.LopHocs    as List<LopHoc>    ?? [];
+}
+
+<style>
+/* ══ Reset & base ══════════════════════════════════════════════════════ */
+.cal-page { font-family:'Segoe UI',sans-serif; }
+
+/* ══ Toolbar ═══════════════════════════════════════════════════════════ */
+.cal-toolbar { background:#fff; border:none; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08); margin-bottom:1rem; }
+.cal-toolbar .card-body { padding:.6rem 1rem; }
+.nav-btn { border:1px solid #dee2e6; border-radius:8px; padding:5px 14px; background:#fff; cursor:pointer; font-size:.85rem; transition:background .15s; }
+.nav-btn:hover { background:#f0f2f5; }
+#calTitle { min-width:160px; text-align:center; font-size:1rem; font-weight:700; color:#1e293b; }
+.view-toggle .btn { font-size:.8rem; padding:4px 12px; }
+
+/* ══ Month view ════════════════════════════════════════════════════════ */
+.cal-month-wrap { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08); overflow:hidden; }
+.cal-daynames { display:grid; grid-template-columns:repeat(7,1fr); background:#f8f9fa; border-bottom:1px solid #e5e7eb; }
+.cal-dn { text-align:center; padding:.45rem 0; font-size:.75rem; font-weight:700; color:#64748b; letter-spacing:.5px; text-transform:uppercase; }
+.cal-dn.we { color:#ef4444; }
+.cal-month-grid { display:grid; grid-template-columns:repeat(7,1fr); }
+.cal-cell { min-height:120px; padding:4px; display:flex; flex-direction:column; gap:2px; border-right:1px solid #f1f5f9; border-bottom:1px solid #f1f5f9; background:#fff; overflow:hidden; }
+.cal-cell:nth-child(7n) { border-right:none; }
+.cal-cell.other-month { background:#fafafa; opacity:.55; }
+.cal-cell.today { background:#eff6ff; }
+.cal-cell:hover { background:#f8faff; }
+.cal-date-num { font-size:13px; font-weight:500; color:#374151; margin-bottom:2px; padding:0 2px; }
+.cal-date-num.we { color:#ef4444; }
+.today-circle { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#3b82f6; color:#fff; border-radius:50%; font-size:12px; font-weight:700; }
+.cal-event-card { border-radius:4px; padding:2px 6px; cursor:pointer; transition:opacity .15s; overflow:hidden; }
+.cal-event-card:hover { opacity:.82; }
+.ev-line1 { font-size:11px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ev-line2 { font-size:10px; opacity:.78; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cal-more { font-size:10px; color:#64748b; background:#f1f5f9; border-radius:3px; padding:1px 5px; cursor:pointer; width:fit-content; margin-top:1px; }
+.cal-more:hover { background:#e2e8f0; }
+
+/* ══ Week view ══════════════════════════════════════════════════════════ */
+.week-outer { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.08); overflow:hidden; }
+.week-header-row { display:grid; grid-template-columns:56px repeat(7,1fr); background:#f8f9fa; border-bottom:2px solid #e5e7eb; position:sticky; top:0; z-index:10; }
+.week-corner { border-right:1px solid #e5e7eb; }
+.week-col-hdr { text-align:center; padding:8px 4px; border-right:1px solid #f1f5f9; cursor:default; }
+.week-col-hdr.today-hdr { background:#eff6ff; }
+.wch-name { font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase; }
+.wch-date { font-size:14px; font-weight:700; color:#1e293b; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; margin:0 auto; }
+.wch-date.today-d { background:#3b82f6; color:#fff; }
+.week-scroll { max-height:640px; overflow-y:auto; overflow-x:auto; }
+.week-body-grid { display:grid; grid-template-columns:56px repeat(7,minmax(80px,1fr)); }
+.week-time-col { border-right:1px solid #e5e7eb; }
+.week-tl { font-size:10px; color:#9ca3af; padding:2px 4px; display:flex; align-items:flex-start; justify-content:flex-end; border-top:1px solid #f1f5f9; box-sizing:border-box; }
+.week-day-col { position:relative; border-right:1px solid #f1f5f9; box-sizing:border-box; }
+.week-day-col.today-bg { background:#eff6ff; }
+.week-hl { position:absolute; left:0; right:0; border-top:1px solid #f1f5f9; }
+.week-hl.half { border-top:1px dashed #f1f5f9; }
+.week-now-line { position:absolute; left:0; right:0; border-top:2px solid #ef4444; z-index:4; }
+.week-now-line::before { content:''; position:absolute; left:-4px; top:-4px; width:8px; height:8px; background:#ef4444; border-radius:50%; }
+.week-ev { position:absolute; left:2px; right:2px; border-radius:5px; padding:3px 5px; cursor:pointer; overflow:hidden; z-index:2; transition:opacity .15s, box-shadow .15s; }
+.week-ev:hover { opacity:.88; box-shadow:0 2px 8px rgba(0,0,0,.18); z-index:3; }
+.week-ev .ev1 { font-size:11px; font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.week-ev .ev2 { font-size:10px; opacity:.8; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+
+/* ══ List view ══════════════════════════════════════════════════════════ */
+.list-day-group { margin-bottom:16px; }
+.list-day-hdr { font-size:13px; font-weight:700; color:#374151; padding:6px 0 6px; border-bottom:2px solid #e5e7eb; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.list-day-hdr.today-day { color:#2563eb; border-color:#3b82f6; }
+.list-ev-row { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #f1f5f9; border-radius:8px; padding:9px 12px; margin-bottom:5px; cursor:pointer; transition:box-shadow .15s, border-color .15s; }
+.list-ev-row:hover { box-shadow:0 2px 8px rgba(0,0,0,.09); border-color:#cbd5e1; }
+.list-time-badge { font-size:12px; font-weight:700; padding:4px 8px; border-radius:6px; white-space:nowrap; flex-shrink:0; }
+.list-name { font-weight:600; font-size:14px; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.list-meta { font-size:12px; color:#6b7280; white-space:nowrap; flex-shrink:0; }
+.list-stat { font-size:12px; color:#6b7280; }
+
+/* ══ Loading ════════════════════════════════════════════════════════════ */
+#calLoading { text-align:center; padding:40px 0; }
+
+/* ══ Legend ═════════════════════════════════════════════════════════════ */
+.cal-legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; }
+.leg-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#374151; }
+.leg-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+
+/* ══ Modal body ═════════════════════════════════════════════════════════ */
+.info-grid { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:.875rem; }
+.info-grid dt { color:#64748b; font-weight:500; white-space:nowrap; }
+.info-grid dd { margin:0; font-weight:500; }
+
+/* ══ Responsive ═════════════════════════════════════════════════════════ */
+@@media (max-width:767px) {
+    #viewMonth, #viewWeek, .btnMonth, .btnWeek { display:none !important; }
+    #viewList { display:block !important; }
+    .btnList { /* always visible on mobile */ }
+    .week-scroll { max-height:400px; }
+}
+@@media (min-width:768px) and (max-width:991px) {
+    .cal-cell { min-height:90px; }
+    .ev-line2 { display:none; }
+}
+</style>
+
+@Html.AntiForgeryToken()
+
+<!-- ── Page title ─────────────────────────────────────────────────────── -->
+<div class="d-flex justify-content-between align-items-center mb-3 cal-page">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-calendar3 me-2 text-primary"></i>
+        @(isAdmin ? "Lịch học toàn hệ thống" : isGV ? "Lịch dạy của tôi" : "Lịch học của tôi")
+    </h4>
+</div>
+
+<!-- ── Toolbar ────────────────────────────────────────────────────────── -->
+<div class="card cal-toolbar mb-3">
+    <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center gap-2 justify-content-between">
+
+            <!-- Left: prev / title / next -->
+            <div class="d-flex align-items-center gap-2">
+                <button class="nav-btn" id="navPrev" onclick="navigate(-1)">
+                    <i class="bi bi-chevron-left"></i> Trước
+                </button>
+                <span id="calTitle" style="min-width:150px;text-align:center;"></span>
+                <button class="nav-btn" id="navNext" onclick="navigate(1)">
+                    Sau <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Center: today -->
+            <button class="btn btn-primary btn-sm px-3" onclick="goToday()">
+                <i class="bi bi-calendar-event me-1"></i>Hôm nay
+            </button>
+
+            <!-- Right: view toggle + admin filters -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="btn-group btn-group-sm view-toggle" role="group">
+                    <button id="btnMonth" class="btn btn-outline-secondary btnMonth" onclick="setView('month')">
+                        <i class="bi bi-grid-3x3-gap me-1"></i>Tháng
+                    </button>
+                    <button id="btnWeek" class="btn btn-outline-secondary btnWeek" onclick="setView('week')">
+                        <i class="bi bi-calendar-week me-1"></i>Tuần
+                    </button>
+                    <button id="btnList" class="btn btn-outline-secondary btnList" onclick="setView('list')">
+                        <i class="bi bi-list-ul me-1"></i>Danh sách
+                    </button>
+                </div>
+
+                @if (isAdmin)
+                {
+                    <select id="filterKhoaHoc" class="form-select form-select-sm" style="max-width:180px;" onchange="reloadEvents()">
+                        <option value="">-- Tất cả khóa --</option>
+                        @foreach (var k in khoaHocs)
+                        {
+                            <option value="@k.Id">@k.TenKhoaHoc</option>
+                        }
+                    </select>
+                    <select id="filterGiangVien" class="form-select form-select-sm" style="max-width:160px;" onchange="reloadEvents()">
+                        <option value="">-- Tất cả GV --</option>
+                        @foreach (var g in giangViens)
+                        {
+                            <option value="@g.Id">@g.HoTen</option>
+                        }
+                    </select>
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalTaoHangLoat">
+                        <i class="bi bi-plus-circle me-1"></i>Tạo hàng loạt
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Loading ─────────────────────────────────────────────────────────── -->
+<div id="calLoading" class="d-none">
+    <div class="spinner-border text-primary" style="width:2rem;height:2rem;"></div>
+    <div class="text-muted small mt-2">Đang tải lịch học...</div>
+</div>
+
+<!-- ── Month view ──────────────────────────────────────────────────────── -->
+<div id="viewMonth">
+    <div class="cal-month-wrap">
+        <div class="cal-daynames">
+            <div class="cal-dn">Thứ Hai</div>
+            <div class="cal-dn">Thứ Ba</div>
+            <div class="cal-dn">Thứ Tư</div>
+            <div class="cal-dn">Thứ Năm</div>
+            <div class="cal-dn">Thứ Sáu</div>
+            <div class="cal-dn we">Thứ Bảy</div>
+            <div class="cal-dn we">Chủ Nhật</div>
+        </div>
+        <div class="cal-month-grid" id="monthGrid"></div>
+    </div>
+</div>
+
+<!-- ── Week view ───────────────────────────────────────────────────────── -->
+<div id="viewWeek" class="d-none">
+    <div class="week-outer">
+        <div id="weekHeaderRow" class="week-header-row"></div>
+        <div class="week-scroll">
+            <div id="weekBodyGrid" class="week-body-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── List view ───────────────────────────────────────────────────────── -->
+<div id="viewList" class="d-none">
+    <div id="listContent"></div>
+</div>
+
+<!-- ── Legend ──────────────────────────────────────────────────────────── -->
+<div id="calLegend" class="cal-legend"></div>
+
+<!-- ── Event Modal ─────────────────────────────────────────────────────── -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <div>
+                    <h6 class="modal-title fw-bold mb-1" id="modalTitle"></h6>
+                    <span id="modalBadge"></span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isAdmin)
+{
+    <!-- TaoHangLoat Modal -->
+    <div class="modal fade" id="modalTaoHangLoat" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Tạo hàng loạt buổi học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Lớp học <span class="text-danger">*</span></label>
+                            <select id="hlLopHoc" class="form-select">
+                                <option value="">-- Chọn lớp --</option>
+                                @foreach (var l in lopHocs)
+                                {
+                                    <option value="@l.Id">@l.TenLop (@(l.KhoaHoc?.TenKhoaHoc ?? ""))</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Từ ngày <span class="text-danger">*</span></label>
+                            <input id="hlNgayBatDau" type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Đến ngày <span class="text-danger">*</span></label>
+                            <input id="hlNgayKetThuc" type="date" class="form-control" value="@DateTime.Today.AddMonths(2).ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Các thứ trong tuần <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-3 flex-wrap">
+                                @foreach (var (val, label) in new[] {(1,"T2"),(2,"T3"),(3,"T4"),(4,"T5"),(5,"T6"),(6,"T7"),(7,"CN")})
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input hl-thu" type="checkbox" value="@val" id="hlThu@val" />
+                                        <label class="form-check-label" for="hlThu@val">@label</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Giờ bắt đầu</label>
+                            <input id="hlGioBatDau" type="time" class="form-control" value="08:00" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Giờ kết thúc</label>
+                            <input id="hlGioKetThuc" type="time" class="form-control" value="09:30" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Phòng học</label>
+                            <input id="hlPhongHoc" type="text" class="form-control" placeholder="P.101" />
+                        </div>
+                    </div>
+                    <div id="hlResult" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" onclick="taoHangLoat()">
+                        <i class="bi bi-calendar-plus me-1"></i>Tạo buổi học
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+(function () {
+'use strict';
+
+// ══ Constants ═══════════════════════════════════════════════════════════════
+var COLORS = [
+    { bg:'#dbeafe', border:'#3b82f6', text:'#1e40af' },
+    { bg:'#fef3c7', border:'#f59e0b', text:'#92400e' },
+    { bg:'#ede9fe', border:'#8b5cf6', text:'#4c1d95' },
+    { bg:'#dcfce7', border:'#22c55e', text:'#14532d' },
+    { bg:'#fce7f3', border:'#ec4899', text:'#831843' },
+    { bg:'#ffedd5', border:'#f97316', text:'#7c2d12' },
+    { bg:'#cffafe', border:'#06b6d4', text:'#164e63' },
+    { bg:'#fee2e2', border:'#ef4444', text:'#7f1d1d' }
+];
+var WEEK_START_H = 6, WEEK_END_H = 22, SLOT_H = 60;
+var THU = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+var THU_S = ['CN','T2','T3','T4','T5','T6','T7'];
+var TT_LABEL = { DangHoc:'Đang học', DangTuyenSinh:'Tuyển sinh', ChuaMo:'Chưa mở', DaKetThuc:'Đã kết thúc', TamDung:'Tạm dừng' };
+var TT_BADGE = { DangHoc:'bg-success', DangTuyenSinh:'bg-info text-dark', ChuaMo:'bg-secondary', DaKetThuc:'bg-dark', TamDung:'bg-warning text-dark' };
+
+var isAdminOrGV = @((isAdmin || isGV).ToString().ToLower());
+var isAdmin     = @isAdmin.ToString().ToLower();
+
+// ══ State ════════════════════════════════════════════════════════════════════
+var now       = new Date();
+var todayIso  = toIso(now);
+var curDate   = new Date(now);
+var curView   = 'month';
+var allEvents = [];
+
+// ══ Date helpers ═════════════════════════════════════════════════════════════
+function pad(n) { return String(n).padStart(2,'0'); }
+function toIso(d) { return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function addDays(d, n) { var r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function getMon(d) {                                // Monday of d's week
+    var r=new Date(d), dow=r.getDay();
+    r.setDate(r.getDate() - (dow===0?6:dow-1));
+    return r;
+}
+function fmtDate(iso) {                             // "26/05/2026"
+    var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
+}
+function fmtDateShort(d) { return pad(d.getDate())+'/'+pad(d.getMonth()+1); }
+function getDayName(iso) { return THU[new Date(iso).getDay()]; }
+function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function parseMin(s) { var p=s.split(':'); return +p[0]*60 + +p[1]; }
+function getColor(id) { return COLORS[id % COLORS.length]; }
+
+// ══ Navigation ═══════════════════════════════════════════════════════════════
+window.navigate = function(dir) {
+    if (curView==='month') curDate.setMonth(curDate.getMonth()+dir);
+    else if (curView==='week') curDate.setDate(curDate.getDate()+dir*7);
+    loadAndRender();
+};
+window.goToday = function() { curDate=new Date(now); loadAndRender(); };
+window.reloadEvents = function() { loadAndRender(); };
+
+window.setView = function(v) {
+    curView = v;
+    ['month','week','list'].forEach(function(vv) {
+        document.getElementById('view'+cap(vv)).classList.toggle('d-none', vv!==v);
+        document.getElementById('btn'+cap(vv)).classList.toggle('active', vv===v);
+    });
+    var hideNav = (v==='list');
+    document.getElementById('navPrev').style.visibility = hideNav?'hidden':'visible';
+    document.getElementById('navNext').style.visibility = hideNav?'hidden':'visible';
+    loadAndRender();
+};
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+// ══ Month/Year for API ═══════════════════════════════════════════════════════
+function getMonthYear() {
+    // For list view: use today's month. For week: use the week's month.
+    if (curView === 'week') {
+        var mon = getMon(curDate);
+        return { month: mon.getMonth()+1, year: mon.getFullYear() };
+    }
+    return { month: curDate.getMonth()+1, year: curDate.getFullYear() };
+}
+
+// ══ Title ════════════════════════════════════════════════════════════════════
+function updateTitle() {
+    var el = document.getElementById('calTitle');
+    if (curView==='month') {
+        el.textContent = 'Tháng ' + (curDate.getMonth()+1) + ' / ' + curDate.getFullYear();
+    } else if (curView==='week') {
+        var mon = getMon(curDate);
+        el.textContent = fmtDate(toIso(mon)) + ' – ' + fmtDate(toIso(addDays(mon,6)));
+    } else {
+        el.textContent = '30 ngày tiếp theo';
+    }
+}
+
+// ══ Load & render ════════════════════════════════════════════════════════════
+async function loadAndRender() {
+    updateTitle();
+    var my  = getMonthYear();
+    var loading = document.getElementById('calLoading');
+    loading.classList.remove('d-none');
+    document.getElementById('viewMonth').style.opacity='0.4';
+    document.getElementById('viewWeek').style.opacity='0.4';
+    document.getElementById('viewList').style.opacity='0.4';
+
+    var url = '/LichHoc/GetEvents?month='+my.month+'&year='+my.year;
+    if (isAdmin) {
+        var kId = document.getElementById('filterKhoaHoc')?.value||'';
+        var gId = document.getElementById('filterGiangVien')?.value||'';
+        if (kId) url += '&khoaHocId='+kId;
+        if (gId) url += '&giangVienId='+gId;
+    }
+    try {
+        var r = await fetch(url);
+        allEvents = await r.json();
+    } catch(e) { allEvents=[]; }
+
+    loading.classList.add('d-none');
+    document.getElementById('viewMonth').style.opacity='';
+    document.getElementById('viewWeek').style.opacity='';
+    document.getElementById('viewList').style.opacity='';
+
+    if (curView==='month')      renderMonth();
+    else if (curView==='week')  renderWeek();
+    else                        renderList();
+    renderLegend();
+}
+
+// ══ Month render ═════════════════════════════════════════════════════════════
+function renderMonth() {
+    var first    = new Date(curDate.getFullYear(), curDate.getMonth(), 1);
+    var gridStart = getMon(first);
+    var grid = document.getElementById('monthGrid');
+    grid.innerHTML = '';
+
+    for (var i=0; i<42; i++) {
+        var d       = addDays(gridStart, i);
+        var iso     = toIso(d);
+        var inMonth = (d.getMonth()===curDate.getMonth() && d.getFullYear()===curDate.getFullYear());
+        var isToday = (iso===todayIso);
+        var isWe    = (d.getDay()===0 || d.getDay()===6);
+
+        var cell = document.createElement('div');
+        cell.className = 'cal-cell'+(inMonth?'':' other-month')+(isToday?' today':'');
+
+        // Date number
+        var dn = document.createElement('div');
+        dn.className = 'cal-date-num'+(isWe?' we':'');
+        if (isToday) dn.innerHTML = '<span class="today-circle">'+d.getDate()+'</span>';
+        else         dn.textContent = d.getDate();
+        cell.appendChild(dn);
+
+        // Events
+        var dayEvs = allEvents.filter(function(e){ return e.ngayHoc===iso; });
+        var maxShow = 3;
+        dayEvs.slice(0,maxShow).forEach(function(ev){
+            cell.appendChild(buildMonthCard(ev));
+        });
+        if (dayEvs.length>maxShow) {
+            var more = document.createElement('div');
+            more.className='cal-more';
+            more.textContent='+' + (dayEvs.length-maxShow) + ' buổi';
+            more.onclick=(function(date,evs){ return function(e){ e.stopPropagation(); showDayModal(date,evs); }; })(iso,dayEvs);
+            cell.appendChild(more);
+        }
+        grid.appendChild(cell);
+    }
+}
+
+function buildMonthCard(ev) {
+    var c = getColor(ev.khoaHocId);
+    var el = document.createElement('div');
+    el.className='cal-event-card';
+    el.style.cssText='background:'+c.bg+';border-left:3px solid '+c.border+';color:'+c.text+';';
+    el.innerHTML='<div class="ev-line1"><i class="bi bi-clock-fill me-1" style="font-size:8px;opacity:.8;"></i>'+esc(ev.gioBatDau)+' '+esc(ev.tenKhoaHoc)+'</div>'+
+                 '<div class="ev-line2">'+esc(ev.phongHoc)+' · '+esc(ev.tenGiangVien)+'</div>';
+    el.onclick=(function(evCopy){ return function(){ showEventModal(evCopy); }; })(ev);
+    return el;
+}
+
+// ══ Week render ══════════════════════════════════════════════════════════════
+function renderWeek() {
+    var mon   = getMon(curDate);
+    var days  = Array.from({length:7}, function(_,i){ return addDays(mon,i); });
+    var totalH = (WEEK_END_H - WEEK_START_H) * SLOT_H; // 960px
+
+    // ── Header ──
+    var hdr = document.getElementById('weekHeaderRow');
+    var hHtml = '<div class="week-corner"></div>';
+    days.forEach(function(d) {
+        var isToday = toIso(d)===todayIso;
+        var isWe    = (d.getDay()===0||d.getDay()===6);
+        hHtml += '<div class="week-col-hdr'+(isToday?' today-hdr':'')+'">';
+        hHtml += '<div class="wch-name'+(isWe?' text-danger':'')+'">'+THU_S[d.getDay()]+'</div>';
+        hHtml += '<div class="wch-date'+(isToday?' today-d':'')+'">'+fmtDateShort(d)+'</div>';
+        hHtml += '</div>';
+    });
+    hdr.innerHTML = hHtml;
+
+    // ── Body: time column ──
+    var bGrid = document.getElementById('weekBodyGrid');
+    var tHtml = '<div class="week-time-col">';
+    for (var h=WEEK_START_H; h<=WEEK_END_H; h++) {
+        tHtml += '<div class="week-tl" style="height:'+SLOT_H+'px;">'+pad(h)+':00</div>';
+    }
+    tHtml += '</div>';
+
+    // ── Body: day columns ──
+    var daysHtml = '';
+    days.forEach(function(d, dayIdx) {
+        var iso     = toIso(d);
+        var isToday = iso===todayIso;
+        var dayEvs  = allEvents.filter(function(e){ return e.date===iso; });
+
+        daysHtml += '<div class="week-day-col'+(isToday?' today-bg':'')+'" style="height:'+totalH+'px;" data-col="'+dayIdx+'">';
+
+        // Hour grid lines
+        for (var h=WEEK_START_H; h<=WEEK_END_H; h++) {
+            var top = (h-WEEK_START_H)*SLOT_H;
+            daysHtml += '<div class="week-hl" style="top:'+top+'px;"></div>';
+            if (h<WEEK_END_H) {
+                daysHtml += '<div class="week-hl half" style="top:'+(top+30)+'px;"></div>';
+            }
+        }
+
+        // Today line
+        if (isToday) {
+            var nowMin = now.getHours()*60+now.getMinutes();
+            var nowTop = (nowMin - WEEK_START_H*60);
+            if (nowTop>=0 && nowTop<=totalH) {
+                daysHtml += '<div class="week-now-line" style="top:'+nowTop+'px;"></div>';
+            }
+        }
+
+        // Events
+        dayEvs.forEach(function(ev, evIdx) {
+            var sm   = ev.startMin!=null ? ev.startMin : parseMin(ev.gioBatDau);
+            var em   = ev.endMin!=null   ? ev.endMin   : parseMin(ev.gioKetThuc);
+            var top  = Math.max(0, sm - WEEK_START_H*60);
+            var hPx  = Math.max(22, em - sm);
+            var c    = getColor(ev.khoaHocId);
+            var evId = 'wev_'+dayIdx+'_'+evIdx;
+            daysHtml += '<div class="week-ev" id="'+evId+'" style="top:'+top+'px;height:'+hPx+'px;background:'+c.bg+';border-left:3px solid '+c.border+';color:'+c.text+';">';
+            daysHtml += '<div class="ev1"><strong>'+esc(ev.gioBatDau)+'</strong> '+esc(ev.tenKhoaHoc)+'</div>';
+            if (hPx>=38) daysHtml += '<div class="ev2">'+esc(ev.phongHoc)+'</div>';
+            daysHtml += '</div>';
+        });
+
+        daysHtml += '</div>';
+    });
+
+    bGrid.innerHTML = tHtml + daysHtml;
+
+    // Attach click handlers
+    days.forEach(function(d, dayIdx) {
+        var dayEvs = allEvents.filter(function(e){ return e.date===toIso(d); });
+        dayEvs.forEach(function(ev, evIdx) {
+            var el = document.getElementById('wev_'+dayIdx+'_'+evIdx);
+            if (el) el.onclick=(function(evCopy){ return function(){ showEventModal(evCopy); }; })(ev);
+        });
+    });
+
+    // Scroll to 7:00
+    setTimeout(function(){
+        var scrollEl = document.querySelector('.week-scroll');
+        if (scrollEl) scrollEl.scrollTop = (7-WEEK_START_H)*SLOT_H - 20;
+    }, 50);
+}
+
+// ══ List render ══════════════════════════════════════════════════════════════
+function renderList() {
+    var list = document.getElementById('listContent');
+
+    // Group events by date
+    var grouped = {};
+    allEvents.forEach(function(ev) {
+        (grouped[ev.ngayHoc] = grouped[ev.ngayHoc]||[]).push(ev);
+    });
+    var dates = Object.keys(grouped).sort();
+
+    if (!dates.length) {
+        list.innerHTML='<div class="alert alert-info text-center py-5"><i class="bi bi-calendar-x fs-2 d-block mb-2"></i>Không có buổi học nào trong thời gian này.</div>';
+        return;
+    }
+
+    var html = '';
+    dates.forEach(function(iso) {
+        var isToday = iso===todayIso;
+        var dayEvs  = grouped[iso];
+        var dayName = getDayName(iso);
+
+        html += '<div class="list-day-group">';
+        html += '<div class="list-day-hdr'+(isToday?' today-day':'')+'">'+
+                '<i class="bi bi-calendar3 me-1"></i>'+dayName+', '+fmtDate(iso)+
+                (isToday?' <span class="badge bg-primary ms-1">Hôm nay</span>':'')+
+                '</div>';
+
+        dayEvs.forEach(function(ev, idx) {
+            var c    = getColor(ev.khoaHocId);
+            var evId = 'lev_'+iso+'_'+idx;
+            var ttLabel = TT_LABEL[ev.trangThaiLop]||ev.trangThaiLop;
+            var ttCls   = TT_BADGE[ev.trangThaiLop]||'bg-secondary';
+
+            html += '<div class="list-ev-row" id="'+evId+'">';
+            html += '<span class="list-time-badge" style="background:'+c.bg+';color:'+c.text+';border:1px solid '+c.border+';">'+esc(ev.gioBatDau)+' – '+esc(ev.gioKetThuc)+'</span>';
+            html += '<span class="list-name">'+esc(ev.tenKhoaHoc)+'</span>';
+            html += '<span class="list-meta"><i class="bi bi-door-open me-1"></i>'+esc(ev.phongHoc)+'</span>';
+            html += '<span class="list-meta d-none d-sm-inline"><i class="bi bi-person me-1"></i>'+esc(ev.tenGiangVien)+'</span>';
+            html += '<span class="badge '+ttCls+' d-none d-md-inline">'+esc(ttLabel)+'</span>';
+            html += '</div>';
+        });
+
+        html += '</div>';
+    });
+
+    list.innerHTML = html;
+
+    // Attach click handlers
+    dates.forEach(function(iso) {
+        grouped[iso].forEach(function(ev, idx) {
+            var el = document.getElementById('lev_'+iso+'_'+idx);
+            if (el) el.onclick=(function(evCopy){ return function(){ showEventModal(evCopy); }; })(ev);
+        });
+    });
+}
+
+// ══ Legend ═══════════════════════════════════════════════════════════════════
+function renderLegend() {
+    var seen = {}, items = [];
+    allEvents.forEach(function(ev) {
+        if (!seen[ev.khoaHocId]) {
+            seen[ev.khoaHocId] = true;
+            items.push({ id:ev.khoaHocId, name:ev.tenKhoaHoc });
+        }
+    });
+    items.sort(function(a,b){ return a.id-b.id; });
+    var html = items.map(function(item) {
+        var c = getColor(item.id);
+        return '<div class="leg-item"><div class="leg-dot" style="background:'+c.border+';"></div><span>'+esc(item.name)+'</span></div>';
+    }).join('');
+    document.getElementById('calLegend').innerHTML = html;
+}
+
+// ══ Modals ════════════════════════════════════════════════════════════════════
+function showEventModal(ev) {
+    document.getElementById('modalTitle').textContent = ev.tenKhoaHoc;
+    var ttLabel = TT_LABEL[ev.trangThaiLop]||ev.trangThaiLop;
+    var ttCls   = TT_BADGE[ev.trangThaiLop]||'bg-secondary';
+    document.getElementById('modalBadge').innerHTML = '<span class="badge '+ttCls+'">'+esc(ttLabel)+'</span>';
+
+    var c = getColor(ev.khoaHocId);
+    var body = document.getElementById('modalBody');
+    var info = '<dl class="info-grid">';
+    info += '<dt>Ngày học</dt><dd>'+esc(getDayName(ev.ngayHoc))+', '+fmtDate(ev.ngayHoc)+'</dd>';
+    info += '<dt>Giờ học</dt><dd><i class="bi bi-clock me-1"></i>'+esc(ev.gioBatDau)+' – '+esc(ev.gioKetThuc)+'</dd>';
+    info += '<dt>Phòng học</dt><dd><i class="bi bi-door-open me-1"></i>'+esc(ev.phongHoc)+'</dd>';
+    info += '<dt>Giảng viên</dt><dd><i class="bi bi-person me-1"></i>'+esc(ev.tenGiangVien)+'</dd>';
+    if (isAdminOrGV) {
+        if (ev.tenLop) info += '<dt>Lớp học</dt><dd>'+esc(ev.tenLop)+'</dd>';
+        info += '<dt>Sĩ số</dt><dd>'+ev.siSoHienTai+' / '+ev.siSoToiDa+' học viên</dd>';
+    }
+    if (ev.chuDe) info += '<dt>Chủ đề</dt><dd>'+esc(ev.chuDe)+'</dd>';
+    info += '</dl>';
+
+    // Load students badge list for Admin/GV
+    if (isAdminOrGV) {
+        info += '<div id="studentsList" class="mt-3"><div class="text-muted small"><i class="bi bi-arrow-clockwise me-1"></i>Đang tải danh sách...</div></div>';
+        if (isAdmin) {
+            info += '<div class="mt-2 d-flex gap-2"><button class="btn btn-sm btn-outline-danger" onclick="deleteSession('+ev.id+')"><i class="bi bi-trash me-1"></i>Xóa buổi này</button></div>';
+        }
+    }
+
+    body.innerHTML = info;
+
+    if (isAdminOrGV) {
+        fetch('/LichHoc/GetLopStudents?lopHocId='+ev.lopHocId)
+            .then(function(r){ return r.json(); })
+            .then(function(students) {
+                var el = document.getElementById('studentsList');
+                if (!el) return;
+                if (!students.length) {
+                    el.innerHTML='<div class="text-muted small">Chưa có học viên đăng ký.</div>';
+                    return;
+                }
+                var badgesHtml = '<div class="small fw-semibold text-muted mb-1">Học viên đã duyệt ('+students.length+'):</div>';
+                badgesHtml += '<div class="d-flex flex-wrap gap-1">';
+                students.forEach(function(s) {
+                    badgesHtml += '<span class="badge bg-light text-dark border" style="font-size:.75rem;" title="'+esc(s.maHocVien)+'">'+esc(s.hoTen)+'</span>';
+                });
+                badgesHtml += '</div>';
+                el.innerHTML = badgesHtml;
+            })
+            .catch(function(){
+                var el = document.getElementById('studentsList');
+                if (el) el.innerHTML='';
+            });
+    }
+
+    new bootstrap.Modal(document.getElementById('eventModal')).show();
+}
+
+function showDayModal(dateStr, events) {
+    document.getElementById('modalTitle').textContent = getDayName(dateStr)+', '+fmtDate(dateStr);
+    document.getElementById('modalBadge').innerHTML = '<span class="badge bg-primary">'+events.length+' buổi</span>';
+    var html = events.map(function(ev) {
+        var c = getColor(ev.khoaHocId);
+        return '<div class="list-ev-row mb-1 p-2" style="cursor:pointer;" onclick="window.__showEv('+JSON.stringify(ev).replace(/</g,'\\u003c')+')">'+
+            '<span class="list-time-badge" style="background:'+c.bg+';color:'+c.text+';border:1px solid '+c.border+';">'+esc(ev.gioBatDau)+'</span>'+
+            '<span class="list-name ms-2">'+esc(ev.tenKhoaHoc)+'</span>'+
+            '<span class="list-meta ms-2">'+esc(ev.phongHoc)+'</span>'+
+            '</div>';
+    }).join('');
+    document.getElementById('modalBody').innerHTML = html;
+    new bootstrap.Modal(document.getElementById('eventModal')).show();
+}
+window.__showEv = function(ev) {
+    var modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+    if (modal) modal.hide();
+    setTimeout(function(){ showEventModal(ev); }, 300);
+};
+
+// ══ Admin helpers ════════════════════════════════════════════════════════════
+window.taoHangLoat = async function() {
+    var lopHocId  = document.getElementById('hlLopHoc').value;
+    var ngayBD    = document.getElementById('hlNgayBatDau').value;
+    var ngayKT    = document.getElementById('hlNgayKetThuc').value;
+    var gioBD     = document.getElementById('hlGioBatDau').value;
+    var gioKT     = document.getElementById('hlGioKetThuc').value;
+    var phong     = document.getElementById('hlPhongHoc').value;
+    var thuChecked = Array.from(document.querySelectorAll('.hl-thu:checked')).map(function(c){ return +c.value; });
+    var result    = document.getElementById('hlResult');
+
+    if (!lopHocId || !ngayBD || !ngayKT || !thuChecked.length) {
+        result.innerHTML = '<div class="alert alert-warning py-2">Vui lòng điền đầy đủ thông tin.</div>';
+        return;
+    }
+
+    var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+    result.innerHTML = '<div class="text-muted small"><i class="bi bi-arrow-clockwise me-1"></i>Đang tạo...</div>';
+    try {
+        var r = await fetch('/LichHoc/TaoHangLoat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token },
+            body: JSON.stringify({ lopHocId:+lopHocId, ngayBatDau:ngayBD, ngayKetThuc:ngayKT,
+                                   gioBatDau:gioBD, gioKetThuc:gioKT, phongHoc:phong,
+                                   thuTrongTuan:thuChecked })
+        });
+        var data = await r.json();
+        result.innerHTML = data.success
+            ? '<div class="alert alert-success py-2 mb-0">'+esc(data.message)+'</div>'
+            : '<div class="alert alert-danger py-2 mb-0">'+esc(data.message)+'</div>';
+        if (data.success) loadAndRender();
+    } catch(e) {
+        result.innerHTML = '<div class="alert alert-danger py-2 mb-0">Lỗi kết nối.</div>';
+    }
+};
+
+window.deleteSession = async function(id) {
+    if (!confirm('Xóa buổi học này?')) return;
+    var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+    try {
+        var r = await fetch('/LichHoc/Delete/'+id, {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': token }
+        });
+        var data = await r.json();
+        if (data.success) {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
+            if (modal) modal.hide();
+            loadAndRender();
+        } else {
+            alert(data.message);
+        }
+    } catch(e) { alert('Lỗi kết nối.'); }
+};
+
+// ══ Init ═════════════════════════════════════════════════════════════════════
+setView('month'); // sets active button; loadAndRender called inside
+})();
+</script>
+}

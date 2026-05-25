@@ -1,0 +1,32 @@
+@model List<QuanLyKhoaHoc5.Web.Models.Entities.PhanCongGiangDay>
+@{ ViewData["Title"] = "Lịch sử phân công"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Lịch sử phân công - @ViewBag.TenKhoaHoc</h4>
+    <a asp-action="PhanCong" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr><th>Giảng viên</th><th>Ngày phân công</th><th>Ghi chú</th><th>Trạng thái</th></tr>
+                </thead>
+                <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@p.GiangVien?.HoTen</td>
+                        <td class="small">@p.NgayPhanCong.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="small text-muted">@(p.GhiChu ?? "-")</td>
+                        <td>
+                            @if (p.IsActive) { <span class="badge bg-success">Đang phân công</span> }
+                            else { <span class="badge bg-secondary">Đã hủy</span> }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any()) { <tr><td colspan="4" class="text-center text-muted py-4">Chưa có lịch sử phân công</td></tr> }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

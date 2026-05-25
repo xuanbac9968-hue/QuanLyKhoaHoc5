@@ -1,0 +1,108 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.ThanhToanListItemViewModel
+@{
+    ViewData["Title"] = "Chi tiết thanh toán";
+    var (badgeCls, badgeText) = Model.TrangThai switch
+    {
+        "ChoPheduyet" => ("bg-warning text-dark", "Chờ phê duyệt"),
+        "DaThanhToan"  => ("bg-success", "Đã thanh toán"),
+        "TuChoi"       => ("bg-danger", "Từ chối"),
+        _              => ("bg-secondary", Model.TrangThai)
+    };
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0"><i class="bi bi-credit-card-2-front me-2 text-primary"></i>Chi tiết yêu cầu thanh toán #@Model.Id</h5>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại
+            </a>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header fw-semibold">Thông tin yêu cầu</div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="text-muted small">Học viên</label>
+                        <div class="fw-semibold">@Model.TenHocVien <span class="badge bg-light text-dark border">@Model.MaHocVien</span></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Khóa học</label>
+                        <div class="fw-semibold">@Model.TenKhoaHoc</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Số tiền</label>
+                        <div class="fs-5 fw-bold text-success">@Model.SoTien.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Phương thức</label>
+                        <div>
+                            <span class="badge @(Model.PhuongThuc == "ChuyenKhoan" ? "bg-info text-dark" : "bg-secondary") fs-6">
+                                @(Model.PhuongThuc == "ChuyenKhoan" ? "Chuyển khoản" : "Tiền mặt")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Ngày tạo</label>
+                        <div>@Model.NgayTao.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Trạng thái</label>
+                        <div><span class="badge @badgeCls fs-6">@badgeText</span></div>
+                    </div>
+                    @if (Model.NgayDuyet.HasValue)
+                    {
+                        <div class="col-md-6">
+                            <label class="text-muted small">Ngày duyệt</label>
+                            <div>@Model.NgayDuyet.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Người duyệt</label>
+                            <div>@(Model.TenNguoiDuyet ?? "—")</div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.GhiChu))
+                    {
+                        <div class="col-12">
+                            <label class="text-muted small">Ghi chú</label>
+                            <div class="border rounded p-2 bg-light">@Model.GhiChu</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.TrangThai == "ChoPheduyet")
+        {
+            <div class="card shadow-sm border-warning">
+                <div class="card-header fw-semibold bg-warning text-dark">
+                    <i class="bi bi-check2-circle me-2"></i>Xử lý yêu cầu
+                </div>
+                <div class="card-body">
+                    <form asp-action="Duyet" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ghi chú (bắt buộc nếu từ chối)</label>
+                            <textarea name="GhiChu" class="form-control" rows="3"
+                                      placeholder="Nhập lý do từ chối hoặc ghi chú thêm..."></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" name="HanhDong" value="DaThanhToan"
+                                    class="btn btn-success"
+                                    onclick="return confirm('Xác nhận thanh toán thành công?')">
+                                <i class="bi bi-check-circle me-1"></i>Xác nhận đã thanh toán
+                            </button>
+                            <button type="submit" name="HanhDong" value="TuChoi"
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Từ chối yêu cầu này?')">
+                                <i class="bi bi-x-circle me-1"></i>Từ chối
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>

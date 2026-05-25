@@ -1,0 +1,1474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.4542" branch-rate="0.2051" version="1.9" timestamp="1779695913" lines-covered="149" lines-valid="328" branches-covered="32" branches-valid="156">
+  <sources>
+    <source>D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Web\</source>
+  </sources>
+  <packages>
+    <package name="QuanLyKhoaHoc5.Web" line-rate="0.4542" branch-rate="0.2051" complexity="210">
+      <classes>
+        <class name="QuanLyKhoaHoc5.Web.Services.ChatService" filename="Services\ChatService.cs" line-rate="0" branch-rate="0" complexity="19">
+          <methods>
+            <method name="ExtractContent" signature="(System.String)" line-rate="0" branch-rate="0" complexity="18">
+              <lines>
+                <line number="309" hits="0" branch="False" />
+                <line number="311" hits="0" branch="False" />
+                <line number="312" hits="0" branch="False" />
+                <line number="313" hits="0" branch="True" condition-coverage="0% (0/18)">
+                  <conditions>
+                    <condition number="14" type="jump" coverage="0%" />
+                    <condition number="73" type="jump" coverage="0%" />
+                    <condition number="86" type="jump" coverage="0%" />
+                    <condition number="162" type="jump" coverage="0%" />
+                    <condition number="243" type="jump" coverage="0%" />
+                    <condition number="256" type="jump" coverage="0%" />
+                    <condition number="330" type="jump" coverage="0%" />
+                    <condition number="340" type="jump" coverage="0%" />
+                    <condition number="418" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="315" hits="0" branch="False" />
+                <line number="316" hits="0" branch="False" />
+                <line number="317" hits="0" branch="False" />
+                <line number="319" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Net.Http.HttpClient,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger`1&lt;QuanLyKhoaHoc5.Web.Services.ChatService&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+                <line number="15" hits="0" branch="False" />
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="309" hits="0" branch="False" />
+            <line number="311" hits="0" branch="False" />
+            <line number="312" hits="0" branch="False" />
+            <line number="313" hits="0" branch="True" condition-coverage="0% (0/18)">
+              <conditions>
+                <condition number="14" type="jump" coverage="0%" />
+                <condition number="73" type="jump" coverage="0%" />
+                <condition number="86" type="jump" coverage="0%" />
+                <condition number="162" type="jump" coverage="0%" />
+                <condition number="243" type="jump" coverage="0%" />
+                <condition number="256" type="jump" coverage="0%" />
+                <condition number="330" type="jump" coverage="0%" />
+                <condition number="340" type="jump" coverage="0%" />
+                <condition number="418" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="315" hits="0" branch="False" />
+            <line number="316" hits="0" branch="False" />
+            <line number="317" hits="0" branch="False" />
+            <line number="319" hits="0" branch="False" />
+            <line number="14" hits="0" branch="False" />
+            <line number="15" hits="0" branch="False" />
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Services.ExcelService" filename="Services\ExcelService.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="18" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="11" hits="18" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Services.GeminiService" filename="Services\GeminiService.cs" line-rate="0" branch-rate="0" complexity="26">
+          <methods>
+            <method name="BuildPrompt" signature="(QuanLyKhoaHoc5.Web.Models.ViewModels.HocVienProfileViewModel,System.Collections.Generic.List`1&lt;QuanLyKhoaHoc5.Web.Models.ViewModels.KhoaHocGoiYInputViewModel&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="99" hits="0" branch="False" />
+                <line number="100" hits="0" branch="False" />
+                <line number="101" hits="0" branch="False" />
+                <line number="103" hits="0" branch="False" />
+                <line number="104" hits="0" branch="False" />
+                <line number="106" hits="0" branch="False" />
+                <line number="107" hits="0" branch="False" />
+                <line number="108" hits="0" branch="False" />
+                <line number="109" hits="0" branch="False" />
+                <line number="110" hits="0" branch="False" />
+                <line number="111" hits="0" branch="False" />
+                <line number="112" hits="0" branch="False" />
+                <line number="113" hits="0" branch="False" />
+                <line number="114" hits="0" branch="False" />
+                <line number="115" hits="0" branch="False" />
+                <line number="116" hits="0" branch="False" />
+                <line number="117" hits="0" branch="False" />
+                <line number="118" hits="0" branch="False" />
+                <line number="119" hits="0" branch="False" />
+                <line number="120" hits="0" branch="False" />
+                <line number="121" hits="0" branch="False" />
+                <line number="122" hits="0" branch="False" />
+                <line number="123" hits="0" branch="False" />
+                <line number="124" hits="0" branch="False" />
+                <line number="125" hits="0" branch="False" />
+                <line number="126" hits="0" branch="False" />
+                <line number="127" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="ExtractTextFromGroqResponse" signature="(System.String)" line-rate="0" branch-rate="0" complexity="18">
+              <lines>
+                <line number="131" hits="0" branch="False" />
+                <line number="133" hits="0" branch="False" />
+                <line number="134" hits="0" branch="False" />
+                <line number="135" hits="0" branch="True" condition-coverage="0% (0/18)">
+                  <conditions>
+                    <condition number="14" type="jump" coverage="0%" />
+                    <condition number="72" type="jump" coverage="0%" />
+                    <condition number="85" type="jump" coverage="0%" />
+                    <condition number="161" type="jump" coverage="0%" />
+                    <condition number="242" type="jump" coverage="0%" />
+                    <condition number="255" type="jump" coverage="0%" />
+                    <condition number="329" type="jump" coverage="0%" />
+                    <condition number="339" type="jump" coverage="0%" />
+                    <condition number="412" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="137" hits="0" branch="False" />
+                <line number="138" hits="0" branch="False" />
+                <line number="139" hits="0" branch="False" />
+                <line number="141" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="CleanJsonResponse" signature="(System.String)" line-rate="0" branch-rate="0" complexity="6">
+              <lines>
+                <line number="144" hits="0" branch="False" />
+                <line number="145" hits="0" branch="False" />
+                <line number="146" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="22" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="147" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="56" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="148" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="90" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="149" hits="0" branch="False" />
+                <line number="150" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Net.Http.HttpClient,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger`1&lt;QuanLyKhoaHoc5.Web.Services.GeminiService&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="0" branch="False" />
+                <line number="13" hits="0" branch="False" />
+                <line number="14" hits="0" branch="False" />
+                <line number="15" hits="0" branch="False" />
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="99" hits="0" branch="False" />
+            <line number="100" hits="0" branch="False" />
+            <line number="101" hits="0" branch="False" />
+            <line number="103" hits="0" branch="False" />
+            <line number="104" hits="0" branch="False" />
+            <line number="106" hits="0" branch="False" />
+            <line number="107" hits="0" branch="False" />
+            <line number="108" hits="0" branch="False" />
+            <line number="109" hits="0" branch="False" />
+            <line number="110" hits="0" branch="False" />
+            <line number="111" hits="0" branch="False" />
+            <line number="112" hits="0" branch="False" />
+            <line number="113" hits="0" branch="False" />
+            <line number="114" hits="0" branch="False" />
+            <line number="115" hits="0" branch="False" />
+            <line number="116" hits="0" branch="False" />
+            <line number="117" hits="0" branch="False" />
+            <line number="118" hits="0" branch="False" />
+            <line number="119" hits="0" branch="False" />
+            <line number="120" hits="0" branch="False" />
+            <line number="121" hits="0" branch="False" />
+            <line number="122" hits="0" branch="False" />
+            <line number="123" hits="0" branch="False" />
+            <line number="124" hits="0" branch="False" />
+            <line number="125" hits="0" branch="False" />
+            <line number="126" hits="0" branch="False" />
+            <line number="127" hits="0" branch="False" />
+            <line number="131" hits="0" branch="False" />
+            <line number="133" hits="0" branch="False" />
+            <line number="134" hits="0" branch="False" />
+            <line number="135" hits="0" branch="True" condition-coverage="0% (0/18)">
+              <conditions>
+                <condition number="14" type="jump" coverage="0%" />
+                <condition number="72" type="jump" coverage="0%" />
+                <condition number="85" type="jump" coverage="0%" />
+                <condition number="161" type="jump" coverage="0%" />
+                <condition number="242" type="jump" coverage="0%" />
+                <condition number="255" type="jump" coverage="0%" />
+                <condition number="329" type="jump" coverage="0%" />
+                <condition number="339" type="jump" coverage="0%" />
+                <condition number="412" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="137" hits="0" branch="False" />
+            <line number="138" hits="0" branch="False" />
+            <line number="139" hits="0" branch="False" />
+            <line number="141" hits="0" branch="False" />
+            <line number="144" hits="0" branch="False" />
+            <line number="145" hits="0" branch="False" />
+            <line number="146" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="22" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="147" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="56" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="148" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="90" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="149" hits="0" branch="False" />
+            <line number="150" hits="0" branch="False" />
+            <line number="12" hits="0" branch="False" />
+            <line number="13" hits="0" branch="False" />
+            <line number="14" hits="0" branch="False" />
+            <line number="15" hits="0" branch="False" />
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Services.GoiYKhoaHocService" filename="Services\GoiYKhoaHocService.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.GeminiService,Microsoft.Extensions.Logging.ILogger`1&lt;QuanLyKhoaHoc5.Web.Services.GoiYKhoaHocService&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="0" branch="False" />
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="15" hits="0" branch="False" />
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Services.PdfService" filename="Services\PdfService.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="12" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Services.ThongBaoService" filename="Services\ThongBaoService.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="28" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="10" hits="28" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ErrorViewModel" filename="Models\ErrorViewModel.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_ShowRequestId" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.LichHocChiTietViewModel" filename="Models\ViewModels\DashboardViewModel.cs" line-rate="0" branch-rate="0" complexity="12">
+          <methods>
+            <method name="get_TenThu" signature="()" line-rate="0" branch-rate="0" complexity="8">
+              <lines>
+                <line number="69" hits="0" branch="True" condition-coverage="0% (0/8)">
+                  <conditions>
+                    <condition number="20" type="switch" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="70" hits="0" branch="False" />
+                <line number="71" hits="0" branch="False" />
+                <line number="72" hits="0" branch="False" />
+                <line number="73" hits="0" branch="False" />
+                <line number="74" hits="0" branch="False" />
+                <line number="75" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_CaHoc" signature="()" line-rate="0" branch-rate="0" complexity="4">
+              <lines>
+                <line number="77" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="16" type="jump" coverage="0%" />
+                    <condition number="34" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="69" hits="0" branch="True" condition-coverage="0% (0/8)">
+              <conditions>
+                <condition number="20" type="switch" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="70" hits="0" branch="False" />
+            <line number="71" hits="0" branch="False" />
+            <line number="72" hits="0" branch="False" />
+            <line number="73" hits="0" branch="False" />
+            <line number="74" hits="0" branch="False" />
+            <line number="75" hits="0" branch="False" />
+            <line number="77" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="16" type="jump" coverage="0%" />
+                <condition number="34" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.BuoiHocViewModel" filename="Models\ViewModels\DashboardViewModel.cs" line-rate="0" branch-rate="0" complexity="12">
+          <methods>
+            <method name="get_TenThu" signature="()" line-rate="0" branch-rate="0" complexity="8">
+              <lines>
+                <line number="148" hits="0" branch="True" condition-coverage="0% (0/8)">
+                  <conditions>
+                    <condition number="20" type="switch" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="149" hits="0" branch="False" />
+                <line number="150" hits="0" branch="False" />
+                <line number="151" hits="0" branch="False" />
+                <line number="152" hits="0" branch="False" />
+                <line number="153" hits="0" branch="False" />
+                <line number="154" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_CaHoc" signature="()" line-rate="0" branch-rate="0" complexity="4">
+              <lines>
+                <line number="156" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="16" type="jump" coverage="0%" />
+                    <condition number="34" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="148" hits="0" branch="True" condition-coverage="0% (0/8)">
+              <conditions>
+                <condition number="20" type="switch" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="149" hits="0" branch="False" />
+            <line number="150" hits="0" branch="False" />
+            <line number="151" hits="0" branch="False" />
+            <line number="152" hits="0" branch="False" />
+            <line number="153" hits="0" branch="False" />
+            <line number="154" hits="0" branch="False" />
+            <line number="156" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="16" type="jump" coverage="0%" />
+                <condition number="34" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.DiemSoThongKeViewModel" filename="Models\ViewModels\DiemSoViewModel.cs" line-rate="0" branch-rate="0" complexity="2">
+          <methods>
+            <method name="get_TiLeDat" signature="()" line-rate="0" branch-rate="0" complexity="2">
+              <lines>
+                <line number="43" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="7" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="43" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="7" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.DiemSoKyHocViewModel" filename="Models\ViewModels\DiemSoViewModel.cs" line-rate="0" branch-rate="0" complexity="2">
+          <methods>
+            <method name="get_DiemTrungBinhKy" signature="()" line-rate="0" branch-rate="0" complexity="2">
+              <lines>
+                <line number="89" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="42" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="90" hits="0" branch="False" />
+                <line number="91" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="89" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="42" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="90" hits="0" branch="False" />
+            <line number="91" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.GiangVienCreateEditViewModel" filename="Models\ViewModels\GiangVienViewModel.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_IsEdit" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.HocVienCreateEditViewModel" filename="Models\ViewModels\HocVienViewModel.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_IsEdit" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.ViewModels.LichHocItemViewModel" filename="Models\ViewModels\LopHocViewModel.cs" line-rate="0" branch-rate="0" complexity="12">
+          <methods>
+            <method name="get_TenThu" signature="()" line-rate="0" branch-rate="0" complexity="8">
+              <lines>
+                <line number="100" hits="0" branch="True" condition-coverage="0% (0/8)">
+                  <conditions>
+                    <condition number="20" type="switch" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="101" hits="0" branch="False" />
+                <line number="102" hits="0" branch="False" />
+                <line number="103" hits="0" branch="False" />
+                <line number="104" hits="0" branch="False" />
+                <line number="105" hits="0" branch="False" />
+                <line number="106" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_CaHoc" signature="()" line-rate="0" branch-rate="0" complexity="4">
+              <lines>
+                <line number="108" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="16" type="jump" coverage="0%" />
+                    <condition number="34" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="100" hits="0" branch="True" condition-coverage="0% (0/8)">
+              <conditions>
+                <condition number="20" type="switch" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="101" hits="0" branch="False" />
+            <line number="102" hits="0" branch="False" />
+            <line number="103" hits="0" branch="False" />
+            <line number="104" hits="0" branch="False" />
+            <line number="105" hits="0" branch="False" />
+            <line number="106" hits="0" branch="False" />
+            <line number="108" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="16" type="jump" coverage="0%" />
+                <condition number="34" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Models.Entities.Diem" filename="Models\Entities\Diem.cs" line-rate="1" branch-rate="1" complexity="16">
+          <methods>
+            <method name="TinhTongKet" signature="(System.Nullable`1&lt;System.Double&gt;,System.Nullable`1&lt;System.Double&gt;)" line-rate="1" branch-rate="1" complexity="4">
+              <lines>
+                <line number="34" hits="12" branch="False" />
+                <line number="35" hits="16" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="8" type="jump" coverage="100%" />
+                    <condition number="25" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="36" hits="8" branch="False" />
+                <line number="37" hits="12" branch="False" />
+              </lines>
+            </method>
+            <method name="TinhXepLoai" signature="(System.Nullable`1&lt;System.Double&gt;)" line-rate="1" branch-rate="1" complexity="12">
+              <lines>
+                <line number="39" hits="23" branch="True" condition-coverage="100% (12/12)">
+                  <conditions>
+                    <condition number="11" type="jump" coverage="100%" />
+                    <condition number="31" type="jump" coverage="100%" />
+                    <condition number="43" type="jump" coverage="100%" />
+                    <condition number="55" type="jump" coverage="100%" />
+                    <condition number="67" type="jump" coverage="100%" />
+                    <condition number="79" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="40" hits="23" branch="False" />
+                <line number="41" hits="6" branch="False" />
+                <line number="42" hits="4" branch="False" />
+                <line number="43" hits="3" branch="False" />
+                <line number="44" hits="4" branch="False" />
+                <line number="45" hits="4" branch="False" />
+                <line number="46" hits="2" branch="False" />
+                <line number="47" hits="23" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="34" hits="12" branch="False" />
+            <line number="35" hits="16" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="8" type="jump" coverage="100%" />
+                <condition number="25" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="36" hits="8" branch="False" />
+            <line number="37" hits="12" branch="False" />
+            <line number="39" hits="23" branch="True" condition-coverage="100% (12/12)">
+              <conditions>
+                <condition number="11" type="jump" coverage="100%" />
+                <condition number="31" type="jump" coverage="100%" />
+                <condition number="43" type="jump" coverage="100%" />
+                <condition number="55" type="jump" coverage="100%" />
+                <condition number="67" type="jump" coverage="100%" />
+                <condition number="79" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="40" hits="23" branch="False" />
+            <line number="41" hits="6" branch="False" />
+            <line number="42" hits="4" branch="False" />
+            <line number="43" hits="3" branch="False" />
+            <line number="44" hits="4" branch="False" />
+            <line number="45" hits="4" branch="False" />
+            <line number="46" hits="2" branch="False" />
+            <line number="47" hits="23" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Helpers.LichHocHelper" filename="Helpers\LichHocHelper.cs" line-rate="0" branch-rate="0" complexity="20">
+          <methods>
+            <method name="ToViewModel" signature="(QuanLyKhoaHoc5.Web.Models.Entities.LichHoc)" line-rate="0" branch-rate="0" complexity="20">
+              <lines>
+                <line number="27" hits="0" branch="True" condition-coverage="0% (0/20)">
+                  <conditions>
+                    <condition number="39" type="jump" coverage="0%" />
+                    <condition number="64" type="jump" coverage="0%" />
+                    <condition number="76" type="jump" coverage="0%" />
+                    <condition number="88" type="jump" coverage="0%" />
+                    <condition number="110" type="jump" coverage="0%" />
+                    <condition number="122" type="jump" coverage="0%" />
+                    <condition number="144" type="jump" coverage="0%" />
+                    <condition number="156" type="jump" coverage="0%" />
+                    <condition number="220" type="jump" coverage="0%" />
+                    <condition number="230" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="28" hits="0" branch="False" />
+                <line number="29" hits="0" branch="False" />
+                <line number="30" hits="0" branch="False" />
+                <line number="31" hits="0" branch="False" />
+                <line number="32" hits="0" branch="False" />
+                <line number="33" hits="0" branch="False" />
+                <line number="34" hits="0" branch="False" />
+                <line number="35" hits="0" branch="False" />
+                <line number="36" hits="0" branch="False" />
+                <line number="37" hits="0" branch="False" />
+                <line number="38" hits="0" branch="False" />
+                <line number="39" hits="0" branch="False" />
+                <line number="40" hits="0" branch="False" />
+                <line number="41" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="27" hits="0" branch="True" condition-coverage="0% (0/20)">
+              <conditions>
+                <condition number="39" type="jump" coverage="0%" />
+                <condition number="64" type="jump" coverage="0%" />
+                <condition number="76" type="jump" coverage="0%" />
+                <condition number="88" type="jump" coverage="0%" />
+                <condition number="110" type="jump" coverage="0%" />
+                <condition number="122" type="jump" coverage="0%" />
+                <condition number="144" type="jump" coverage="0%" />
+                <condition number="156" type="jump" coverage="0%" />
+                <condition number="220" type="jump" coverage="0%" />
+                <condition number="230" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="28" hits="0" branch="False" />
+            <line number="29" hits="0" branch="False" />
+            <line number="30" hits="0" branch="False" />
+            <line number="31" hits="0" branch="False" />
+            <line number="32" hits="0" branch="False" />
+            <line number="33" hits="0" branch="False" />
+            <line number="34" hits="0" branch="False" />
+            <line number="35" hits="0" branch="False" />
+            <line number="36" hits="0" branch="False" />
+            <line number="37" hits="0" branch="False" />
+            <line number="38" hits="0" branch="False" />
+            <line number="39" hits="0" branch="False" />
+            <line number="40" hits="0" branch="False" />
+            <line number="41" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Filters.AuthorizeRoleAttribute" filename="Filters\AuthorizeRoleAttribute.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(System.String[])" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="0" branch="False" />
+                <line number="8" hits="0" branch="False" />
+                <line number="9" hits="0" branch="False" />
+                <line number="10" hits="0" branch="False" />
+                <line number="11" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="0" branch="False" />
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="0" branch="False" />
+            <line number="10" hits="0" branch="False" />
+            <line number="11" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Data.AppDbContext" filename="Data\AppDbContext.cs" line-rate="0.9417" branch-rate="1" complexity="16">
+          <methods>
+            <method name="get_NguoiDungs" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="77" branch="False" />
+              </lines>
+            </method>
+            <method name="get_HocViens" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="32" branch="False" />
+              </lines>
+            </method>
+            <method name="get_GiangViens" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="10" branch="False" />
+              </lines>
+            </method>
+            <method name="get_KhoaHocs" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="51" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LopHocs" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="50" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LichHocs" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_DangKyKhoaHocs" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="32" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Diems" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="23" branch="False" />
+              </lines>
+            </method>
+            <method name="get_GoiYKhoaHocs" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_ThongBaos" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PhanCongGiangDays" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="20" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_ChatHistories" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_ThanhToans" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_KyHocs" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="23" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="OnModelCreating" signature="(Microsoft.EntityFrameworkCore.ModelBuilder)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="26" hits="1" branch="False" />
+                <line number="27" hits="1" branch="False" />
+                <line number="29" hits="1" branch="False" />
+                <line number="30" hits="1" branch="False" />
+                <line number="31" hits="1" branch="False" />
+                <line number="32" hits="1" branch="False" />
+                <line number="33" hits="1" branch="False" />
+                <line number="35" hits="1" branch="False" />
+                <line number="36" hits="1" branch="False" />
+                <line number="37" hits="1" branch="False" />
+                <line number="38" hits="1" branch="False" />
+                <line number="39" hits="1" branch="False" />
+                <line number="40" hits="1" branch="False" />
+                <line number="41" hits="1" branch="False" />
+                <line number="43" hits="1" branch="False" />
+                <line number="44" hits="1" branch="False" />
+                <line number="45" hits="1" branch="False" />
+                <line number="46" hits="1" branch="False" />
+                <line number="47" hits="1" branch="False" />
+                <line number="48" hits="1" branch="False" />
+                <line number="49" hits="1" branch="False" />
+                <line number="51" hits="1" branch="False" />
+                <line number="52" hits="1" branch="False" />
+                <line number="53" hits="1" branch="False" />
+                <line number="54" hits="1" branch="False" />
+                <line number="55" hits="1" branch="False" />
+                <line number="56" hits="1" branch="False" />
+                <line number="57" hits="1" branch="False" />
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="62" hits="1" branch="False" />
+                <line number="63" hits="1" branch="False" />
+                <line number="64" hits="1" branch="False" />
+                <line number="66" hits="1" branch="False" />
+                <line number="67" hits="1" branch="False" />
+                <line number="68" hits="1" branch="False" />
+                <line number="69" hits="1" branch="False" />
+                <line number="70" hits="1" branch="False" />
+                <line number="71" hits="1" branch="False" />
+                <line number="72" hits="1" branch="False" />
+                <line number="73" hits="1" branch="False" />
+                <line number="74" hits="1" branch="False" />
+                <line number="75" hits="1" branch="False" />
+                <line number="77" hits="1" branch="False" />
+                <line number="78" hits="1" branch="False" />
+                <line number="79" hits="1" branch="False" />
+                <line number="80" hits="1" branch="False" />
+                <line number="81" hits="1" branch="False" />
+                <line number="83" hits="1" branch="False" />
+                <line number="84" hits="1" branch="False" />
+                <line number="85" hits="1" branch="False" />
+                <line number="86" hits="1" branch="False" />
+                <line number="87" hits="1" branch="False" />
+                <line number="88" hits="1" branch="False" />
+                <line number="89" hits="1" branch="False" />
+                <line number="91" hits="1" branch="False" />
+                <line number="92" hits="1" branch="False" />
+                <line number="93" hits="1" branch="False" />
+                <line number="94" hits="1" branch="False" />
+                <line number="95" hits="1" branch="False" />
+                <line number="97" hits="1" branch="False" />
+                <line number="98" hits="1" branch="False" />
+                <line number="99" hits="1" branch="False" />
+                <line number="100" hits="1" branch="False" />
+                <line number="101" hits="1" branch="False" />
+                <line number="102" hits="1" branch="False" />
+                <line number="103" hits="1" branch="False" />
+                <line number="105" hits="1" branch="False" />
+                <line number="106" hits="1" branch="False" />
+                <line number="107" hits="1" branch="False" />
+                <line number="108" hits="1" branch="False" />
+                <line number="109" hits="1" branch="False" />
+                <line number="111" hits="1" branch="False" />
+                <line number="112" hits="1" branch="False" />
+                <line number="113" hits="1" branch="False" />
+                <line number="114" hits="1" branch="False" />
+                <line number="115" hits="1" branch="False" />
+                <line number="116" hits="1" branch="False" />
+                <line number="118" hits="1" branch="False" />
+                <line number="119" hits="1" branch="False" />
+                <line number="120" hits="1" branch="False" />
+                <line number="121" hits="1" branch="False" />
+                <line number="122" hits="1" branch="False" />
+                <line number="123" hits="1" branch="False" />
+                <line number="124" hits="1" branch="False" />
+                <line number="125" hits="1" branch="False" />
+                <line number="126" hits="1" branch="False" />
+                <line number="127" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContextOptions`1&lt;QuanLyKhoaHoc5.Web.Data.AppDbContext&gt;)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="237" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="10" hits="77" branch="False" />
+            <line number="11" hits="32" branch="False" />
+            <line number="12" hits="10" branch="False" />
+            <line number="13" hits="51" branch="False" />
+            <line number="14" hits="50" branch="False" />
+            <line number="15" hits="0" branch="False" />
+            <line number="16" hits="32" branch="False" />
+            <line number="17" hits="23" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="4" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="23" hits="0" branch="False" />
+            <line number="26" hits="1" branch="False" />
+            <line number="27" hits="1" branch="False" />
+            <line number="29" hits="1" branch="False" />
+            <line number="30" hits="1" branch="False" />
+            <line number="31" hits="1" branch="False" />
+            <line number="32" hits="1" branch="False" />
+            <line number="33" hits="1" branch="False" />
+            <line number="35" hits="1" branch="False" />
+            <line number="36" hits="1" branch="False" />
+            <line number="37" hits="1" branch="False" />
+            <line number="38" hits="1" branch="False" />
+            <line number="39" hits="1" branch="False" />
+            <line number="40" hits="1" branch="False" />
+            <line number="41" hits="1" branch="False" />
+            <line number="43" hits="1" branch="False" />
+            <line number="44" hits="1" branch="False" />
+            <line number="45" hits="1" branch="False" />
+            <line number="46" hits="1" branch="False" />
+            <line number="47" hits="1" branch="False" />
+            <line number="48" hits="1" branch="False" />
+            <line number="49" hits="1" branch="False" />
+            <line number="51" hits="1" branch="False" />
+            <line number="52" hits="1" branch="False" />
+            <line number="53" hits="1" branch="False" />
+            <line number="54" hits="1" branch="False" />
+            <line number="55" hits="1" branch="False" />
+            <line number="56" hits="1" branch="False" />
+            <line number="57" hits="1" branch="False" />
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="62" hits="1" branch="False" />
+            <line number="63" hits="1" branch="False" />
+            <line number="64" hits="1" branch="False" />
+            <line number="66" hits="1" branch="False" />
+            <line number="67" hits="1" branch="False" />
+            <line number="68" hits="1" branch="False" />
+            <line number="69" hits="1" branch="False" />
+            <line number="70" hits="1" branch="False" />
+            <line number="71" hits="1" branch="False" />
+            <line number="72" hits="1" branch="False" />
+            <line number="73" hits="1" branch="False" />
+            <line number="74" hits="1" branch="False" />
+            <line number="75" hits="1" branch="False" />
+            <line number="77" hits="1" branch="False" />
+            <line number="78" hits="1" branch="False" />
+            <line number="79" hits="1" branch="False" />
+            <line number="80" hits="1" branch="False" />
+            <line number="81" hits="1" branch="False" />
+            <line number="83" hits="1" branch="False" />
+            <line number="84" hits="1" branch="False" />
+            <line number="85" hits="1" branch="False" />
+            <line number="86" hits="1" branch="False" />
+            <line number="87" hits="1" branch="False" />
+            <line number="88" hits="1" branch="False" />
+            <line number="89" hits="1" branch="False" />
+            <line number="91" hits="1" branch="False" />
+            <line number="92" hits="1" branch="False" />
+            <line number="93" hits="1" branch="False" />
+            <line number="94" hits="1" branch="False" />
+            <line number="95" hits="1" branch="False" />
+            <line number="97" hits="1" branch="False" />
+            <line number="98" hits="1" branch="False" />
+            <line number="99" hits="1" branch="False" />
+            <line number="100" hits="1" branch="False" />
+            <line number="101" hits="1" branch="False" />
+            <line number="102" hits="1" branch="False" />
+            <line number="103" hits="1" branch="False" />
+            <line number="105" hits="1" branch="False" />
+            <line number="106" hits="1" branch="False" />
+            <line number="107" hits="1" branch="False" />
+            <line number="108" hits="1" branch="False" />
+            <line number="109" hits="1" branch="False" />
+            <line number="111" hits="1" branch="False" />
+            <line number="112" hits="1" branch="False" />
+            <line number="113" hits="1" branch="False" />
+            <line number="114" hits="1" branch="False" />
+            <line number="115" hits="1" branch="False" />
+            <line number="116" hits="1" branch="False" />
+            <line number="118" hits="1" branch="False" />
+            <line number="119" hits="1" branch="False" />
+            <line number="120" hits="1" branch="False" />
+            <line number="121" hits="1" branch="False" />
+            <line number="122" hits="1" branch="False" />
+            <line number="123" hits="1" branch="False" />
+            <line number="124" hits="1" branch="False" />
+            <line number="125" hits="1" branch="False" />
+            <line number="126" hits="1" branch="False" />
+            <line number="127" hits="1" branch="False" />
+            <line number="8" hits="237" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.AccountController" filename="Controllers\AccountController.cs" line-rate="0.9473" branch-rate="0.8571" complexity="17">
+          <methods>
+            <method name="Login" signature="(System.String)" line-rate="1" branch-rate="0.8332999999999999" complexity="6">
+              <lines>
+                <line number="18" hits="2" branch="False" />
+                <line number="19" hits="2" branch="True" condition-coverage="75% (3/4)">
+                  <conditions>
+                    <condition number="13" type="jump" coverage="50%" />
+                    <condition number="26" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="20" hits="1" branch="False" />
+                <line number="21" hits="1" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="43" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="22" hits="1" branch="False" />
+                <line number="23" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="AccessDenied" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="76" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="ChangePassword" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="79" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="RedirectToRole" signature="(System.String)" line-rate="0.9" branch-rate="0.875" complexity="8">
+              <lines>
+                <line number="106" hits="4" branch="False" />
+                <line number="107" hits="4" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="2" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="108" hits="4" branch="True" condition-coverage="83.33% (5/6)">
+                  <conditions>
+                    <condition number="37" type="jump" coverage="100%" />
+                    <condition number="50" type="jump" coverage="100%" />
+                    <condition number="63" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="109" hits="4" branch="False" />
+                <line number="110" hits="2" branch="False" />
+                <line number="111" hits="1" branch="False" />
+                <line number="112" hits="1" branch="False" />
+                <line number="113" hits="0" branch="False" />
+                <line number="114" hits="4" branch="False" />
+                <line number="115" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="30" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="18" hits="2" branch="False" />
+            <line number="19" hits="2" branch="True" condition-coverage="75% (3/4)">
+              <conditions>
+                <condition number="13" type="jump" coverage="50%" />
+                <condition number="26" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="20" hits="1" branch="False" />
+            <line number="21" hits="1" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="43" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="22" hits="1" branch="False" />
+            <line number="23" hits="2" branch="False" />
+            <line number="76" hits="1" branch="False" />
+            <line number="79" hits="1" branch="False" />
+            <line number="106" hits="4" branch="False" />
+            <line number="107" hits="4" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="2" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="108" hits="4" branch="True" condition-coverage="83.33% (5/6)">
+              <conditions>
+                <condition number="37" type="jump" coverage="100%" />
+                <condition number="50" type="jump" coverage="100%" />
+                <condition number="63" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="109" hits="4" branch="False" />
+            <line number="110" hits="2" branch="False" />
+            <line number="111" hits="1" branch="False" />
+            <line number="112" hits="1" branch="False" />
+            <line number="113" hits="0" branch="False" />
+            <line number="114" hits="4" branch="False" />
+            <line number="115" hits="4" branch="False" />
+            <line number="14" hits="30" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.AdminController" filename="Controllers\AdminController.cs" line-rate="0" branch-rate="1" complexity="2">
+          <methods>
+            <method name="BaoCao" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="282" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ExcelService,QuanLyKhoaHoc5.Web.Services.PdfService,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+                <line number="22" hits="0" branch="False" />
+                <line number="23" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="282" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="23" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.BaoCaoController" filename="Controllers\BaoCaoController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="14" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.ChatController" filename="Controllers\ChatController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ChatService)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="19" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.DangKyController" filename="Controllers\DangKyController.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ThongBaoService)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="14" branch="False" />
+                <line number="20" hits="14" branch="False" />
+                <line number="21" hits="28" branch="False" />
+                <line number="22" hits="14" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="19" hits="14" branch="False" />
+            <line number="20" hits="14" branch="False" />
+            <line number="21" hits="28" branch="False" />
+            <line number="22" hits="14" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.DiemController" filename="Controllers\DiemController.cs" line-rate="0.5" branch-rate="1" complexity="2">
+          <methods>
+            <method name="TinhXepLoai" signature="(System.Nullable`1&lt;System.Double&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="111" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ExcelService)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="45" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="111" hits="0" branch="False" />
+            <line number="19" hits="45" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.DiemSoController" filename="Controllers\DiemSoController.cs" line-rate="0" branch-rate="1" complexity="2">
+          <methods>
+            <method name="QuanLy" signature="(System.Nullable`1&lt;System.Int32&gt;,System.Nullable`1&lt;System.Int32&gt;,System.Nullable`1&lt;System.Int32&gt;,System.String,System.Int32)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="33" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ExcelService)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+                <line number="22" hits="0" branch="False" />
+                <line number="23" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="33" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="23" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.GiangVienController" filename="Controllers\GiangVienController.cs" line-rate="0" branch-rate="0" complexity="8">
+          <methods>
+            <method name="Create" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="127" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="ToItem" signature="(QuanLyKhoaHoc5.Web.Models.Entities.LichHoc)" line-rate="0" branch-rate="0" complexity="6">
+              <lines>
+                <line number="186" hits="0" branch="True" condition-coverage="0% (0/6)">
+                  <conditions>
+                    <condition number="78" type="jump" coverage="0%" />
+                    <condition number="90" type="jump" coverage="0%" />
+                    <condition number="115" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="187" hits="0" branch="False" />
+                <line number="188" hits="0" branch="False" />
+                <line number="189" hits="0" branch="False" />
+                <line number="190" hits="0" branch="False" />
+                <line number="191" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="127" hits="0" branch="False" />
+            <line number="186" hits="0" branch="True" condition-coverage="0% (0/6)">
+              <conditions>
+                <condition number="78" type="jump" coverage="0%" />
+                <condition number="90" type="jump" coverage="0%" />
+                <condition number="115" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="187" hits="0" branch="False" />
+            <line number="188" hits="0" branch="False" />
+            <line number="189" hits="0" branch="False" />
+            <line number="190" hits="0" branch="False" />
+            <line number="191" hits="0" branch="False" />
+            <line number="16" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.GoiYController" filename="Controllers\GoiYController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.GoiYKhoaHocService)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.HocVienController" filename="Controllers\HocVienController.cs" line-rate="0" branch-rate="1" complexity="2">
+          <methods>
+            <method name="Create" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="109" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,QuanLyKhoaHoc5.Web.Services.ExcelService,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="109" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.HomeController" filename="Controllers\HomeController.cs" line-rate="0" branch-rate="0" complexity="14">
+          <methods>
+            <method name="Index" signature="()" line-rate="0" branch-rate="0" complexity="10">
+              <lines>
+                <line number="11" hits="0" branch="False" />
+                <line number="12" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="13" type="jump" coverage="0%" />
+                    <condition number="29" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="13" hits="0" branch="False" />
+                <line number="15" hits="0" branch="True" condition-coverage="0% (0/6)">
+                  <conditions>
+                    <condition number="85" type="jump" coverage="0%" />
+                    <condition number="98" type="jump" coverage="0%" />
+                    <condition number="111" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+                <line number="22" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Error" signature="()" line-rate="0" branch-rate="0" complexity="4">
+              <lines>
+                <line number="26" hits="0" branch="False" />
+                <line number="27" hits="0" branch="True" condition-coverage="0% (0/4)">
+                  <conditions>
+                    <condition number="14" type="jump" coverage="0%" />
+                    <condition number="26" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="28" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="11" hits="0" branch="False" />
+            <line number="12" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="13" type="jump" coverage="0%" />
+                <condition number="29" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="13" hits="0" branch="False" />
+            <line number="15" hits="0" branch="True" condition-coverage="0% (0/6)">
+              <conditions>
+                <condition number="85" type="jump" coverage="0%" />
+                <condition number="98" type="jump" coverage="0%" />
+                <condition number="111" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="26" hits="0" branch="False" />
+            <line number="27" hits="0" branch="True" condition-coverage="0% (0/4)">
+              <conditions>
+                <condition number="14" type="jump" coverage="0%" />
+                <condition number="26" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="28" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.KhoaHocController" filename="Controllers\KhoaHocController.cs" line-rate="1" branch-rate="1" complexity="2">
+          <methods>
+            <method name="Create" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="115" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="60" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="115" hits="1" branch="False" />
+            <line number="17" hits="60" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.LichHocController" filename="Controllers\LichHocController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="18" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.LopHocController" filename="Controllers\LopHocController.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="24" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="18" hits="24" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.PhanCongGVController" filename="Controllers\PhanCongGVController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="14" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.ProfileController" filename="Controllers\ProfileController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.TaiKhoanController" filename="Controllers\TaiKhoanController.cs" line-rate="0.9166" branch-rate="1" complexity="6">
+          <methods>
+            <method name="Create" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="40" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="RoleDisplay" signature="(System.String)" line-rate="1" branch-rate="1" complexity="4">
+              <lines>
+                <line number="205" hits="4" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="15" type="jump" coverage="100%" />
+                    <condition number="28" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="206" hits="4" branch="False" />
+                <line number="207" hits="1" branch="False" />
+                <line number="208" hits="2" branch="False" />
+                <line number="209" hits="1" branch="False" />
+                <line number="210" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="19" branch="False" />
+                <line number="17" hits="19" branch="False" />
+                <line number="18" hits="19" branch="False" />
+                <line number="19" hits="19" branch="False" />
+                <line number="20" hits="19" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="40" hits="0" branch="False" />
+            <line number="205" hits="4" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="15" type="jump" coverage="100%" />
+                <condition number="28" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="206" hits="4" branch="False" />
+            <line number="207" hits="1" branch="False" />
+            <line number="208" hits="2" branch="False" />
+            <line number="209" hits="1" branch="False" />
+            <line number="210" hits="4" branch="False" />
+            <line number="16" hits="19" branch="False" />
+            <line number="17" hits="19" branch="False" />
+            <line number="18" hits="19" branch="False" />
+            <line number="19" hits="19" branch="False" />
+            <line number="20" hits="19" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.ThanhToanController" filename="Controllers\ThanhToanController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="17" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="QuanLyKhoaHoc5.Web.Controllers.ThongBaoController" filename="Controllers\ThongBaoController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(QuanLyKhoaHoc5.Web.Data.AppDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="14" hits="0" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

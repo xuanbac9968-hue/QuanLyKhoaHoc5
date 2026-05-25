@@ -1,0 +1,178 @@
+@model List<QuanLyKhoaHoc5.Web.Models.ViewModels.LopHocListViewModel>
+@{
+    ViewData["Title"] = "Danh sách lớp học";
+    var isAdmin = User.IsInRole("Admin");
+    var search = ViewBag.Search as string ?? "";
+    var trangThaiFilter = ViewBag.TrangThai as string ?? "";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="bi bi-people me-2"></i>Danh sách lớp học</h2>
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Thêm lớp học
+        </a>
+    }
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold">Tìm kiếm</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" value="@search" class="form-control" placeholder="Tên lớp, khóa học, giảng viên..." />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Trạng thái</label>
+                    <select name="trangThai" class="form-select">
+                        <option value="">Tất cả</option>
+                        <option value="ChuaMo" selected="@(trangThaiFilter == "ChuaMo")">Chưa mở</option>
+                        <option value="DangTuyenSinh" selected="@(trangThaiFilter == "DangTuyenSinh")">Đang tuyển sinh</option>
+                        <option value="DangHoc" selected="@(trangThaiFilter == "DangHoc")">Đang học</option>
+                        <option value="DaKetThuc" selected="@(trangThaiFilter == "DaKetThuc")">Đã kết thúc</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-funnel me-1"></i>Lọc
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-x-circle me-1"></i>Xóa lọc
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-5">
+        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+        <h5>Không có lớp học nào</h5>
+        <p class="mb-0">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.</p>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tên lớp</th>
+                            <th>Khóa học</th>
+                            <th>Ngôn ngữ</th>
+                            <th>Giảng viên</th>
+                            <th>Khai giảng</th>
+                            <th>Sĩ số</th>
+                            <th>Phòng</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var lop in Model)
+                        {
+                            var badgeClass = lop.TrangThai switch
+                            {
+                                "ChuaMo" => "bg-secondary",
+                                "DangTuyenSinh" => "bg-success",
+                                "DangHoc" => "bg-primary",
+                                "DaKetThuc" => "bg-dark",
+                                _ => "bg-secondary"
+                            };
+                            var trangThaiText = lop.TrangThai switch
+                            {
+                                "ChuaMo" => "Chưa mở",
+                                "DangTuyenSinh" => "Đang tuyển sinh",
+                                "DangHoc" => "Đang học",
+                                "DaKetThuc" => "Đã kết thúc",
+                                _ => lop.TrangThai
+                            };
+                            var siSoPct = lop.SiSoToiDa > 0 ? (int)Math.Round((double)lop.SiSoHienTai / lop.SiSoToiDa * 100) : 0;
+                            <tr>
+                                <td class="fw-semibold">@lop.TenLop</td>
+                                <td>@lop.TenKhoaHoc</td>
+                                <td><span class="badge bg-info text-dark">@lop.NgonNgu</span></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(lop.TenGiangVien))
+                                    {
+                                        @lop.TenGiangVien
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Chưa phân công</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (lop.NgayKhaiGiang.HasValue)
+                                    {
+                                        @lop.NgayKhaiGiang.Value.ToString("dd/MM/yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Chưa xác định</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span>@lop.SiSoHienTai/@lop.SiSoToiDa</span>
+                                        <div class="progress flex-fill" style="height:6px;min-width:50px;">
+                                            <div class="progress-bar @(siSoPct >= 90 ? "bg-danger" : siSoPct >= 70 ? "bg-warning" : "bg-success")"
+                                                 style="width:@siSoPct%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@(lop.PhongHoc ?? "-")</td>
+                                <td><span class="badge @badgeClass">@trangThaiText</span></td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@lop.Id" class="btn btn-outline-primary" title="Chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (isAdmin)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@lop.Id" class="btn btn-outline-warning" title="Sửa">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" title="Xóa"
+                                                    onclick="confirmDelete(@lop.Id, '@lop.TenLop')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted small">
+            Tổng: <strong>@Model.Count</strong> lớp học
+        </div>
+    </div>
+}
+
+<form id="deleteForm" asp-action="Delete" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteId" />
+</form>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id, name) {
+            if (confirm('Bạn có chắc muốn xóa lớp "' + name + '"?')) {
+                document.getElementById('deleteId').value = id;
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+}

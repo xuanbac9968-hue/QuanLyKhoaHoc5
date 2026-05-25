@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<DataFileEntity>
+   <description>Dữ liệu đăng nhập cho Data-Driven Testing (TC-001 đến TC-010)</description>
+   <name>TestData_Login</name>
+   <tag></tag>
+   <connectionProperties/>
+   <containsHeaders>true</containsHeaders>
+   <csvSeperator></csvSeperator>
+   <dataFileGUID>26132a4c-f78e-43a2-9c1e-f034cb2e4913</dataFileGUID>
+   <dataSourceUrl>Data Files/TestData_Login.xlsx</dataSourceUrl>
+   <driver>ExcelFile</driver>
+   <isInternalPath>true</isInternalPath>
+   <query></query>
+   <secureUserAccount>false</secureUserAccount>
+   <sheetName>LoginData</sheetName>
+   <usingGlobalDBSetting>false</usingGlobalDBSetting>
+</DataFileEntity>

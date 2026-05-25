@@ -1,0 +1,171 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.KhoaHocCreateEditViewModel
+@{
+    ViewData["Title"] = "Thêm khóa học mới";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Thêm khóa học mới</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Quay lại
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Thông tin cơ bản</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="TenKhoaHoc" class="form-label fw-semibold"></label>
+                        <input asp-for="TenKhoaHoc" class="form-control" placeholder="Nhập tên khóa học..." />
+                        <span asp-validation-for="TenKhoaHoc" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MoTa" class="form-label fw-semibold"></label>
+                        <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Mô tả ngắn về khóa học..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="NgonNgu" class="form-label fw-semibold"></label>
+                            <select asp-for="NgonNgu" class="form-select">
+                                <option value="Tiếng Anh">Tiếng Anh</option>
+                                <option value="Tiếng Nhật">Tiếng Nhật</option>
+                            </select>
+                            <span asp-validation-for="NgonNgu" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="TrinhDo" class="form-label fw-semibold"></label>
+                            <select asp-for="TrinhDo" class="form-select">
+                                <option value="">-- Chọn trình độ --</option>
+                                <optgroup label="Tiếng Anh">
+                                    <option value="Sơ cấp">Sơ cấp</option>
+                                    <option value="Trung cấp">Trung cấp</option>
+                                    <option value="Cao cấp">Cao cấp</option>
+                                    <option value="IELTS">IELTS</option>
+                                    <option value="TOEIC">TOEIC</option>
+                                </optgroup>
+                                <optgroup label="Tiếng Nhật (JLPT)">
+                                    <option value="N5">N5</option>
+                                    <option value="N4">N4</option>
+                                    <option value="N3">N3</option>
+                                    <option value="N2">N2</option>
+                                    <option value="N1">N1</option>
+                                </optgroup>
+                            </select>
+                            <span asp-validation-for="TrinhDo" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label asp-for="HocPhi" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="HocPhi" class="form-control" type="number" min="0" step="50000" />
+                                <span class="input-group-text">VNĐ</span>
+                            </div>
+                            <span asp-validation-for="HocPhi" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ThoiLuong" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="ThoiLuong" class="form-control" type="number" min="1" />
+                                <span class="input-group-text">buổi</span>
+                            </div>
+                            <span asp-validation-for="ThoiLuong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label asp-for="SoBuoiMoiTuan" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="SoBuoiMoiTuan" class="form-control" type="number" min="1" max="7" />
+                                <span class="input-group-text">buổi/tuần</span>
+                            </div>
+                            <span asp-validation-for="SoBuoiMoiTuan" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ThoiGianMoiBuoi" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="ThoiGianMoiBuoi" class="form-control" type="number" min="30" max="480" />
+                                <span class="input-group-text">phút/buổi</span>
+                            </div>
+                            <span asp-validation-for="ThoiGianMoiBuoi" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        <label asp-for="NoiDungChuongTrinh" class="form-label fw-semibold"></label>
+                        <textarea asp-for="NoiDungChuongTrinh" class="form-control" rows="6"
+                                  placeholder="Mô tả nội dung các chủ đề, module trong chương trình học..."></textarea>
+                        <span asp-validation-for="NoiDungChuongTrinh" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Ảnh bìa & Trạng thái</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="AnhBiaFile" class="form-label fw-semibold">Ảnh bìa khóa học</label>
+                        <input asp-for="AnhBiaFile" type="file" class="form-control" accept="image/*" id="anhBiaInput" />
+                        <div class="form-text">Định dạng: JPG, PNG, WEBP. Tối đa 5MB.</div>
+                        <span asp-validation-for="AnhBiaFile" class="text-danger small"></span>
+                        <div class="mt-2" id="previewContainer" style="display:none;">
+                            <img id="anhBiaPreview" src="#" alt="Preview" class="img-fluid rounded" style="max-height:200px;" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TrangThai" class="form-label fw-semibold"></label>
+                        <select asp-for="TrangThai" class="form-select">
+                            <option value="DangMo">Đang mở</option>
+                            <option value="TamDung">Tạm dừng</option>
+                            <option value="DaDong">Đã đóng</option>
+                        </select>
+                        <span asp-validation-for="TrangThai" class="text-danger small"></span>
+                    </div>
+
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Lưu ý:</strong> Sau khi tạo khóa học, bạn có thể tạo các lớp học thuộc khóa này trong mục <strong>Quản lý lớp học</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <hr class="mt-2" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i>Hủy
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>Lưu khóa học
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('anhBiaInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    document.getElementById('anhBiaPreview').src = ev.target.result;
+                    document.getElementById('previewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

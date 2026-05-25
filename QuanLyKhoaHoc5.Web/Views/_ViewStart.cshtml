@@ -1,0 +1,6 @@
+@{
+    if (User.IsInRole("Admin")) { Layout = "_LayoutAdmin"; }
+    else if (User.IsInRole("GiangVien")) { Layout = "_LayoutGiangVien"; }
+    else if (User.IsInRole("HocVien")) { Layout = "_LayoutHocVien"; }
+    else { Layout = "_Layout"; }
+}

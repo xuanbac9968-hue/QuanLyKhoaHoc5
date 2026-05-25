@@ -1,0 +1,340 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.NhapDiemBatchViewModel?
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = "Nhập điểm";
+    var lopHocList = ViewBag.LopHocList as List<LopHoc> ?? [];
+    var kyHocList  = ViewBag.KyHocList  as List<KyHoc>  ?? [];
+    var selectedId = ViewBag.SelectedLopHocId as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-pencil-square me-2 text-primary"></i>Nhập điểm</h4>
+</div>
+
+<!-- Chọn lớp học -->
+<div class="card mb-4">
+    <div class="card-header py-2">
+        <i class="bi bi-door-open me-2 text-primary"></i>Chọn lớp học
+    </div>
+    <div class="card-body">
+        <form method="get" asp-action="NhapDiem" class="row g-2 align-items-end">
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Lớp học</label>
+                <select name="lopHocId" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Chọn lớp học --</option>
+                    @foreach (var lop in lopHocList)
+                    {
+                        <option value="@lop.Id" selected="@(selectedId == lop.Id)">
+                            @lop.TenLop – @lop.KhoaHoc?.TenKhoaHoc
+                        </option>
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model == null)
+{
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-arrow-up-circle fs-1 d-block mb-2"></i>
+        Chọn lớp học để bắt đầu nhập điểm
+    </div>
+}
+else
+{
+    <!-- Info lớp + trạng thái -->
+    <div class="card mb-3 border-0" style="background:linear-gradient(135deg,#0d6efd15,#6f42c115);">
+        <div class="card-body py-3">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-8">
+                    <h5 class="mb-1">@Model.TenLop</h5>
+                    <p class="text-muted mb-1 small">
+                        <i class="bi bi-book me-1"></i>@Model.TenKhoaHoc
+                        @if (Model.TenKyHoc != null)
+                        {
+                            <span class="ms-2"><i class="bi bi-calendar3 me-1"></i>@Model.TenKyHoc</span>
+                        }
+                    </p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        @if (Model.IsKhoa)
+                        {
+                            <span class="badge bg-secondary"><i class="bi bi-lock-fill me-1"></i>Điểm đã khóa</span>
+                        }
+                        @if (Model.KyDaDong)
+                        {
+                            <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Kỳ học đã đóng</span>
+                        }
+                        @if (!Model.IsKhoa && !Model.KyDaDong)
+                        {
+                            <span class="badge bg-success"><i class="bi bi-unlock-fill me-1"></i>Có thể nhập điểm</span>
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
+                    @if (User.IsInRole("Admin") && kyHocList.Any())
+                    {
+                        <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#ganKyHocModal">
+                            <i class="bi bi-link-45deg me-1"></i>Gán kỳ học
+                        </button>
+                    }
+                    @if (!Model.IsKhoa && !Model.KyDaDong && Model.HocViens.Any())
+                    {
+                        <button class="btn btn-sm btn-primary" id="btnSaveAll" onclick="saveAll()">
+                            <i class="bi bi-cloud-check me-1"></i>Lưu tất cả
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="saveToast" class="toast align-items-center position-fixed bottom-0 end-0 m-3" role="alert" style="z-index:9999">
+        <div class="d-flex">
+            <div class="toast-body" id="saveToastMsg">Đang lưu...</div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+
+    <!-- Bảng nhập điểm -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center py-2">
+            <span><i class="bi bi-table me-2 text-primary"></i>Danh sách học viên <span class="badge bg-secondary ms-1">@Model.HocViens.Count</span></span>
+            <small class="text-muted">Công thức: GK × 30% + CK × 70%</small>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Mã HV</th>
+                        <th>Họ tên</th>
+                        <th class="text-center" style="width:110px">Giữa kỳ</th>
+                        <th class="text-center" style="width:110px">Cuối kỳ</th>
+                        <th class="text-center" style="width:100px">Tổng kết</th>
+                        <th class="text-center" style="width:110px">Xếp loại</th>
+                        <th>Nhận xét</th>
+                        <th class="text-center">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.HocViens.Any())
+                    {
+                        <tr><td colspan="9" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox me-2"></i>Chưa có học viên trong lớp
+                        </td></tr>
+                    }
+                    @for (int i = 0; i < Model.HocViens.Count; i++)
+                    {
+                        var hv = Model.HocViens[i];
+                        bool canEdit = !hv.IsKhoa && !Model.KyDaDong;
+                        <tr data-dangky="@hv.DangKyId">
+                            <td class="text-muted small">@(i + 1)</td>
+                            <td><code class="small">@hv.MaHocVien</code></td>
+                            <td class="fw-semibold">@hv.TenHocVien</td>
+                            <td class="text-center">
+                                @if (canEdit || User.IsInRole("Admin"))
+                                {
+                                    <input type="number" class="form-control form-control-sm text-center inp-gk"
+                                           min="0" max="10" step="0.1"
+                                           value="@(hv.DiemGiuaKy?.ToString("F1") ?? "")"
+                                           @(hv.IsKhoa && !User.IsInRole("Admin") ? "disabled" : "")
+                                           oninput="calcTongKet(this)" />
+                                }
+                                else
+                                {
+                                    <span>@(hv.DiemGiuaKy?.ToString("F1") ?? "—")</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (canEdit || User.IsInRole("Admin"))
+                                {
+                                    <input type="number" class="form-control form-control-sm text-center inp-ck"
+                                           min="0" max="10" step="0.1"
+                                           value="@(hv.DiemCuoiKy?.ToString("F1") ?? "")"
+                                           @(hv.IsKhoa && !User.IsInRole("Admin") ? "disabled" : "")
+                                           oninput="calcTongKet(this)" />
+                                }
+                                else
+                                {
+                                    <span>@(hv.DiemCuoiKy?.ToString("F1") ?? "—")</span>
+                                }
+                            </td>
+                            <td class="text-center fw-bold">
+                                <span class="tongket-display @(hv.DiemTongKet.HasValue ? (hv.DiemTongKet >= 4 ? "text-success" : "text-danger") : "")">
+                                    @(hv.DiemTongKet?.ToString("F2") ?? "—")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="xeploai-display">
+                                    @if (hv.XepLoai != null)
+                                    {
+                                        var bc = hv.XepLoai switch {
+                                            "Xuất sắc" => "bg-success",
+                                            "Giỏi" => "bg-primary",
+                                            "Khá" => "bg-info text-dark",
+                                            "Trung bình" => "bg-warning text-dark",
+                                            _ => "bg-danger"
+                                        };
+                                        <span class="badge @bc">@hv.XepLoai</span>
+                                    }
+                                    else { <span class="text-muted">—</span> }
+                                </span>
+                            </td>
+                            <td>
+                                @if (canEdit || User.IsInRole("Admin"))
+                                {
+                                    <input type="text" class="form-control form-control-sm inp-nhanxet"
+                                           value="@(hv.NhanXet ?? "")" maxlength="200"
+                                           @(hv.IsKhoa && !User.IsInRole("Admin") ? "disabled" : "")
+                                           placeholder="Nhận xét..." />
+                                }
+                                else
+                                {
+                                    <span class="small text-muted">@(hv.NhanXet ?? "—")</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (hv.IsKhoa)
+                                { <span class="badge bg-secondary"><i class="bi bi-lock-fill"></i></span> }
+                                else
+                                { <span class="badge bg-light text-success border"><i class="bi bi-unlock"></i></span> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.IsKhoa && !Model.KyDaDong && Model.HocViens.Any())
+        {
+            <div class="card-footer text-end">
+                <button class="btn btn-primary" id="btnSaveAll2" onclick="saveAll()">
+                    <i class="bi bi-cloud-check me-1"></i>Lưu tất cả điểm
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- Modal Gán kỳ học -->
+    @if (User.IsInRole("Admin") && kyHocList.Any())
+    {
+        <div class="modal fade" id="ganKyHocModal" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gán kỳ học cho lớp</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="post" asp-action="GanKyHoc">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="lopHocId" value="@Model.LopHocId" />
+                        <div class="modal-body">
+                            <label class="form-label fw-semibold">Chọn kỳ học</label>
+                            <select name="kyHocId" class="form-select" required>
+                                <option value="">-- Chọn kỳ học --</option>
+                                @foreach (var ky in kyHocList)
+                                {
+                                    <option value="@ky.Id">@ky.TenKy (@ky.TrangThai)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Gán kỳ học</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+<script>
+var csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+// Tính điểm tổng kết ngay trên client
+function calcTongKet(input) {
+    var row = input.closest('tr');
+    var gkInput = row.querySelector('.inp-gk');
+    var ckInput = row.querySelector('.inp-ck');
+    var tongKetEl = row.querySelector('.tongket-display');
+    var xepLoaiEl = row.querySelector('.xeploai-display');
+    if (!gkInput || !ckInput) return;
+    var gk = parseFloat(gkInput.value);
+    var ck = parseFloat(ckInput.value);
+    if (!isNaN(gk) && !isNaN(ck)) {
+        var tk = Math.round((gk * 0.3 + ck * 0.7) * 100) / 100;
+        tongKetEl.textContent = tk.toFixed(2);
+        tongKetEl.className = 'tongket-display fw-bold ' + (tk >= 4 ? 'text-success' : 'text-danger');
+        var xl = getXepLoai(tk);
+        xepLoaiEl.innerHTML = xl ? '<span class="badge ' + badgeClass(xl) + '">' + xl + '</span>' : '<span class="text-muted">—</span>';
+    } else {
+        tongKetEl.textContent = '—';
+        tongKetEl.className = 'tongket-display';
+        xepLoaiEl.innerHTML = '<span class="text-muted">—</span>';
+    }
+}
+
+function getXepLoai(d) {
+    if (d >= 8.5) return 'Xuất sắc';
+    if (d >= 7.0) return 'Giỏi';
+    if (d >= 5.5) return 'Khá';
+    if (d >= 4.0) return 'Trung bình';
+    if (d >= 0)   return 'Yếu';
+    return null;
+}
+
+function badgeClass(xl) {
+    var map = {'Xuất sắc':'bg-success','Giỏi':'bg-primary','Khá':'bg-info text-dark','Trung bình':'bg-warning text-dark','Yếu':'bg-danger'};
+    return map[xl] || 'bg-secondary';
+}
+
+async function saveAll() {
+    var rows = document.querySelectorAll('tr[data-dangky]');
+    var items = [];
+    rows.forEach(function(row) {
+        var dangKyId = parseInt(row.dataset.dangky);
+        var gkEl = row.querySelector('.inp-gk');
+        var ckEl = row.querySelector('.inp-ck');
+        var nxEl = row.querySelector('.inp-nhanxet');
+        if (!gkEl) return; // read-only row
+        var gk = gkEl.value !== '' ? parseFloat(gkEl.value) : null;
+        var ck = ckEl.value !== '' ? parseFloat(ckEl.value) : null;
+        items.push({ dangKyId: dangKyId, diemGiuaKy: gk, diemCuoiKy: ck, nhanXet: nxEl ? nxEl.value : null });
+    });
+
+    if (items.length === 0) { alert('Không có dữ liệu để lưu.'); return; }
+
+    var btn = document.getElementById('btnSaveAll') || document.getElementById('btnSaveAll2');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang lưu...'; }
+
+    try {
+        var res = await fetch('@Url.Action("BatchSave")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': csrfToken
+            },
+            body: JSON.stringify({ items: items })
+        });
+        var data = await res.json();
+        showToast(data.message, data.success ? 'success' : 'danger');
+    } catch(e) {
+        showToast('Có lỗi kết nối. Vui lòng thử lại.', 'danger');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-cloud-check me-1"></i>Lưu tất cả'; }
+    }
+}
+
+function showToast(msg, type) {
+    var toast = document.getElementById('saveToast');
+    var toastMsg = document.getElementById('saveToastMsg');
+    toast.className = 'toast align-items-center position-fixed bottom-0 end-0 m-3 text-bg-' + type;
+    toastMsg.textContent = msg;
+    var bsToast = new bootstrap.Toast(toast, { delay: 3500 });
+    bsToast.show();
+}
+</script>
+}

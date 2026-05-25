@@ -1,0 +1,98 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.BangDiemLopViewModel
+@{ ViewData["Title"] = "Bảng điểm - " + Model.TenLop; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0"><i class="bi bi-bar-chart me-2 text-primary"></i>Bảng điểm</h4>
+        <small class="text-muted">@Model.TenLop · @Model.TenKhoaHoc @(Model.TenGiangVien != null ? "· GV: " + Model.TenGiangVien : "")</small>
+    </div>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin") && !Model.IsKhoa) {
+            <form method="post" asp-action="KhoaDiem" asp-route-lopHocId="@Model.LopHocId" onsubmit="return confirm('Khóa điểm? Sau khi khóa giảng viên không thể sửa.')">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger"><i class="bi bi-lock me-1"></i>Khóa điểm</button>
+            </form>
+        }
+        <a asp-action="ExportExcel" asp-route-lopHocId="@Model.LopHocId" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel</a>
+    </div>
+</div>
+
+@if (Model.IsKhoa) {
+    <div class="alert alert-warning py-2"><i class="bi bi-lock-fill me-2"></i>Bảng điểm đã bị khóa. Chỉ Admin mới có thể chỉnh sửa.</div>
+}
+<p class="text-muted small mb-2"><i class="bi bi-info-circle me-1"></i>* Điểm tổng kết được tính tự động: (Giữa kỳ + Cuối kỳ × 2) / 3</p>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0" id="bangDiemTable">
+                <thead class="table-light">
+                    <tr><th>Mã HV</th><th>Họ tên</th><th>Điểm giữa kỳ</th><th>Điểm cuối kỳ</th><th>Điểm tổng kết*</th><th>Xếp loại</th><th>Nhận xét GV</th>@if (Model.CanEdit) { <th></th> }</tr>
+                </thead>
+                <tbody>
+                @foreach (var d in Model.DanhSachDiem)
+                {
+                    <tr data-dky="@d.DangKyId">
+                        <td class="fw-semibold">@d.MaHocVien</td>
+                        <td>@d.TenHocVien</td>
+                        @if (Model.CanEdit && !d.IsKhoa) {
+                            <td><input type="number" class="form-control form-control-sm diem-input" name="diemGiuaKy" min="0" max="10" step="0.1" value="@d.DiemGiuaKy" style="width:80px" /></td>
+                            <td><input type="number" class="form-control form-control-sm diem-input" name="diemCuoiKy" min="0" max="10" step="0.1" value="@d.DiemCuoiKy" style="width:80px" /></td>
+                            <td><span class="form-control-plaintext fw-semibold diem-tongket text-center" style="width:80px">@(d.DiemTongKet?.ToString("F2") ?? "-")</span></td>
+                            <td><span class="xep-loai-badge">@(d.XepLoai ?? "-")</span></td>
+                            <td><input type="text" class="form-control form-control-sm diem-input" name="nhanXet" value="@d.NhanXetGiangVien" style="width:180px" placeholder="Nhận xét..." /></td>
+                            <td><button class="btn btn-sm btn-primary btn-luu" data-dky="@d.DangKyId"><i class="bi bi-check-lg"></i></button></td>
+                        } else {
+                            <td>@(d.DiemGiuaKy?.ToString("F1") ?? "-")</td>
+                            <td>@(d.DiemCuoiKy?.ToString("F1") ?? "-")</td>
+                            <td class="fw-semibold">@(d.DiemTongKet?.ToString("F1") ?? "-")</td>
+                            <td>@if (!string.IsNullOrEmpty(d.XepLoai)) {
+                                var cls = d.XepLoai switch { "Xuất sắc" or "Giỏi" => "bg-success", "Khá" => "bg-primary", "Trung bình" => "bg-warning text-dark", _ => "bg-danger" };
+                                <span class="badge @cls">@d.XepLoai</span>
+                            } else { <span>-</span> }</td>
+                            <td class="small text-muted">@(d.NhanXetGiangVien ?? "-")</td>
+                        }
+                    </tr>
+                }
+                @if (!Model.DanhSachDiem.Any()) { <tr><td colspan="8" class="text-center text-muted py-4">Chưa có học viên nào được duyệt</td></tr> }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+@if (Model.CanEdit) {
+@section Scripts {
+<script>
+document.querySelectorAll('.btn-luu').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const dkyId = this.dataset.dky;
+        const row = this.closest('tr');
+        const body = new FormData();
+        body.append('dangKyId', dkyId);
+        body.append('diemGiuaKy', row.querySelector('[name=diemGiuaKy]')?.value ?? '');
+        body.append('diemCuoiKy', row.querySelector('[name=diemCuoiKy]')?.value ?? '');
+        body.append('diemTongKet', row.querySelector('[name=diemTongKet]')?.value ?? '');
+        body.append('nhanXet', row.querySelector('[name=nhanXet]')?.value ?? '');
+        const tok = document.querySelector('input[name=__RequestVerificationToken]')?.value ?? '';
+        body.append('__RequestVerificationToken', tok);
+
+        this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        const res = await fetch('/Diem/NhapDiem', { method: 'POST', body });
+        const json = await res.json();
+        this.innerHTML = '<i class="bi bi-check-lg"></i>';
+        if (json.success) {
+            this.classList.replace('btn-primary','btn-success');
+            const xepLoai = row.querySelector('.xep-loai-badge');
+            if (xepLoai && json.xepLoai) xepLoai.textContent = json.xepLoai;
+            const tongKet = row.querySelector('.diem-tongket');
+            if (tongKet) tongKet.textContent = json.diemTongKet ?? '-';
+            setTimeout(() => this.classList.replace('btn-success','btn-primary'), 1500);
+        } else {
+            alert(json.message || 'Lỗi khi lưu điểm');
+        }
+    });
+});
+</script>
+}
+}

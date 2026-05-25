@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(dotnet ef *)",
+      "Bash(dotnet run *)",
+      "Bash(curl *)",
+      "Bash(taskkill *)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Get-Process *)",
+      "mcp__grapuco__get_context",
+      "mcp__grapuco__search_code",
+      "mcp__grapuco__list_repositories",
+      "PowerShell(Start-Sleep -Seconds 3; Invoke-WebRequest -Uri \"http://localhost:5189\" -UseBasicParsing -TimeoutSec 10 | Select-Object StatusCode, StatusDescription)",
+      "PowerShell(Start-Sleep -Seconds 5; Invoke-WebRequest -Uri \"http://localhost:5125\" -UseBasicParsing -TimeoutSec 10 | Select-Object StatusCode, StatusDescription)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:5125\" -UseBasicParsing -TimeoutSec 10; \"Status: $\\($r.StatusCode\\)\" } catch { \"Error: $\\($_.Exception.Message\\)\" })",
+      "Bash(netstat -ano)",
+      "Bash(Get-Process -Id 3604 -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Name, Id, MainWindowTitle)",
+      "Bash(tasklist)",
+      "Bash(wmic logicaldisk *)",
+      "Bash(dotnet nuget *)",
+      "Bash(kill 3604)",
+      "Bash(kill -0 3604)",
+      "mcp__grapuco__get_architecture",
+      "Bash(Get-ChildItem -Path \"D:\\\\QuanLyKhoaHoc5\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Format-List)",
+      "Bash(python3 -c \"import docx; print\\('ok'\\)\")",
+      "Bash(pip install *)",
+      "PowerShell(python -c \"import docx; print\\('ok'\\)\")",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(dotnet run *)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\QuanLyKhoaHoc5\" -Recurse -Depth 3 | Where-Object { $_.Name -notmatch \"^\\(bin|obj|\\\\.git|node_modules\\)$\" } | Select-Object FullName, PSIsContainer | Format-Table -AutoSize)",
+      "PowerShell(New-Item *)",
+      "PowerShell(dotnet build *)",
+      "PowerShell(dotnet ef migrations *)",
+      "PowerShell(Start-Sleep -Seconds 3; try { $r = Invoke-WebRequest -Uri \"http://localhost:5125\" -TimeoutSec 5 -UseBasicParsing; \"Status: $\\($r.StatusCode\\)\" } catch { \"Error: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(Start-Process dotnet -ArgumentList \"run --no-build --urls http://localhost:5125\" -WorkingDirectory \"D:\\\\QuanLyKhoaHoc5\\\\QuanLyKhoaHoc5.Web\"; Start-Sleep -Seconds 4; try { $r = Invoke-WebRequest -Uri \"http://localhost:5125\" -TimeoutSec 5 -UseBasicParsing; \"App running: $\\($r.StatusCode\\)\" } catch { \"Error: $\\($_.Exception.Message\\)\" })"
+    ]
+  }
+}

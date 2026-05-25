@@ -1,0 +1,226 @@
+name: QuanLyKhoaHoc5 – Playwright Automated Tests
+
+on:
+  push:
+    branches: [ main, develop, feature/** ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run (all / login / khoahoc / taikhoan)'
+        required: false
+        default: 'all'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  NODE_VERSION: '20.x'
+
+jobs:
+  # ─── Job 1: Build .NET App ─────────────────────────────────────────
+  build-app:
+    name: Build ASP.NET Core App
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: QuanLyKhoaHoc5.Web
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore packages
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish app
+        run: dotnet publish --configuration Release --output ../published-app --no-build
+
+      - name: Upload published artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-app
+          path: published-app/
+          retention-days: 1
+
+  # ─── Job 2: Run Playwright Tests ───────────────────────────────────
+  playwright-tests:
+    name: Playwright E2E Tests
+    runs-on: windows-latest
+    needs: build-app
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download published app
+        uses: actions/download-artifact@v4
+        with:
+          name: published-app
+          path: published-app
+
+      - name: Setup SQL Server LocalDB
+        shell: pwsh
+        run: |
+          SqlLocalDB start
+          SqlLocalDB info
+          Write-Host "LocalDB ready"
+
+      - name: Configure appsettings for CI
+        shell: pwsh
+        run: |
+          $config = @{
+            ConnectionStrings = @{
+              DefaultConnection = "Server=(localdb)\mssqllocaldb;Database=QuanLyKhoaHoc5_CI;Trusted_Connection=True;MultipleActiveResultSets=true"
+            }
+            AppSettings = @{
+              DefaultPassword = "Abc@12345"
+            }
+            Logging = @{
+              LogLevel = @{
+                Default = "Warning"
+              }
+            }
+          } | ConvertTo-Json -Depth 5
+          $config | Set-Content published-app/appsettings.json -Encoding utf8
+          Write-Host "appsettings.json configured for CI"
+
+      - name: Start app in background
+        shell: pwsh
+        run: |
+          $proc = Start-Process `
+            -FilePath "published-app/QuanLyKhoaHoc5.Web.exe" `
+            -ArgumentList "--urls=http://localhost:5299" `
+            -PassThru -NoNewWindow
+          echo "APP_PID=$($proc.Id)" >> $env:GITHUB_ENV
+          Write-Host "App started with PID $($proc.Id)"
+
+      - name: Wait for app to be ready
+        shell: pwsh
+        run: |
+          $maxWait = 60
+          $waited = 0
+          do {
+            Start-Sleep -Seconds 2
+            $waited += 2
+            try {
+              $resp = Invoke-WebRequest -Uri "http://localhost:5299/Account/Login" -UseBasicParsing -ErrorAction Stop
+              if ($resp.StatusCode -eq 200) {
+                Write-Host "App ready after ${waited}s"
+                break
+              }
+            } catch {
+              Write-Host "Waiting... ${waited}s"
+            }
+          } while ($waited -lt $maxWait)
+          if ($waited -ge $maxWait) {
+            Write-Error "App did not start within ${maxWait} seconds"
+            exit 1
+          }
+
+      - name: Install Node.js dependencies + Playwright browsers
+        working-directory: KiemThu/02_selenium_scripts
+        run: |
+          npm install
+          npx playwright install chromium --with-deps
+
+      - name: Run all Playwright tests
+        working-directory: KiemThu/02_selenium_scripts
+        run: |
+          if ("${{ github.event.inputs.test_suite }}" -eq "login") {
+            node tests/01_login_test.js
+          } elseif ("${{ github.event.inputs.test_suite }}" -eq "khoahoc") {
+            node tests/02_khoa_hoc_test.js
+          } elseif ("${{ github.event.inputs.test_suite }}" -eq "taikhoan") {
+            node tests/07_tai_khoan_test.js
+          } else {
+            node tests/run_all.js
+          }
+        shell: pwsh
+        continue-on-error: false
+
+      - name: Stop app
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:APP_PID) {
+            Stop-Process -Id $env:APP_PID -Force -ErrorAction SilentlyContinue
+            Write-Host "App stopped"
+          }
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            KiemThu/02_selenium_scripts/playwright-report/
+            KiemThu/02_selenium_scripts/test-results/
+          retention-days: 7
+
+  # ─── Job 3: SonarQube Analysis (optional) ──────────────────────────
+  sonarqube:
+    name: SonarQube Code Analysis
+    runs-on: windows-latest
+    needs: build-app
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin `
+            /k:"QuanLyKhoaHoc5" `
+            /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet build QuanLyKhoaHoc5.Web/QuanLyKhoaHoc5.Web.csproj
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        shell: pwsh
+        continue-on-error: true
+
+  # ─── Job 4: Notify Results ─────────────────────────────────────────
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [ playwright-tests ]
+    if: always()
+
+    steps:
+      - name: Report status
+        run: |
+          if [ "${{ needs.playwright-tests.result }}" == "success" ]; then
+            echo "✅ All tests passed!"
+          else
+            echo "❌ Some tests failed. Check the logs."
+          fi

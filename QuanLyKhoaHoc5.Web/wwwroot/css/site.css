@@ -1,0 +1,167 @@
+/* ================================================================
+   Design System — Trung tâm Ngoại ngữ NNL
+   ================================================================ */
+
+:root {
+    --gradient-primary: linear-gradient(135deg, #0d6efd, #6610f2);
+    --gradient-success: linear-gradient(135deg, #198754, #20c997);
+    --gradient-warning: linear-gradient(135deg, #fd7e14, #ffc107);
+    --gradient-danger:  linear-gradient(135deg, #dc3545, #e91e63);
+    --gradient-info:    linear-gradient(135deg, #0dcaf0, #0d6efd);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.12);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.16);
+    --radius: 12px;
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+
+html { font-size: 14px; position: relative; min-height: 100%; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+body { margin-bottom: 60px; }
+
+/* Focus ring */
+.btn:focus, .btn:active:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem #fff, 0 0 0 0.25rem #258cfb;
+}
+
+/* Form floating placeholders */
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+/* ── Stat Cards ───────────────────────────────────────────────── */
+
+.stat-card { border-radius: var(--radius); color: #fff; padding: 1.25rem; position: relative; overflow: hidden; }
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+}
+.stat-card-primary { background: var(--gradient-primary) !important; }
+.stat-card-success  { background: var(--gradient-success) !important; }
+.stat-card-warning  { background: var(--gradient-warning) !important; }
+.stat-card-danger   { background: var(--gradient-danger) !important; }
+.stat-card-info     { background: var(--gradient-info) !important; }
+
+/* ── Ca học badges ────────────────────────────────────────────── */
+
+.badge-sang  { background-color: #dbeafe !important; color: #1d4ed8 !important; border: 1px solid #bfdbfe; }
+.badge-chieu { background-color: #ffedd5 !important; color: #c2410c !important; border: 1px solid #fed7aa; }
+.badge-toi   { background-color: #ede9fe !important; color: #6d28d9 !important; border: 1px solid #ddd6fe; }
+
+/* Left border for schedule rows by session type */
+tr.row-sang > td:first-child { border-left: 3px solid #3b82f6; }
+tr.row-chieu > td:first-child { border-left: 3px solid #f97316; }
+tr.row-toi   > td:first-child { border-left: 3px solid #8b5cf6; }
+
+/* ── Course Card ──────────────────────────────────────────────── */
+
+.course-thumb {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+    font-size: 3rem;
+    color: #7c3aed;
+    transition: opacity .2s;
+}
+.card:hover .course-thumb { opacity: .85; }
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+
+.btn { transition: transform .15s ease, box-shadow .15s ease; }
+.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+.btn-sm:hover { transform: none; }
+
+/* ── Tables ───────────────────────────────────────────────────── */
+
+.table { font-size: .9rem; }
+.table th { font-weight: 600; font-size: .82rem; letter-spacing: .02em; }
+.table-hover tbody tr { transition: background-color .1s; }
+.table-hover tbody tr:hover { background-color: rgba(13,110,253,.04) !important; }
+
+/* ── Cards ────────────────────────────────────────────────────── */
+
+.card { border: none; box-shadow: var(--shadow-sm); border-radius: var(--radius); transition: box-shadow .2s; }
+.card:hover { box-shadow: var(--shadow-md); }
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+    font-weight: 600;
+    border-radius: var(--radius) var(--radius) 0 0 !important;
+    padding: .85rem 1.25rem;
+}
+
+/* ── Forms ────────────────────────────────────────────────────── */
+
+.form-control, .form-select { border-radius: 8px; }
+.form-control:focus, .form-select:focus { border-color: #86b7fe; }
+.form-label { font-weight: 500; font-size: .9rem; }
+.input-group-text { background: #f8f9fa; border-radius: 8px 0 0 8px; }
+
+/* ── Navigation / Breadcrumb ──────────────────────────────────── */
+
+.breadcrumb { font-size: .85rem; }
+.breadcrumb-item + .breadcrumb-item::before { color: #adb5bd; }
+
+/* ── Pagination ───────────────────────────────────────────────── */
+
+.page-link { border-radius: 6px !important; margin: 0 2px; }
+
+/* ── Badges ───────────────────────────────────────────────────── */
+
+.badge { font-weight: 500; letter-spacing: .02em; }
+
+/* ── Chatbot enhancements (supplement layout inline styles) ───── */
+
+#chatbot-popup { border-radius: 16px; }
+.chat-msg { line-height: 1.5; }
+.chat-msg.bot { white-space: pre-wrap; }
+
+/* ── Misc Utilities ───────────────────────────────────────────── */
+
+.list-group-item-action { transition: background-color .12s; }
+.list-group-item-action:hover { background-color: rgba(13,110,253,.05); }
+.border-dashed { border-style: dashed !important; }
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Responsive Sidebar (Mobile) ─────────────────────────────── */
+
+@media (max-width: 991px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.show { transform: translateX(0); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1040; }
+    .sidebar-overlay.show { display: block; }
+    .main-content { margin-left: 0 !important; }
+}
+
+/* ── Calendar Mobile ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .view-btn[data-view="month"], .view-btn[data-view="week"] { display: none; }
+    .day-cell { min-height: 70px; }
+    .event-detail { display: none; }
+}
+
+/* ── Responsive Tables ───────────────────────────────────────── */
+
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }

@@ -1,0 +1,181 @@
+@model List<QuanLyKhoaHoc5.Web.Models.ViewModels.GiangVienListViewModel>
+@{
+    ViewData["Title"] = "Quản lý Giảng viên";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="bi bi-person-workspace me-2 text-primary"></i>Danh sách Giảng viên</h4>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>Thêm giảng viên
+    </a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label small text-muted mb-1">Tìm kiếm</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Tên, email, mã giảng viên..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Chuyên môn</label>
+                <select name="chuyenMon" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Tiếng Anh" selected="@(ViewBag.ChuyenMon == "Tiếng Anh")">Tiếng Anh</option>
+                    <option value="Tiếng Nhật" selected="@(ViewBag.ChuyenMon == "Tiếng Nhật")">Tiếng Nhật</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-funnel me-1"></i>Lọc
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Xóa lọc
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-table me-2"></i>Danh sách (@Model.Count giảng viên)</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Count == 0)
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                Không tìm thấy giảng viên nào
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã GV</th>
+                            <th>Họ tên</th>
+                            <th>Email / SĐT</th>
+                            <th>Chuyên môn</th>
+                            <th>Bằng cấp</th>
+                            <th class="text-center">Kinh nghiệm</th>
+                            <th class="text-center">Số lớp</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" style="width:140px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var gv in Model)
+                        {
+                            <tr>
+                                <td><code>@gv.MaGiangVien</code></td>
+                                <td>
+                                    <div class="fw-semibold">@gv.HoTen</div>
+                                </td>
+                                <td>
+                                    <div class="small">@gv.Email</div>
+                                    @if (!string.IsNullOrEmpty(gv.SoDienThoai))
+                                    {
+                                        <div class="small text-muted"><i class="bi bi-telephone me-1"></i>@gv.SoDienThoai</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(gv.ChuyenMon))
+                                    {
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle">@gv.ChuyenMon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="small">@(gv.BangCap ?? "—")</span>
+                                </td>
+                                <td class="text-center">
+                                    @if (gv.KinhNghiem.HasValue)
+                                    {
+                                        <span class="badge bg-secondary">@gv.KinhNghiem năm</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary rounded-pill">@gv.SoLopDangDay</span>
+                                </td>
+                                <td class="text-center">
+                                    @if (gv.IsActive)
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Ngừng HĐ</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@gv.Id" class="btn btn-outline-info" title="Xem">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@gv.Id" class="btn btn-outline-warning" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="Xóa"
+                                                onclick="confirmDelete(@gv.Id, '@Html.Raw(gv.HoTen.Replace("'","\\\'"))')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn xóa giảng viên <strong id="deleteGVName"></strong>?
+                <div class="alert alert-warning mt-2 small mb-0">
+                    <i class="bi bi-info-circle me-1"></i>Hành động này không thể hoàn tác.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteForm" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function confirmDelete(id, name) {
+    document.getElementById('deleteGVName').textContent = name;
+    document.getElementById('deleteForm').action = '/GiangVien/Delete/' + id;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+}

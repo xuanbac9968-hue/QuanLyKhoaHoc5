@@ -1,0 +1,116 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.GoiYTrangViewModel
+@{ ViewData["Title"] = "Gợi ý khóa học AI"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0"><i class="bi bi-stars me-2 text-warning"></i>Gợi ý khóa học thông minh</h4>
+        <small class="text-muted">Powered by Groq AI (Llama 3.3)</small>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="LichSu" class="btn btn-outline-secondary"><i class="bi bi-clock-history me-1"></i>Lịch sử gợi ý</a>
+        <button id="btnGoiY" class="btn btn-warning fw-semibold">
+            <i class="bi bi-stars me-1"></i>Gợi ý cho tôi
+        </button>
+    </div>
+</div>
+
+<!-- Loading spinner -->
+<div id="loadingDiv" class="text-center py-5" style="display:none">
+    <div class="spinner-border text-warning" style="width:3rem;height:3rem"></div>
+    <p class="mt-3 text-muted">AI đang phân tích hồ sơ của bạn...</p>
+</div>
+
+<!-- Kết quả gợi ý -->
+<div id="ketQuaDiv">
+@if (Model.DaGoiY && Model.KetQua.Any()) {
+    <div class="alert alert-info py-2 mb-3">
+        <i class="bi bi-info-circle me-1"></i>Đây là gợi ý từ lần gần nhất. Nhấn "Gợi ý cho tôi" để cập nhật gợi ý mới.
+    </div>
+    <div class="row g-3" id="goiYCards">
+        @foreach (var g in Model.KetQua) {
+            <div class="col-md-4">
+                <div class="card h-100 border-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-warning text-dark fs-6">@g.DiemPhuHop.ToString("F0")% phù hợp</span>
+                        </div>
+                        <h5 class="card-title fw-bold">@g.TenKhoaHoc</h5>
+                        <p class="text-muted small">@g.LyDo</p>
+                        <div class="fw-semibold text-primary mb-3">@g.HocPhi.ToString("N0") VNĐ</div>
+                        <a asp-controller="DangKy" asp-action="CuaToi" class="btn btn-primary w-100">
+                            <i class="bi bi-clipboard-check me-1"></i>Đăng ký ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+} else {
+    <div id="noGoiY" class="text-center py-5">
+        <i class="bi bi-stars text-warning" style="font-size:4rem"></i>
+        <h5 class="mt-3 fw-bold">Nhận gợi ý khóa học từ AI</h5>
+        <p class="text-muted">AI sẽ phân tích hồ sơ học tập của bạn và đề xuất các khóa học phù hợp nhất.</p>
+        <button id="btnGoiY2" class="btn btn-warning btn-lg fw-semibold">
+            <i class="bi bi-stars me-2"></i>Gợi ý cho tôi ngay
+        </button>
+    </div>
+}
+</div>
+
+<!-- Error -->
+<div id="errorDiv" class="alert alert-danger" style="display:none">
+    <i class="bi bi-exclamation-circle me-2"></i><span id="errorMsg"></span>
+</div>
+
+@section Scripts {
+<script>
+async function taoGoiY() {
+    document.getElementById('loadingDiv').style.display = 'block';
+    document.getElementById('ketQuaDiv').style.display = 'none';
+    document.getElementById('errorDiv').style.display = 'none';
+
+    const tok = document.querySelector('input[name=__RequestVerificationToken]')?.value ?? '';
+    try {
+        const res = await fetch('/GoiY/TaoGoiY', {
+            method: 'POST',
+            headers: { 'RequestVerificationToken': tok, 'X-CSRF-TOKEN': tok }
+        });
+        const json = await res.json();
+        console.log('[GoiY] HTTP status:', res.status);
+        console.log('[GoiY] Response JSON:', JSON.stringify(json, null, 2));
+        document.getElementById('loadingDiv').style.display = 'none';
+        document.getElementById('ketQuaDiv').style.display = 'block';
+
+        if (json.success && json.goiY?.length > 0) {
+            let html = '<div class="row g-3">';
+            json.goiY.forEach(g => {
+                html += `<div class="col-md-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-body">
+                            <span class="badge bg-warning text-dark fs-6 mb-2">${Math.round(g.diemPhuHop)}% phù hợp</span>
+                            <h5 class="fw-bold">${g.tenKhoaHoc}</h5>
+                            <p class="text-muted small">${g.lyDo}</p>
+                            <div class="fw-semibold text-primary mb-3">${(g.hocPhi||0).toLocaleString('vi-VN')} VNĐ</div>
+                            <a href="/DangKy/CuaToi" class="btn btn-primary w-100"><i class="bi bi-clipboard-check me-1"></i>Đăng ký ngay</a>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            document.getElementById('ketQuaDiv').innerHTML = html;
+        } else {
+            document.getElementById('errorDiv').style.display = 'block';
+            document.getElementById('errorMsg').textContent = json.message || 'Hiện chưa có gợi ý phù hợp.';
+        }
+    } catch (e) {
+        document.getElementById('loadingDiv').style.display = 'none';
+        document.getElementById('ketQuaDiv').style.display = 'block';
+        document.getElementById('errorDiv').style.display = 'block';
+        document.getElementById('errorMsg').textContent = 'Không thể kết nối AI, vui lòng thử lại sau.';
+    }
+}
+
+document.getElementById('btnGoiY').addEventListener('click', taoGoiY);
+document.getElementById('btnGoiY2')?.addEventListener('click', taoGoiY);
+</script>
+<form id="csrfForm">@Html.AntiForgeryToken()</form>
+}

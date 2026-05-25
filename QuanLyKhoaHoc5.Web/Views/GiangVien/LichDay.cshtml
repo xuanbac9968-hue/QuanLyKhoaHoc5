@@ -1,0 +1,86 @@
+@model List<QuanLyKhoaHoc5.Web.Models.ViewModels.LichHocItemViewModel>
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = "Lịch dạy";
+    var lopList = ViewBag.LopList as List<LopHoc> ?? [];
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-calendar-week me-2 text-primary"></i>Lịch dạy của tôi</h4>
+    <a asp-controller="LichHoc" asp-action="CuaToi" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-calendar3 me-1"></i>Xem lịch theo tháng
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>Bạn chưa có lịch dạy sắp tới.
+    </div>
+}
+else
+{
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-list-ul me-2 text-success"></i>Danh sách buổi dạy sắp tới</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>Ngày học</th><th>Thứ</th><th>Ca học</th><th>Giờ</th><th>Lớp / Khóa học</th><th>Phòng</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(l => l.NgayHoc).ThenBy(l => l.GioBatDau))
+                        {
+                            bool isToday = item.NgayHoc == today;
+                            <tr class="@(isToday ? "table-warning" : "")">
+                                <td class="fw-semibold small">
+                                    @item.NgayHoc.ToString("dd/MM/yyyy")
+                                    @if (isToday) { <span class="badge bg-warning text-dark ms-1">Hôm nay</span> }
+                                </td>
+                                <td><span class="badge bg-secondary">@item.TenThu</span></td>
+                                <td><span class="badge bg-primary">@item.CaHoc</span></td>
+                                <td class="small">@item.GioBatDau.ToString("HH:mm") – @item.GioKetThuc.ToString("HH:mm")</td>
+                                <td class="small">
+                                    @if (!string.IsNullOrEmpty(item.TenLop))
+                                    { <div class="fw-semibold">@item.TenLop</div> }
+                                    <span class="text-muted">@(item.TenKhoaHoc ?? "-")</span>
+                                </td>
+                                <td class="small">@(item.PhongHoc ?? "—")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (lopList.Any())
+{
+    <div class="card mt-4">
+        <div class="card-header"><i class="bi bi-door-open me-2 text-warning"></i>Lớp học phụ trách</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>Tên lớp</th><th>Khóa học</th><th>Khai giảng</th><th>Kết thúc</th><th>Sĩ số</th><th>Trạng thái</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var lop in lopList)
+                        {
+                            <tr>
+                                <td><a asp-controller="LopHoc" asp-action="Details" asp-route-id="@lop.Id" class="fw-semibold text-decoration-none">@lop.TenLop</a></td>
+                                <td class="small">@lop.KhoaHoc?.TenKhoaHoc</td>
+                                <td class="small">@(lop.NgayKhaiGiang?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                <td class="small">@(lop.NgayKetThuc?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                <td class="small">@lop.DangKys?.Count(d => d.TrangThai == "DaDuyet")/@lop.SiSoToiDa</td>
+                                <td><span class="badge @(lop.TrangThai == "DangHoc" ? "bg-success" : lop.TrangThai == "DaKetThuc" ? "bg-secondary" : "bg-warning text-dark")">@lop.TrangThai</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

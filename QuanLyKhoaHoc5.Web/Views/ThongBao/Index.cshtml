@@ -1,0 +1,45 @@
+@model List<QuanLyKhoaHoc5.Web.Models.Entities.ThongBao>
+@{ ViewData["Title"] = "Thông báo"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-bell me-2 text-primary"></i>Thông báo</h4>
+    <span class="badge bg-secondary">@Model.Count thông báo</span>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Any()) {
+            <div class="list-group list-group-flush">
+            @foreach (var tb in Model) {
+                var iconClass = tb.LoaiThongBao switch {
+                    "DangKy" => "bi-clipboard-check text-primary",
+                    "LichHoc" => "bi-calendar3 text-info",
+                    "Diem" => "bi-bar-chart text-success",
+                    _ => "bi-bell text-secondary"
+                };
+                <div class="list-group-item @(!tb.DaDoc ? "bg-light border-start border-primary border-3" : "") py-3">
+                    <div class="d-flex gap-3">
+                        <div class="pt-1"><i class="bi @iconClass fs-4"></i></div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <span class="fw-semibold @(!tb.DaDoc ? "text-dark" : "text-muted")">@tb.TieuDe</span>
+                                <small class="text-muted ms-3 text-nowrap">@tb.NgayTao.ToString("dd/MM HH:mm")</small>
+                            </div>
+                            @if (!string.IsNullOrEmpty(tb.NoiDung)) {
+                                <p class="text-muted small mb-0 mt-1">@tb.NoiDung</p>
+                            }
+                            @if (!string.IsNullOrEmpty(tb.DuongDanLienKet)) {
+                                <a href="@tb.DuongDanLienKet" class="btn btn-sm btn-outline-primary mt-2">Xem chi tiết</a>
+                            }
+                        </div>
+                        @if (!tb.DaDoc) { <span class="badge bg-primary rounded-pill align-self-center">Mới</span> }
+                    </div>
+                </div>
+            }
+            </div>
+        } else {
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-bell-slash fs-1 d-block mb-3"></i>
+                <p>Không có thông báo nào</p>
+            </div>
+        }
+    </div>
+</div>

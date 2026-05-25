@@ -1,0 +1,177 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery AntiforgeryService
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="@AntiforgeryService.GetAndStoreTokens(Context).RequestToken" />
+    <title>@ViewData["Title"] - Trung tâm Ngoại ngữ NNL</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        :root { --sidebar-width: 260px; }
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+        .sidebar { width: var(--sidebar-width); min-height: 100vh; background: linear-gradient(180deg,#064e3b 0%,#059669 100%); position: fixed; top: 0; left: 0; z-index: 1050; transition: transform .3s; overflow-y: auto; }
+        .sidebar .brand { padding: 1.2rem 1rem; color: #fff; font-weight: 700; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,.15); }
+        .sidebar .nav-link { color: rgba(255,255,255,.8); padding: .6rem 1rem; border-radius: 8px; margin: 2px 8px; transition: all .2s; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.15); color: #fff; }
+        .sidebar .nav-link i { width: 20px; }
+        .sidebar .nav-section { font-size: .7rem; color: rgba(255,255,255,.5); padding: .5rem 1rem .2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .main-content { margin-left: var(--sidebar-width); }
+        .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: .75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 99; }
+        .page-content { padding: 1.5rem; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1040; }
+        .sidebar-overlay.show { display: block; }
+    </style>
+</head>
+<body>
+<div class="sidebar" id="sidebar">
+    <div class="brand"><i class="bi bi-mortarboard-fill me-2"></i>Ngoại ngữ NNL</div>
+    <nav class="nav flex-column py-2">
+        <span class="nav-section">Tổng quan</span>
+        <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString()=="Dashboard"?"active":"")" asp-controller="GiangVien" asp-action="Dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+        <span class="nav-section">Giảng dạy</span>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="LopHoc"?"active":"")" asp-controller="LopHoc" asp-action="Index"><i class="bi bi-door-open me-2"></i>Lớp &amp; Học viên</a>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="DiemSo"&&ViewContext.RouteData.Values["action"]?.ToString()=="NhapDiem"?"active":"")" asp-controller="DiemSo" asp-action="NhapDiem"><i class="bi bi-pencil-square me-2"></i>Nhập điểm</a>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="LichHoc"?"active":"")" asp-controller="LichHoc" asp-action="CuaToi"><i class="bi bi-calendar3 me-2"></i>Lịch dạy</a>
+        <span class="nav-section">Tài khoản</span>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="Profile"?"active":"")" asp-controller="Profile" asp-action="Index"><i class="bi bi-person-circle me-2"></i>Hồ sơ</a>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="ThongBao"?"active":"")" asp-controller="ThongBao" asp-action="Index"><i class="bi bi-bell me-2"></i>Thông báo <span class="badge bg-danger ms-1" id="badge-thong-bao" style="display:none"></span></a>
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString()=="Account"&&ViewContext.RouteData.Values["action"]?.ToString()=="ChangePassword"?"active":"")" asp-controller="Account" asp-action="ChangePassword"><i class="bi bi-key me-2"></i>Đổi mật khẩu</a>
+        <a class="nav-link text-warning" asp-controller="Account" asp-action="Logout"><i class="bi bi-box-arrow-left me-2"></i>Đăng xuất</a>
+    </nav>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="main-content">
+    <div class="topbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="openSidebar()"><i class="bi bi-list fs-5"></i></button>
+            <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">@(ViewData["Breadcrumb"] as Microsoft.AspNetCore.Html.IHtmlContent ?? (object)"")</ol></nav>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a asp-controller="ThongBao" asp-action="Index" class="position-relative btn btn-sm btn-light">
+                <i class="bi bi-bell fs-6"></i>
+                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle" id="badge-bell" style="display:none;font-size:.6rem"></span>
+            </a>
+            <span class="text-muted small d-none d-sm-inline">@User.Identity?.Name</span>
+            <span class="badge bg-success">Giảng viên</span>
+        </div>
+    </div>
+    <div class="page-content">
+        @if (TempData["Success"] != null)
+        { <div class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle me-2"></i>@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+        @if (TempData["Error"] != null)
+        { <div class="alert alert-danger alert-dismissible fade show"><i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+        @if (TempData["Warning"] != null)
+        { <div class="alert alert-warning alert-dismissible fade show"><i class="bi bi-exclamation-triangle me-2"></i>@TempData["Warning"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+        @RenderBody()
+    </div>
+</div>
+
+<style>
+    #chatbot-btn { position:fixed;bottom:24px;right:24px;z-index:1060;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#059669,#0d6efd);color:#fff;border:none;box-shadow:0 4px 16px rgba(5,150,105,.4);font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s; }
+    #chatbot-btn:hover { transform:scale(1.1); }
+    #chatbot-popup { position:fixed;bottom:88px;right:24px;z-index:1060;width:370px;height:520px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.18);display:flex;flex-direction:column;overflow:hidden;transition:all .25s;transform-origin:bottom right; }
+    #chatbot-popup.hidden { transform:scale(0);opacity:0;pointer-events:none; }
+    #chatbot-header { background:linear-gradient(135deg,#059669,#0d6efd);color:#fff;padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;font-weight:600; }
+    #chatbot-header-actions { display:flex;gap:.4rem;align-items:center; }
+    #chatbot-messages { flex:1;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:.5rem; }
+    .chat-msg { max-width:82%;padding:.5rem .75rem;border-radius:12px;font-size:.875rem;line-height:1.45; }
+    .chat-msg.user { background:#059669;color:#fff;align-self:flex-end;border-bottom-right-radius:4px; }
+    .chat-msg.bot { background:#f0f2f5;color:#222;align-self:flex-start;border-bottom-left-radius:4px; }
+    #chatbot-suggestions { padding:.5rem .75rem;display:flex;flex-wrap:wrap;gap:.4rem; }
+    #chatbot-input-area { padding:.5rem .75rem;border-top:1px solid #e0e0e0;display:flex;gap:.5rem; }
+    #chatbot-input { flex:1;border:1px solid #dee2e6;border-radius:20px;padding:.4rem .8rem;font-size:.875rem;outline:none; }
+    #chatbot-input:focus { border-color:#059669; }
+    #chatbot-send { background:#059669;color:#fff;border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0; }
+    .chat-spinner { display:inline-flex;gap:3px;align-items:center; }
+    .chat-spinner span { width:6px;height:6px;border-radius:50%;background:#888;animation:chatBounce 1.2s infinite; }
+    .chat-spinner span:nth-child(2) { animation-delay:.2s; }
+    .chat-spinner span:nth-child(3) { animation-delay:.4s; }
+    @@keyframes chatBounce { 0%,80%,100%{transform:scale(0)}40%{transform:scale(1)} }
+</style>
+<button id="chatbot-btn" title="Trợ lý AI – NNL Assistant"><i class="bi bi-chat-dots-fill"></i></button>
+<div id="chatbot-popup" class="hidden">
+    <div id="chatbot-header">
+        <span><i class="bi bi-robot me-2"></i>Trợ lý AI – NNL Assistant</span>
+        <div id="chatbot-header-actions">
+            <button onclick="clearChatHistory()" style="background:none;border:none;color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;padding:2px 6px;" title="Xóa hội thoại"><i class="bi bi-trash"></i></button>
+            <button onclick="toggleChat()" style="background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+    <div id="chatbot-messages"></div>
+    <div id="chatbot-suggestions">
+        <button class="badge bg-light text-success border border-success-subtle py-1 px-2" style="cursor:pointer;font-size:.78rem;" onclick="sendQuick('Lịch dạy của tôi tuần này là gì?')">Lịch dạy tuần này</button>
+        <button class="badge bg-light text-success border border-success-subtle py-1 px-2" style="cursor:pointer;font-size:.78rem;" onclick="sendQuick('Lớp tôi đang phụ trách có bao nhiêu học viên?')">Sĩ số lớp học</button>
+        <button class="badge bg-light text-success border border-success-subtle py-1 px-2" style="cursor:pointer;font-size:.78rem;" onclick="sendQuick('Buổi dạy tiếp theo của tôi là khi nào?')">Buổi dạy tiếp theo</button>
+    </div>
+    <div id="chatbot-input-area">
+        <input id="chatbot-input" type="text" placeholder="Hỏi NNL Assistant..." />
+        <button id="chatbot-send" onclick="sendChat()"><i class="bi bi-send-fill" style="font-size:.8rem;"></i></button>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+function openSidebar() {
+    document.getElementById('sidebar').classList.add('show');
+    document.getElementById('sidebarOverlay').classList.add('show');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('show');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+}
+fetch('/ThongBao/SoChuaDoc').then(r=>r.json()).then(n=>{
+    if(n>0){
+        var b1=document.getElementById('badge-thong-bao');if(b1){b1.style.display='inline';b1.textContent=n;}
+        var b2=document.getElementById('badge-bell');if(b2){b2.style.display='inline';b2.textContent=n;}
+    }
+}).catch(()=>{});
+(function() {
+    var chatInitialized = false;
+    var csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+    var chatWelcome = 'Xin chào! Tôi là NNL Assistant – trợ lý AI của trung tâm. Tôi có thể giúp bạn tra cứu lịch dạy, thông tin lớp học và danh sách học viên.';
+    function appendMsg(role, html) {
+        var el = document.createElement('div'); el.className = 'chat-msg ' + role; el.innerHTML = html;
+        var msgs = document.getElementById('chatbot-messages'); msgs.appendChild(el); msgs.scrollTop = msgs.scrollHeight; return el;
+    }
+    async function initChat() {
+        if (chatInitialized) return; chatInitialized = true;
+        try {
+            var res = await fetch('/Chat/GetHistory'); var history = await res.json();
+            var msgs = document.getElementById('chatbot-messages'); msgs.innerHTML = '';
+            if (history && history.length > 0) { history.forEach(function(h) { appendMsg(h.role==='user'?'user':'bot',(h.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')); }); }
+            else { appendMsg('bot', chatWelcome); }
+        } catch(e) { appendMsg('bot', chatWelcome); }
+    }
+    window.toggleChat = function() {
+        var popup = document.getElementById('chatbot-popup'); popup.classList.toggle('hidden');
+        if (!popup.classList.contains('hidden')) { initChat(); setTimeout(function(){ document.getElementById('chatbot-input').focus(); }, 100); }
+    };
+    window.sendQuick = function(msg) { document.getElementById('chatbot-input').value = msg; sendChat(); };
+    window.clearChatHistory = async function() {
+        if (!confirm('Xóa toàn bộ lịch sử hội thoại?')) return;
+        try { await fetch('/Chat/ClearHistory', { method:'POST', headers:{'RequestVerificationToken':csrfToken} }); var msgs=document.getElementById('chatbot-messages'); msgs.innerHTML=''; appendMsg('bot',chatWelcome); chatInitialized=true; } catch(e) {}
+    };
+    async function sendChat() {
+        var input = document.getElementById('chatbot-input'); var msg = input.value.trim(); if (!msg) return; input.value = '';
+        appendMsg('user', msg.replace(/&/g,'&amp;').replace(/</g,'&lt;'));
+        var spinner = appendMsg('bot','<div class="chat-spinner"><span></span><span></span><span></span></div>');
+        try {
+            var res = await fetch('/Chat/SendMessage', { method:'POST', headers:{'Content-Type':'application/json','RequestVerificationToken':csrfToken}, body:JSON.stringify({message:msg}) });
+            var data = await res.json(); spinner.innerHTML = (data.reply??'Xin lỗi, tôi không thể xử lý câu hỏi này.').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+        } catch(e) { spinner.innerHTML = 'Có lỗi kết nối. Vui lòng thử lại.'; }
+        document.getElementById('chatbot-messages').scrollTop = 9999;
+    }
+    window.sendChat = sendChat;
+    document.getElementById('chatbot-btn').addEventListener('click', window.toggleChat);
+    document.getElementById('chatbot-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') sendChat(); });
+})();
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,93 @@
+@model List<QuanLyKhoaHoc5.Web.Models.ViewModels.PhanCongViewModel>
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{ ViewData["Title"] = "Phân công giảng viên"; var giangViens = ViewBag.GiangViens as List<GiangVien> ?? []; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-person-badge me-2 text-primary"></i>Phân công giảng viên</h4>
+</div>
+
+@if (TempData["Warning"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Warning"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Khóa học</th>
+                        <th>Ngôn ngữ / Trình độ</th>
+                        <th>GV hiện tại</th>
+                        <th>Ngày PC</th>
+                        <th>Phân công mới</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var k in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="KhoaHoc" asp-action="Details" asp-route-id="@k.KhoaHocId" class="fw-semibold text-decoration-none">@k.TenKhoaHoc</a>
+                        </td>
+                        <td>
+                            <span class="badge bg-info text-dark">@k.NgonNgu</span>
+                            <span class="badge bg-secondary ms-1">@k.TrinhDo</span>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(k.TenGiangVienHienTai))
+                            {
+                                <span class="fw-semibold text-success"><i class="bi bi-check-circle me-1"></i>@k.TenGiangVienHienTai</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted"><i class="bi bi-dash-circle me-1"></i>Chưa phân công</span>
+                            }
+                        </td>
+                        <td class="small text-muted">@(k.NgayPhanCong?.ToString("dd/MM/yyyy") ?? "-")</td>
+                        <td>
+                            <form asp-action="DoPhanCong" method="post" class="d-flex gap-2 align-items-center">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="KhoaHocId" value="@k.KhoaHocId" />
+                                <select name="GiangVienId" class="form-select form-select-sm" style="min-width:180px;">
+                                    <option value="0">-- Bỏ phân công --</option>
+                                    @foreach (var gv in giangViens)
+                                    {
+                                        <option value="@gv.Id" selected="@(k.GiangVienIdHienTai == gv.Id ? "selected" : null)">@gv.HoTen</option>
+                                    }
+                                </select>
+                                <input type="text" name="GhiChu" class="form-control form-control-sm" style="max-width:140px;" placeholder="Ghi chú..." value="@k.GhiChu" />
+                                <button type="submit" class="btn btn-sm btn-primary text-nowrap"><i class="bi bi-check me-1"></i>Lưu</button>
+                            </form>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="LichSuPhanCong" asp-route-khoaHocId="@k.KhoaHocId" class="btn btn-sm btn-outline-secondary" title="Lịch sử phân công">
+                                <i class="bi bi-clock-history"></i>
+                            </a>
+                            @if (k.PhanCongId > 0)
+                            {
+                                <form asp-action="HuyPhanCong" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="phanCongId" value="@k.PhanCongId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hủy phân công" onclick="return confirm('Hủy phân công giảng viên này?')">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Không có khóa học nào đang mở</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

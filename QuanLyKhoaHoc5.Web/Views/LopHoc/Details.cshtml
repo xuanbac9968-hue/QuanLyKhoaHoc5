@@ -1,0 +1,337 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.LopHocDetailsViewModel
+@using QuanLyKhoaHoc5.Web.Models.ViewModels
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = Model.TenLop;
+    var isAdmin = User.IsInRole("Admin");
+    var badgeClass = Model.TrangThai switch
+    {
+        "ChuaMo" => "bg-secondary",
+        "DangTuyenSinh" => "bg-success",
+        "DangHoc" => "bg-primary",
+        "DaKetThuc" => "bg-dark",
+        _ => "bg-secondary"
+    };
+    var trangThaiText = Model.TrangThai switch
+    {
+        "ChuaMo" => "Chưa mở",
+        "DangTuyenSinh" => "Đang tuyển sinh",
+        "DangHoc" => "Đang học",
+        "DaKetThuc" => "Đã kết thúc",
+        _ => Model.TrangThai
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Lớp học</a></li>
+            <li class="breadcrumb-item active">@Model.TenLop</li>
+        </ol>
+    </nav>
+    <div class="d-flex gap-2">
+        <a asp-controller="Diem" asp-action="LopHoc" asp-route-lopHocId="@Model.Id" class="btn btn-info btn-sm text-white">
+            <i class="bi bi-bar-chart me-1"></i>Bảng điểm
+        </a>
+        @if (isAdmin)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil me-1"></i>Sửa
+            </a>
+            <a asp-controller="DangKy" asp-action="Index" asp-route-lopHocId="@Model.Id" class="btn btn-success btn-sm">
+                <i class="bi bi-check2-all me-1"></i>Duyệt đăng ký
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white fw-bold">
+                <i class="bi bi-info-circle me-1"></i>Thông tin lớp học
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="text-muted small">Tên lớp</div>
+                    <strong>@Model.TenLop</strong>
+                </li>
+                <li class="list-group-item">
+                    <div class="text-muted small">Khóa học</div>
+                    <strong>@Model.TenKhoaHoc</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Ngôn ngữ</span>
+                    <span class="badge bg-info text-dark">@Model.NgonNgu</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Trình độ</span>
+                    <strong>@Model.TrinhDo</strong>
+                </li>
+                <li class="list-group-item">
+                    <div class="text-muted small">Giảng viên</div>
+                    <strong>@(Model.TenGiangVien ?? "Chưa phân công")</strong>
+                </li>
+                @if (Model.NgayKhaiGiang.HasValue)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Khai giảng</span>
+                        <strong>@Model.NgayKhaiGiang.Value.ToString("dd/MM/yyyy")</strong>
+                    </li>
+                }
+                @if (Model.NgayKetThuc.HasValue)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Kết thúc</span>
+                        <strong>@Model.NgayKetThuc.Value.ToString("dd/MM/yyyy")</strong>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Sĩ số</span>
+                    <strong>@Model.DanhSachHocVien.Count(h => h.TrangThaiDangKy == "DaDuyet")/@Model.SiSoToiDa học viên</strong>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.PhongHoc))
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Phòng học</span>
+                        <strong>@Model.PhongHoc</strong>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Trạng thái</span>
+                    <span class="badge @badgeClass">@trangThaiText</span>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.GhiChu))
+                {
+                    <li class="list-group-item">
+                        <div class="text-muted small">Ghi chú</div>
+                        <span>@Model.GhiChu</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <ul class="nav nav-tabs" id="lopTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="hocvien-tab" data-bs-toggle="tab" data-bs-target="#hocvien"
+                        type="button" role="tab">
+                    <i class="bi bi-people me-1"></i>Danh sách học viên
+                    <span class="badge bg-secondary ms-1">@Model.DanhSachHocVien.Count</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="lichhoc-tab" data-bs-toggle="tab" data-bs-target="#lichhoc"
+                        type="button" role="tab">
+                    <i class="bi bi-calendar3 me-1"></i>Lịch học
+                    <span class="badge bg-secondary ms-1">@((ViewBag.TatCaBuoiHoc as List<BuoiHocViewModel>)?.Count ?? Model.LichHocs.Count) buổi</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content border border-top-0 rounded-bottom p-3 bg-white">
+            <div class="tab-pane fade show active" id="hocvien" role="tabpanel">
+                @if (!Model.DanhSachHocVien.Any())
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                        Chưa có học viên nào trong lớp này.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã HV</th>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Điểm TK</th>
+                                    @if (isAdmin)
+                                    {
+                                        <th class="text-center">Thao tác</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var hv in Model.DanhSachHocVien)
+                                {
+                                    var hvBadge = hv.TrangThaiDangKy switch
+                                    {
+                                        "ChoDuyet" => "bg-warning text-dark",
+                                        "DaDuyet" => "bg-success",
+                                        "TuChoi" => "bg-danger",
+                                        "DaHuy" => "bg-secondary",
+                                        _ => "bg-secondary"
+                                    };
+                                    var hvText = hv.TrangThaiDangKy switch
+                                    {
+                                        "ChoDuyet" => "Chờ duyệt",
+                                        "DaDuyet" => "Đã duyệt",
+                                        "TuChoi" => "Từ chối",
+                                        "DaHuy" => "Đã hủy",
+                                        _ => hv.TrangThaiDangKy
+                                    };
+                                    <tr>
+                                        <td><code>@hv.MaHocVien</code></td>
+                                        <td class="fw-semibold">@hv.HoTen</td>
+                                        <td class="text-muted small">@hv.Email</td>
+                                        <td><span class="badge @hvBadge">@hvText</span></td>
+                                        <td class="small">@hv.NgayDangKy.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            @if (hv.DiemTongKet.HasValue)
+                                            {
+                                                <strong class="@(hv.DiemTongKet >= 5 ? "text-success" : "text-danger")">
+                                                    @hv.DiemTongKet.Value.ToString("F1")
+                                                </strong>
+                                                if (!string.IsNullOrEmpty(hv.XepLoai))
+                                                {
+                                                    <span class="text-muted small ms-1">(@hv.XepLoai)</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        @if (isAdmin)
+                                        {
+                                            <td class="text-center">
+                                                @if (hv.TrangThaiDangKy == "ChoDuyet")
+                                                {
+                                                    <form asp-controller="DangKy" asp-action="Duyet" asp-route-id="@hv.DangKyId" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-success btn-sm" title="Duyệt">
+                                                            <i class="bi bi-check"></i>
+                                                        </button>
+                                                    </form>
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Từ chối"
+                                                            onclick="showTuChoiModal(@hv.DangKyId)">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                }
+                                                <a asp-controller="HocVien" asp-action="Details" asp-route-id="@hv.HocVienId"
+                                                   class="btn btn-outline-primary btn-sm" title="Xem hồ sơ">
+                                                    <i class="bi bi-person"></i>
+                                                </a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+
+            <div class="tab-pane fade" id="lichhoc" role="tabpanel">
+                @{
+                    var tatCaBuoiHoc = ViewBag.TatCaBuoiHoc as List<BuoiHocViewModel> ?? [];
+                    var todayLH = (DateOnly)(ViewBag.Today ?? DateOnly.FromDateTime(DateTime.Today));
+                }
+                @if (!tatCaBuoiHoc.Any())
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                        Khóa học này chưa có lịch học nào.
+                        @if (isAdmin)
+                        {
+                            <div class="mt-2">
+                                <a asp-controller="LichHoc" asp-action="Index" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-plus-circle me-1"></i>Quản lý lịch học
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                        <span class="fw-semibold small">
+                            <i class="bi bi-list-ol me-1 text-primary"></i>
+                            Tổng <strong>@tatCaBuoiHoc.Count</strong> buổi học
+                        </span>
+                        @if (isAdmin)
+                        {
+                            <a asp-controller="LichHoc" asp-action="Index" asp-route-khoaHocId="@Model.Id"
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil me-1"></i>Quản lý lịch học
+                            </a>
+                        }
+                    </div>
+                    <div class="table-responsive" style="max-height:420px;overflow-y:auto;">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead class="table-light" style="position:sticky;top:0;">
+                                <tr>
+                                    <th class="text-center" style="width:48px;">Buổi</th>
+                                    <th>Ngày học</th><th>Thứ</th><th>Ca</th>
+                                    <th>Giờ</th><th>Phòng</th><th>Giảng viên</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int sttLH = 0; }
+                                @foreach (var b in tatCaBuoiHoc)
+                                {
+                                    sttLH++;
+                                    bool isTodayLH = b.NgayHoc == todayLH;
+                                    bool isPastLH = b.NgayHoc < todayLH;
+                                    <tr class="@(isTodayLH ? "table-warning" : isPastLH ? "text-muted" : "")">
+                                        <td class="text-center text-muted small">@sttLH</td>
+                                        <td class="@(isTodayLH ? "fw-bold" : "")">
+                                            @b.NgayHoc.ToString("dd/MM/yyyy")
+                                            @if (isTodayLH) { <span class="badge bg-warning text-dark ms-1">Hôm nay</span> }
+                                        </td>
+                                        <td><span class="badge bg-secondary" style="font-size:.7rem;">@b.TenThu</span></td>
+                                        <td><span class="badge @(b.CaHoc switch { "Sáng" => "badge-sang", "Chiều" => "badge-chieu", "Tối" => "badge-toi", _ => "bg-secondary" })" style="font-size:.7rem;">@b.CaHoc</span></td>
+                                        <td class="small">@b.GioBatDau.ToString("HH:mm")–@b.GioKetThuc.ToString("HH:mm")</td>
+                                        <td class="small">@(b.PhongHoc ?? "—")</td>
+                                        <td class="small text-muted">@(b.TenGiangVien ?? "—")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal từ chối đăng ký -->
+<div class="modal fade" id="tuChoiModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-x-circle text-warning me-2"></i>Từ chối đăng ký</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="tuChoiForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Lý do từ chối <span class="text-danger">*</span></label>
+                        <textarea name="lyDo" class="form-control" rows="3" required placeholder="Nhập lý do từ chối..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning"><i class="bi bi-x-circle me-1"></i>Xác nhận từ chối</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showTuChoiModal(id) {
+            document.getElementById('tuChoiForm').action = '/DangKy/TuChoi/' + id;
+            document.querySelector('#tuChoiModal textarea[name="lyDo"]').value = '';
+            new bootstrap.Modal(document.getElementById('tuChoiModal')).show();
+        }
+    </script>
+}

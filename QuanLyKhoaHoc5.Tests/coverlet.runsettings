@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <!-- Loại bỏ code tự động sinh (migrations, Razor views biên dịch) -->
+          <Exclude>
+            [QuanLyKhoaHoc5.Web]QuanLyKhoaHoc5.Web.Migrations.*,
+            [QuanLyKhoaHoc5.Web]AspNetCoreGeneratedDocument.*,
+            [QuanLyKhoaHoc5.Web]QuanLyKhoaHoc5.Web.Data.SeedData*,
+            [QuanLyKhoaHoc5.Web]Program*
+          </Exclude>
+          <!-- Loại bỏ file migration theo path -->
+          <ExcludeByFile>
+            **/Migrations/**/*.cs,
+            **/obj/**/*.cs
+          </ExcludeByFile>
+          <!-- Loại bỏ class/method có attribute [ExcludeFromCodeCoverage] hoặc [GeneratedCode]
+               KHÔNG loại CompilerGeneratedAttribute vì nó cũng gắn vào async state machines (thân method async) -->
+          <ExcludeByAttribute>ExcludeFromCodeCoverage,GeneratedCodeAttribute</ExcludeByAttribute>
+          <Format>cobertura</Format>
+          <SingleHit>false</SingleHit>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

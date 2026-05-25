@@ -1,0 +1,78 @@
+TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN & TRUYỀN THÔNG
+KHOA CÔNG NGHỆ THÔNG TIN
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+ĐỀ CƯƠNG ĐỀ TÀI THAY THẾ ĐỒ ÁN
+
+Bộ môn phụ trách: Công nghệ phần mềm
+Định hướng: Phát triển ứng dụng
+Người xây dựng: Nguyễn Thị Dung
+Đề tài: Xây dựng hệ thống quản lý khóa học cho trung tâm ngoại ngữ tích hợp gợi ý khóa học thông minh
+
+1. MỤC TIÊU
+Vận dụng kiến thức và kỹ năng phát triển phần mềm đã học để xây dựng một hệ thống phần mềm quản lý khóa học cho trung tâm ngoại ngữ trên nền tảng web, cho phép:
+- Quản lý khóa học, học viên, giảng viên và lịch học
+- Hỗ trợ đăng ký khóa học trực tuyến
+- Tích hợp chức năng gợi ý khóa học thông minh dựa trên:
+  + Lịch sử đăng ký
+  + Trình độ học viên
+  + Hành vi người dùng
+
+2. CHUẨN NĂNG LỰC YÊU CẦU
+STT | Nội dung | Thuộc học phần / Tự nghiên cứu | Chung | Điểm định mức
+1   | Vận dụng được quy trình phân tích bài toán và thiết kế giải pháp | Phân tích và thiết kế hệ thống | x | 1,5
+2   | Vận dụng được kỹ thuật và quy trình thiết kế phần mềm để thiết kế các sơ đồ UML cho ứng dụng | Phân tích và thiết kế hệ thống; Phát triển phần mềm hướng đối tượng | x | 1,5
+3   | Vận dụng được kỹ năng làm việc với cơ sở dữ liệu để thiết kế và xây dựng cơ sở dữ liệu cho phần mềm | Cơ sở dữ liệu | x | 1,0
+4   | Vận dụng được kỹ năng làm việc với Entity Framework Core để tương tác với cơ sở dữ liệu | Công nghệ .NET | x | 1,0
+5   | Vận dụng được nền tảng Asp.net Core để phát triển thành phần backend cho ứng dụng web | Công nghệ .NET; Tự nghiên cứu (Asp.net Core) | | 2,0
+6   | Vận dụng được kiến thức về HTML, CSS, Javascript để xây dựng thành phần frontend cho ứng dụng web | Phát triển phần mềm mã mở; Thiết kế web | | 2,0
+7   | Vận dụng được kiến thức về triển khai và quản lý phần mềm để triển khai phần mềm lên server | Triển khai và bảo trì phần mềm | | 1,0
+
+3. YÊU CẦU VỀ SẢN PHẨM
+
+a. Mô tả tóm tắt về sản phẩm cần đạt được
+Sản phẩm là một phần mềm ứng dụng có những chức năng phù hợp để quản lý dữ liệu về khóa học cho trung tâm ngoại ngữ.
+Phần mềm cần đảm bảo: cho phép nhiều người cùng sử dụng; đảm bảo vấn đề bảo mật và an ninh; có giao diện trực quan dễ sử dụng.
+
+b. Mô tả chi tiết yêu cầu về sản phẩm
+STT | Yêu cầu | Định mức điểm
+1   | Quản lý khóa học, lịch học | 1,5
+2   | Quản lý học viên, đăng ký khóa học | 1,5
+3   | Quản lý giảng viên, phân công giảng dạy | 1,5
+4   | Quản lý điểm, kết quả học tập | 1,0
+5   | Hệ thống đăng nhập, phân quyền (Admin/User) | 1,0
+6   | Giao diện web thân thiện, responsive | 1,0
+7   | Tích hợp AI gợi ý khóa học | 2,0
+8   | Triển khai & báo cáo | 0,5
+
+4. YÊU CẦU VỀ QUYỂN BÁO CÁO
+
+Cấu trúc quyển báo cáo:
+- Chương 1. Khảo sát thực tế và phân tích nghiệp vụ
+- Chương 2. Phân tích hệ thống và Thiết kế giải pháp
+- Chương 3. Giới thiệu công nghệ
+- Chương 4. Sản phẩm phần mềm
+
+STT | Tiêu chí | Điểm định mức
+1   | Có đầy đủ các phần theo quy định của trường | 0,5
+2   | Có đầy đủ các nội dung theo yêu cầu của giáo viên hướng dẫn (trong đề cương) với khối lượng hợp lý | 2
+3   | Chất lượng nội dung các phần | 3
+4   | Trình bày (tuân thủ các quy định trình bày chung của trường, chính tả, định dạng văn bản, tuân thủ các quy tắc trình bày văn bản khoa học, etc.) | 2
+5   | Tính nguyên bản (1% đạo văn trừ 0,1 điểm; tỉ lệ đạo văn 0% => 2,5 điểm, tỉ lệ đạo văn 25% => 0 điểm) | 2,5
+
+5. TIẾN ĐỘ THỰC HIỆN
+STT | Công việc | Kết quả dự kiến | Xác nhận tiến độ
+1   | Khảo sát thực tế và phân tích yêu cầu | Văn bản mô tả nghiệp vụ và yêu cầu hệ thống | Ngày ... Ký tên
+2   | Phân tích và thiết kế hệ thống | Các biểu đồ UML | Ngày ... Ký tên
+3   | Thiết kế giao diện và cơ sở dữ liệu | Mô hình giao diện prototype, cấu trúc cơ sở dữ liệu | Ngày ... Ký tên
+4   | Xây dựng chức năng backend cơ bản | Các API cơ bản (CRUD) và kết nối cơ sở dữ liệu | Ngày ... Ký tên
+5   | Xây dựng chức năng frontend cơ bản | Giao diện cơ bản với các tính năng chính hoạt động | Ngày ... Ký tên
+6   | Hoàn thiện các chức năng chi tiết | Hoàn thành tất cả tính năng đã đề xuất | Ngày ... Ký tên
+7   | Hoàn thiện các chức năng chi tiết | Hoàn thành tất cả tính năng đã đề xuất | Ngày ... Ký tên
+8   | Triển khai và báo cáo | Hệ thống hoàn chỉnh, báo cáo kết quả | Ngày ... Ký tên
+
+Lãnh đạo khoa | Lãnh đạo bộ môn | Giáo viên phụ trách
+               |                 | Nguyễn Thị Dung
+
+Đề tài giao cho sinh viên .......................................................................

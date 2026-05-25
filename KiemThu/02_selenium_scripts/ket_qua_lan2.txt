@@ -1,0 +1,169 @@
+
+> quanlykhoahoc-selenium-tests@1.0.0 test
+> node tests/run_all.js
+
+╔══════════════════════════════════════════════════════════╗
+║   QuanLyKhoaHoc5 – Playwright Automated Test Suite       ║
+║   Started: 09:16:39 25/5/2026                         ║
+╚══════════════════════════════════════════════════════════╝
+
+
+▶ Running: 01_login_test.js
+
+══════════ MODULE 1: ĐĂNG NHẬP / ĐĂNG XUẤT ══════════
+
+[TC-001] ✅ Admin đăng nhập → redirect /Admin | URL: http://localhost:5299/Admin
+[TC-009] ✅ Đăng xuất → redirect Login
+[TC-002] ✅ GiangVien đăng nhập → redirect Dashboard | URL: http://localhost:5299/GiangVien/Dashboard
+[TC-003] ✅ HocVien đăng nhập → redirect Dashboard | URL: http://localhost:5299/HocVien/Dashboard
+[TC-004] ✅ Sai mật khẩu → ở lại Login + thông báo lỗi | Lỗi: "Email hoặc mật khẩu không đúng"
+[TC-005] ✅ Email không tồn tại → thông báo lỗi | Lỗi: "Email hoặc mật khẩu không đúng"
+[TC-007] ✅ Email rỗng → validation/ở lại Login
+[TC-010] ✅ Trang đổi mật khẩu tải được | URL: http://localhost:5299/Account/ChangePassword
+[CONSOLE] ✅ Không có JS errors trong quá trình test
+
+──────────────────────────────────────────────────
+TỔNG: 9 | ✅ 9 | ❌ 0
+──────────────────────────────────────────────────
+
+✅ PASSED: 01_login_test.js
+
+▶ Running: 02_khoa_hoc_test.js
+
+══════════ MODULE 2: KHÓA HỌC ══════════
+
+[TC-011] ✅ Admin xem DS khóa học (cards/rows hiển thị) | Count: 7
+[TC-013] ✅ Filter khóa học theo ngôn ngữ – trang load OK | Title: "Danh sách khóa học - Trung tâm Ngoại ngữ NNL"
+[TC-014a] ✅ Trang Create KH tải được (form tồn tại)
+[TC-014b] ✅ POST Create KH → redirect DS | URL: http://localhost:5299/KhoaHoc
+[TC-015] ✅ POST Create KH thiếu tên → validation lỗi
+[TC-019] ❌ ChangeStatus – không tìm thấy nút | skip
+[TC-012] ✅ HV chỉ thấy KH DangMo (không thấy Đã đóng) |   Nguyễn Văn An Học viên Tiếng Anh Đang mở 
+                            Sơ cấp  
+[TC-020] ✅ Chi tiết KH tải được | URL: http://localhost:5299/KhoaHoc/Details/7
+
+──────────────────────────────────────────────────
+TỔNG: 8 | ✅ 7 | ❌ 1
+──────────────────────────────────────────────────
+
+❌ FAILED: 02_khoa_hoc_test.js (exit code 1)
+
+▶ Running: 03_lop_hoc_test.js
+
+══════════ MODULE 3: LỚP HỌC ══════════
+
+[TC-021] ✅ Admin thấy tất cả lớp | Rows: 10
+[TC-023a] ✅ Trang Create LopHoc tải được
+[TC-023b] ✅ POST Create LopHoc → redirect DS | URL: http://localhost:5299/LopHoc
+[TC-024] ✅ Trang Edit LopHoc tải được
+[TC-022] ✅ GV truy cập /LopHoc tải được | Title: "Danh sách lớp học - Trung tâm Ngoại ngữ NNL"
+
+──────────────────────────────────────────────────
+TỔNG: 5 | ✅ 5 | ❌ 0
+──────────────────────────────────────────────────
+
+✅ PASSED: 03_lop_hoc_test.js
+
+▶ Running: 04_dang_ky_test.js
+
+══════════ MODULE 4: ĐĂNG KÝ KHÓA HỌC ══════════
+
+[TC-027a] ✅ HV xem /DangKy/CuaToi | Title: "Đăng ký của tôi - Trung tâm Ngoại ngữ NNL"
+[TC-027b] ✅ Trang CuaToi tải danh sách lớp mở | Items: 4
+[TC-027c] ✅ Đăng ký hoặc thông báo hiện | URL: http://localhost:5299/DangKy/CuaToi
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+dialog.accept: Cannot accept dialog which is already handled!
+    at _Page.<anonymous> (D:\QuanLyKhoaHoc5\KiemThu\02_selenium_scripts\tests\04_dang_ky_test.js:46:32) {
+  name: 'Error'
+}
+
+Node.js v24.15.0
+❌ FAILED: 04_dang_ky_test.js (exit code 1)
+
+▶ Running: 05_diem_test.js
+
+══════════ MODULE 5: ĐIỂM SỐ ══════════
+
+[TC-034b] ✅ Không tìm được lopHocId – skip | skip
+[TC-035] ✅ skip | skip
+[TC-036] ✅ skip | skip
+[TC-037] ✅ skip | skip
+[TC-038] ✅ skip | skip
+[TC-039] ✅ HV xem /Diem/CuaToi tải OK | Title: "Điểm của tôi - Trung tâm Ngoại ngữ NNL"
+
+──────────────────────────────────────────────────
+TỔNG: 6 | ✅ 6 | ❌ 0
+──────────────────────────────────────────────────
+
+✅ PASSED: 05_diem_test.js
+
+▶ Running: 06_thanh_toan_test.js
+
+══════════ MODULE 6: THANH TOÁN ══════════
+
+[TC-040a] ✅ HV xem /ThanhToan/CuaToi | Title: "Thanh toán học phí - Trung tâm Ngoại ngữ NNL"
+[TC-040b] ✅ Không có nút TaoYeuCau (HV chưa có DaDuyet hoặc đã có yêu cầu) | skip
+[TC-040c] ✅ skip | skip
+[TC-041] ✅ TaoYeuCau KH không hợp lệ → lỗi hoặc redirect | URL: http://localhost:5299/ThanhToan/CuaToi, Msg: "Bạn chưa đăng ký hoặc chưa được duyệt vào khóa học này."
+[TC-043a] ✅ Admin xem /ThanhToan | Title: "Quản lý thanh toán - Trung tâm Ngoại ngữ NNL"
+[TC-043b] ✅ Nút Duyệt thanh toán tồn tại
+[TC-045] ✅ API ThongKe6Thang trả về 6 phần tử | Length: 6
+
+──────────────────────────────────────────────────
+TỔNG: 7 | ✅ 7 | ❌ 0
+──────────────────────────────────────────────────
+
+✅ PASSED: 06_thanh_toan_test.js
+
+▶ Running: 07_tai_khoan_test.js
+
+══════════ MODULE 7: QUẢN LÝ TÀI KHOẢN ══════════
+
+[TC-046a] ✅ Trang /TaiKhoan tải OK | Title: "Quản lý tài khoản - Trung tâm Ngoại ngữ NNL"
+[TC-046b] ✅ Nút "Tạo tài khoản mới" tồn tại
+[TC-046c] ✅ Bảng có 17 tài khoản
+[TC-048a] ✅ Nút Khóa/Mở khóa tồn tại
+[TC-050a] ✅ Nút Reset MK tồn tại
+[TC-051a] ✅ Nút Sửa vai trò tồn tại
+[TC-049a] ✅ Badge "Bạn" hiện cho tài khoản mình
+[TC-049b] ✅ Self row: Khóa bị ẩn
+[TC-049c] ✅ Self row: SuaVaiTro bị ẩn
+[TC-049d] ✅ Self row: Reset vẫn hiện
+[TC-046d] ✅ Modal Tạo TK mở được
+[TC-046e] ✅ Tất cả 5 field trong modal
+[TC-046f] ✅ POST Create → success=true | {"success":true,"message":"Đã tạo tài khoản <strong>AutoTest User</strong> (Học viên) thành công.","user":{"id":18,"hoTen":"AutoTest User","email":"test.auto.1779675425236@example.com","vaiTro":"HocVien","roleTxt":"Học viên","roleClass":"bg-success","ngayTao":"25/05/2026"}}
+[TC-047] ✅ POST Create email trùng → success=false | {"success":false,"message":"Email này đã tồn tại trong hệ thống."}
+[TC-048b] ✅ KhoaTaiKhoan: nút đổi class sau toggle | Class: btn btn-success btn-sm btn-khoa
+[TC-050b] ✅ Reset MK → toast hiện | Toast: "Đã khóa tài khoản thành công."
+[CONSOLE] ❌ Không có JS errors | lockTarget is not defined
+
+──────────────────────────────────────────────────
+TỔNG: 17 | ✅ 16 | ❌ 1
+──────────────────────────────────────────────────
+
+❌ FAILED: 07_tai_khoan_test.js (exit code 1)
+
+▶ Running: 08_phan_cong_test.js
+
+══════════ MODULE 8: PHÂN CÔNG GIẢNG VIÊN ══════════
+
+[TC-053a] ✅ Trang PhanCong tải được | Title: "Phân công giảng viên - Trung tâm Ngoại ngữ NNL"
+[TC-053b] ✅ Form DoPhanCong tồn tại
+[TC-053c] ✅ Phân công GV → thông báo thành công | Msg: "Đã cập nhật phân công giảng viên"
+[TC-054] ✅ Trang LichSuPhanCong tải được | Title: "Lịch sử phân công - Trung tâm Ngoại ngữ NNL"
+[TC-055] ❌ Hủy phân công → thông báo | Msg: ""
+
+──────────────────────────────────────────────────
+TỔNG: 5 | ✅ 4 | ❌ 1
+──────────────────────────────────────────────────
+
+❌ FAILED: 08_phan_cong_test.js (exit code 1)
+
+╔══════════════════════════════════════════════════════════╗
+║  FINAL RESULT: ❌ 4 file(s) FAILED                       ║
+║  Total time: 45.1s                                        ║
+╚══════════════════════════════════════════════════════════╝
+

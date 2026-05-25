@@ -1,0 +1,239 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.DiemSoHocVienViewModel
+@{
+    ViewData["Title"] = "Điểm số của tôi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Điểm số của tôi</h4>
+</div>
+
+@if (!Model.CacKy.Any())
+{
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+        Bạn chưa có điểm số nào.
+    </div>
+}
+else
+{
+    <!-- Radar Chart + Tóm tắt -->
+    @if (Model.RadarLabels.Any())
+    {
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-md-5">
+                <div class="card h-100">
+                    <div class="card-header py-2">
+                        <i class="bi bi-radar me-2 text-primary"></i>Biểu đồ năng lực tổng thể
+                    </div>
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <canvas id="radarChart" style="max-height:280px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-7">
+                <div class="card h-100">
+                    <div class="card-header py-2">
+                        <i class="bi bi-trophy me-2 text-warning"></i>Thành tích nổi bật
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            @{
+                                var allDiems = Model.CacKy.SelectMany(k => k.Mons).ToList();
+                                var diemCoGiaTri = allDiems.Where(m => m.DiemTongKet.HasValue).ToList();
+                                double? diemTb = diemCoGiaTri.Any() ? Math.Round(diemCoGiaTri.Average(m => m.DiemTongKet!.Value), 2) : null;
+                                int soMonDat = diemCoGiaTri.Count(m => m.DiemTongKet >= 4.0);
+                                int soMonChuaDat = diemCoGiaTri.Count(m => m.DiemTongKet < 4.0);
+                                double? diemCao = diemCoGiaTri.Any() ? diemCoGiaTri.Max(m => m.DiemTongKet) : null;
+                            }
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3 bg-primary bg-opacity-10">
+                                    <div class="fs-2 fw-bold text-primary">@(diemTb?.ToString("F2") ?? "—")</div>
+                                    <div class="small text-muted">Điểm trung bình</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3 bg-warning bg-opacity-10">
+                                    <div class="fs-2 fw-bold text-warning">@(diemCao?.ToString("F2") ?? "—")</div>
+                                    <div class="small text-muted">Điểm cao nhất</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3 bg-success bg-opacity-10">
+                                    <div class="fs-2 fw-bold text-success">@soMonDat</div>
+                                    <div class="small text-muted">Môn đạt (≥ 4.0)</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded-3 bg-danger bg-opacity-10">
+                                    <div class="fs-2 fw-bold text-danger">@soMonChuaDat</div>
+                                    <div class="small text-muted">Môn chưa đạt</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Tabs kỳ học -->
+    <div class="card">
+        <div class="card-header py-0">
+            <ul class="nav nav-tabs card-header-tabs" id="kyHocTabs" role="tablist">
+                @for (int i = 0; i < Model.CacKy.Count; i++)
+                {
+                    var ky = Model.CacKy[i];
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(i == Model.CacKy.Count - 1 ? "active" : "")"
+                                id="tab-@i" data-bs-toggle="tab" data-bs-target="#pane-@i"
+                                type="button" role="tab">
+                            @ky.TenKy
+                            @if (ky.DiemTrungBinhKy.HasValue)
+                            {
+                                <span class="badge bg-primary ms-1">@ky.DiemTrungBinhKy.Value.ToString("F2")</span>
+                            }
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="tab-content p-3">
+            @for (int i = 0; i < Model.CacKy.Count; i++)
+            {
+                var ky = Model.CacKy[i];
+                <div class="tab-pane fade @(i == Model.CacKy.Count - 1 ? "show active" : "")"
+                     id="pane-@i" role="tabpanel">
+
+                    @if (ky.DiemTrungBinhKy.HasValue)
+                    {
+                        <div class="alert alert-info py-2 mb-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Điểm trung bình kỳ này: <strong>@ky.DiemTrungBinhKy.Value.ToString("F2")</strong>
+                        </div>
+                    }
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Khóa học</th>
+                                    <th>Lớp</th>
+                                    <th>Ngôn ngữ</th>
+                                    <th class="text-center">GK</th>
+                                    <th class="text-center">CK</th>
+                                    <th class="text-center">Tổng kết</th>
+                                    <th class="text-center">Xếp loại</th>
+                                    <th>Nhận xét GV</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var mon in ky.Mons)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@mon.TenKhoaHoc</td>
+                                        <td class="text-muted small">@mon.TenLop</td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">@mon.NgonNgu</span>
+                                        </td>
+                                        <td class="text-center">@(mon.DiemGiuaKy?.ToString("F1") ?? "—")</td>
+                                        <td class="text-center">@(mon.DiemCuoiKy?.ToString("F1") ?? "—")</td>
+                                        <td class="text-center fw-bold fs-5">
+                                            @if (mon.DiemTongKet.HasValue)
+                                            {
+                                                <span class="@(mon.DiemTongKet >= 4 ? "text-success" : "text-danger")">
+                                                    @mon.DiemTongKet.Value.ToString("F2")
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">—</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (mon.XepLoai != null)
+                                            {
+                                                var bc = mon.XepLoai switch {
+                                                    "Xuất sắc" => "bg-success",
+                                                    "Giỏi" => "bg-primary",
+                                                    "Khá" => "bg-info text-dark",
+                                                    "Trung bình" => "bg-warning text-dark",
+                                                    _ => "bg-danger"
+                                                };
+                                                <span class="badge @bc fs-6">@mon.XepLoai</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Chưa có điểm</span>
+                                            }
+                                        </td>
+                                        <td class="small text-muted fst-italic">@(mon.NhanXet ?? "—")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Progress bars xếp loại kỳ này -->
+                    @{
+                        var monsKy = ky.Mons.Where(m => m.DiemTongKet.HasValue).ToList();
+                        if (monsKy.Any())
+                        {
+                            var pcts = new[] {
+                                ("Xuất sắc", "success", monsKy.Count(m => m.DiemTongKet >= 8.5)),
+                                ("Giỏi",     "primary", monsKy.Count(m => m.DiemTongKet >= 7.0 && m.DiemTongKet < 8.5)),
+                                ("Khá",      "info",    monsKy.Count(m => m.DiemTongKet >= 5.5 && m.DiemTongKet < 7.0)),
+                                ("Trung bình","warning",monsKy.Count(m => m.DiemTongKet >= 4.0 && m.DiemTongKet < 5.5)),
+                                ("Yếu",      "danger",  monsKy.Count(m => m.DiemTongKet < 4.0))
+                            }.Where(p => p.Item3 > 0).ToArray();
+                            if (pcts.Any())
+                            {
+                                <div class="mt-2">
+                                    <small class="text-muted fw-semibold">Phân loại:</small>
+                                    <div class="d-flex gap-2 flex-wrap mt-1">
+                                        @foreach (var (label, color, count) in pcts)
+                                        {
+                                            <span class="badge bg-@color">@label: @count</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+@if (Model.RadarLabels.Any())
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+    (function(){
+        var labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RadarLabels));
+        var data   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RadarData));
+        new Chart(document.getElementById('radarChart').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Điểm tổng kết',
+                    data: data,
+                    backgroundColor: 'rgba(13,110,253,.15)',
+                    borderColor: '#0d6efd',
+                    pointBackgroundColor: '#0d6efd',
+                    pointRadius: 4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { r: { min: 0, max: 10, ticks: { stepSize: 2 } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    })();
+    </script>
+}
+}

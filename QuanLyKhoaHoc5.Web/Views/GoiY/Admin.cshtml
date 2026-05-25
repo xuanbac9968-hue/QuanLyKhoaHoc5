@@ -1,0 +1,39 @@
+@model List<QuanLyKhoaHoc5.Web.Models.Entities.GoiYKhoaHoc>
+@{ ViewData["Title"] = "Log AI Gợi ý"; int page = (int)(ViewBag.Page ?? 1); int totalPages = (int)(ViewBag.TotalPages ?? 1); }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-stars me-2 text-warning"></i>Log AI Gợi ý khóa học</h4>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Học viên</th><th>Khóa được gợi ý</th><th>Điểm phù hợp</th><th>Lý do AI</th><th>Thời gian</th></tr>
+                </thead>
+                <tbody>
+                @foreach (var g in Model) {
+                    <tr>
+                        <td class="fw-semibold">@g.HocVien?.HoTen<br/><small class="text-muted">@g.HocVien?.MaHocVien</small></td>
+                        <td>@g.KhoaHocGoiY?.TenKhoaHoc</td>
+                        <td><span class="badge bg-warning text-dark">@(g.DiemPhuHop?.ToString("F0") ?? "-")%</span></td>
+                        <td class="small" style="max-width:250px">@g.LyDoGoiY</td>
+                        <td class="small text-muted">@g.NgayGoiY.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+                @if (!Model.Any()) { <tr><td colspan="5" class="text-center text-muted py-4">Chưa có log gợi ý nào</td></tr> }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (totalPages > 1) {
+        <div class="card-footer">
+            <nav><ul class="pagination pagination-sm mb-0 justify-content-center">
+                @for (int i = 1; i <= totalPages; i++) {
+                    <li class="page-item @(i == page ? "active" : "")">
+                        <a class="page-link" asp-action="Admin" asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul></nav>
+        </div>
+    }
+</div>

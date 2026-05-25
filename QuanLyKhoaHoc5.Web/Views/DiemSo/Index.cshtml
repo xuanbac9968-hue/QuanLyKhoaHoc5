@@ -1,0 +1,277 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.DiemSoFilterViewModel
+@using QuanLyKhoaHoc5.Web.Models.Entities
+@{
+    ViewData["Title"] = "Quản lý điểm số";
+    var kyHocs   = ViewBag.KyHocs   as List<KyHoc>   ?? [];
+    var khoaHocs = ViewBag.KhoaHocs as List<KhoaHoc> ?? [];
+    var lopHocs  = ViewBag.LopHocs  as List<LopHoc>  ?? [];
+    int totalPages = (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Quản lý Điểm số</h4>
+    <div class="d-flex gap-2">
+        <a asp-action="KyHocList" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-calendar3 me-1"></i>Kỳ học
+        </a>
+        <a asp-action="ExportExcel"
+           asp-route-kyHocId="@Model.KyHocId"
+           asp-route-khoaHocId="@Model.KhoaHocId"
+           asp-route-lopHocId="@Model.LopHocId"
+           asp-route-timKiem="@Model.TimKiem"
+           class="btn btn-success btn-sm">
+            <i class="bi bi-file-earmark-excel me-1"></i>Xuất Excel
+        </a>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-primary">
+            <div class="small opacity-75">Tổng học viên</div>
+            <div class="fs-3 fw-bold">@Model.ThongKe.TongHocVien</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-success">
+            <div class="small opacity-75">Đạt (≥ 4.0)</div>
+            <div class="fs-3 fw-bold">@Model.ThongKe.SoHocVienDat <span class="fs-6 fw-normal">(@Model.ThongKe.TiLeDat%)</span></div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card bg-danger">
+            <div class="small opacity-75">Chưa đạt</div>
+            <div class="fs-3 fw-bold">@Model.ThongKe.SoHocVienChuaDat</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card" style="background:linear-gradient(135deg,#6f42c1,#e83e8c);">
+            <div class="small opacity-75">Điểm TB</div>
+            <div class="fs-3 fw-bold">@Model.ThongKe.DiemTrungBinh.ToString("F2")</div>
+        </div>
+    </div>
+</div>
+
+<!-- Histogram + Filters -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-lg-5">
+        <div class="card h-100">
+            <div class="card-header py-2">
+                <i class="bi bi-bar-chart me-2 text-primary"></i>Phân bố điểm tổng kết
+            </div>
+            <div class="card-body py-2">
+                <canvas id="histogramChart" height="160"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-7">
+        <div class="card h-100">
+            <div class="card-header py-2">
+                <i class="bi bi-funnel me-2 text-primary"></i>Bộ lọc
+            </div>
+            <div class="card-body">
+                <form method="get" asp-action="Index" id="filterForm">
+                    <div class="row g-2">
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Kỳ học</label>
+                            <select name="kyHocId" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Tất cả kỳ</option>
+                                @foreach (var k in kyHocs)
+                                {
+                                    <option value="@k.Id" selected="@(Model.KyHocId == k.Id)">@k.TenKy</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Khóa học</label>
+                            <select name="khoaHocId" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Tất cả khóa</option>
+                                @foreach (var k in khoaHocs)
+                                {
+                                    <option value="@k.Id" selected="@(Model.KhoaHocId == k.Id)">@k.TenKhoaHoc</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Lớp học</label>
+                            <select name="lopHocId" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">Tất cả lớp</option>
+                                @foreach (var l in lopHocs)
+                                {
+                                    <option value="@l.Id" selected="@(Model.LopHocId == l.Id)">@l.TenLop</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Tìm học viên</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="timKiem" value="@Model.TimKiem"
+                                       class="form-control form-control-sm" placeholder="Tên / Mã HV..." />
+                                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.KyHocId.HasValue || Model.KhoaHocId.HasValue || Model.LopHocId.HasValue || !string.IsNullOrEmpty(Model.TimKiem))
+                    {
+                        <div class="mt-2">
+                            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-x-circle me-1"></i>Xóa bộ lọc
+                            </a>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grade Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center py-2">
+        <span><i class="bi bi-table me-2 text-primary"></i>Danh sách điểm <span class="badge bg-secondary ms-1">@Model.TotalItems</span></span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-sm mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Mã HV</th>
+                    <th>Họ tên</th>
+                    <th>Khóa học</th>
+                    <th>Lớp</th>
+                    <th>Kỳ học</th>
+                    <th class="text-center">GK</th>
+                    <th class="text-center">CK</th>
+                    <th class="text-center">Tổng kết</th>
+                    <th class="text-center">Xếp loại</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-muted small text-center">Cập nhật</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Items.Any())
+                {
+                    <tr><td colspan="12" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>Không có dữ liệu</td></tr>
+                }
+                @{ int stt = (Model.Page - 1) * Model.PageSize + 1; }
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="text-muted small">@(stt++)</td>
+                        <td><code class="small">@item.MaHocVien</code></td>
+                        <td class="fw-semibold">@item.TenHocVien</td>
+                        <td class="small">@item.TenKhoaHoc</td>
+                        <td class="small text-muted">@item.TenLop</td>
+                        <td class="small">
+                            @if (item.TenKyHoc != null)
+                            { <span class="badge bg-info text-dark">@item.TenKyHoc</span> }
+                            else
+                            { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-center">@(item.DiemGiuaKy?.ToString("F1") ?? "—")</td>
+                        <td class="text-center">@(item.DiemCuoiKy?.ToString("F1") ?? "—")</td>
+                        <td class="text-center fw-bold">
+                            @if (item.DiemTongKet.HasValue)
+                            {
+                                <span class="@(item.DiemTongKet >= 4.0 ? "text-success" : "text-danger")">
+                                    @item.DiemTongKet.Value.ToString("F2")
+                                </span>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-center">
+                            @if (item.XepLoai != null)
+                            {
+                                var badgeClass = item.XepLoai switch {
+                                    "Xuất sắc" => "bg-success",
+                                    "Giỏi"     => "bg-primary",
+                                    "Khá"      => "bg-info text-dark",
+                                    "Trung bình" => "bg-warning text-dark",
+                                    _          => "bg-danger"
+                                };
+                                <span class="badge @badgeClass">@item.XepLoai</span>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-center">
+                            @if (item.IsKhoa)
+                            { <span class="badge bg-secondary"><i class="bi bi-lock-fill me-1"></i>Đã khóa</span> }
+                            else
+                            { <span class="badge bg-light text-success border border-success-subtle">Mở</span> }
+                        </td>
+                        <td class="text-center text-muted small">@(item.NgayCapNhat?.ToString("dd/MM") ?? "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (totalPages > 1)
+    {
+        <div class="card-footer d-flex justify-content-between align-items-center py-2">
+            <small class="text-muted">Trang @Model.Page / @totalPages · @Model.TotalItems bản ghi</small>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index"
+                               asp-route-page="@(Model.Page - 1)"
+                               asp-route-kyHocId="@Model.KyHocId"
+                               asp-route-khoaHocId="@Model.KhoaHocId"
+                               asp-route-lopHocId="@Model.LopHocId"
+                               asp-route-timKiem="@Model.TimKiem">‹</a>
+                        </li>
+                    }
+                    @for (int p = Math.Max(1, Model.Page - 2); p <= Math.Min(totalPages, Model.Page + 2); p++)
+                    {
+                        <li class="page-item @(p == Model.Page ? "active" : "")">
+                            <a class="page-link" asp-action="Index"
+                               asp-route-page="@p"
+                               asp-route-kyHocId="@Model.KyHocId"
+                               asp-route-khoaHocId="@Model.KhoaHocId"
+                               asp-route-lopHocId="@Model.LopHocId"
+                               asp-route-timKiem="@Model.TimKiem">@p</a>
+                        </li>
+                    }
+                    @if (Model.Page < totalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index"
+                               asp-route-page="@(Model.Page + 1)"
+                               asp-route-kyHocId="@Model.KyHocId"
+                               asp-route-khoaHocId="@Model.KhoaHocId"
+                               asp-route-lopHocId="@Model.LopHocId"
+                               asp-route-timKiem="@Model.TimKiem">›</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+    var hist = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ThongKe.Histogram));
+    var ctx = document.getElementById('histogramChart').getContext('2d');
+    var labels = ['0–1','1–2','2–3','3–4','4–5','5–6','6–7','7–8','8–9','9–10'];
+    var colors = labels.map(function(_,i){
+        if (i < 4) return 'rgba(220,53,69,.8)';
+        if (i < 7) return 'rgba(255,193,7,.9)';
+        return 'rgba(25,135,84,.85)';
+    });
+    new Chart(ctx, {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Học viên', data: hist, backgroundColor: colors, borderRadius: 4 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+})();
+</script>
+}

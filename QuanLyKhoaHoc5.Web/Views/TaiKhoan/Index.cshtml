@@ -1,0 +1,492 @@
+@model List<QuanLyKhoaHoc5.Web.Models.Entities.NguoiDung>
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+    string vtFilter    = ViewBag.VaiTro ?? "";
+    int    currentUid  = (int)(ViewBag.CurrentUserId ?? 0);
+}
+
+<div id="page-data" data-current-user-id="@currentUid" style="display:none"></div>
+
+@Html.AntiForgeryToken()
+<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index:9999;min-width:300px"></div>
+
+@* ══ HEADER ══ *@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-person-lock me-2 text-primary"></i>Quản lý tài khoản
+    </h4>
+    <button class="btn btn-primary" onclick="openCreateModal()">
+        <i class="bi bi-person-plus-fill me-1"></i>Tạo tài khoản mới
+    </button>
+</div>
+
+@* ══ BỘ LỌC ══ *@
+<div class="card mb-4 shadow-sm">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label small text-muted mb-1">Tìm kiếm</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control" placeholder="Họ tên, email..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Vai trò</label>
+                <select name="vaiTro" class="form-select">
+                    <option value="">Tất cả vai trò</option>
+                    <option value="Admin"     selected="@(vtFilter=="Admin")">Admin</option>
+                    <option value="GiangVien" selected="@(vtFilter=="GiangVien")">Giảng viên</option>
+                    <option value="HocVien"   selected="@(vtFilter=="HocVien")">Học viên</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-funnel me-1"></i>Lọc
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Xóa lọc
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* ══ BẢNG TÀI KHOẢN ══ *@
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-table me-2"></i>Danh sách
+            (<span id="tk-count">@Model.Count</span> tài khoản)</span>
+        <span class="text-muted small">Nhấp nút để thực hiện thao tác</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th style="width:110px">Vai trò</th>
+                        <th style="width:105px">Ngày tạo</th>
+                        <th style="width:110px" class="text-center">Trạng thái</th>
+                        <th style="min-width:280px" class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="tk-tbody">
+                @if (!Model.Any())
+                {
+                    <tr class="no-data-row">
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                            Không tìm thấy tài khoản nào
+                        </td>
+                    </tr>
+                }
+                @foreach (var u in Model)
+                {
+                    var roleClass = u.VaiTro switch {
+                        "Admin"     => "bg-danger",
+                        "GiangVien" => "bg-primary",
+                        _           => "bg-success"
+                    };
+                    var roleTxt = u.VaiTro switch {
+                        "Admin"     => "Admin",
+                        "GiangVien" => "Giảng viên",
+                        _           => "Học viên"
+                    };
+                    bool isSelf = (u.Id == currentUid);
+                    <tr id="row-tk-@u.Id">
+                        <td class="fw-semibold">
+                            @u.HoTen
+                            @if (isSelf)
+                            {
+                                <span class="badge bg-info ms-1" title="Tài khoản đang đăng nhập">Bạn</span>
+                            }
+                        </td>
+                        <td class="small text-muted">@u.Email</td>
+                        <td>
+                            <span class="badge @roleClass" id="badge-role-@u.Id">@roleTxt</span>
+                        </td>
+                        <td class="small">@u.NgayTao.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center" id="status-@u.Id">
+                            @if (u.IsActive)
+                            {
+                                <span class="badge bg-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Đã khóa</span>
+                            }
+                        </td>
+                        <td id="actions-@u.Id" class="text-center">
+                            <div class="d-flex flex-column gap-1 align-items-center">
+                                <div class="d-flex gap-1 flex-wrap justify-content-center">
+                                    @if (!isSelf)
+                                    {
+                                        @if (u.IsActive)
+                                        {
+                                            <button class="btn btn-warning btn-sm btn-khoa"
+                                                    data-id="@u.Id" title="Khóa tài khoản">
+                                                <i class="bi bi-lock-fill me-1"></i>Khóa
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success btn-sm btn-khoa"
+                                                    data-id="@u.Id" title="Mở khóa tài khoản">
+                                                <i class="bi bi-unlock-fill me-1"></i>Mở khóa
+                                            </button>
+                                        }
+                                    }
+                                    <button class="btn btn-secondary btn-sm btn-reset"
+                                            data-id="@u.Id" title="Reset về mật khẩu mặc định">
+                                        <i class="bi bi-key-fill me-1"></i>Reset MK
+                                    </button>
+                                </div>
+                                @if (!isSelf)
+                                {
+                                    <button class="btn btn-info btn-sm btn-sua-vaitro"
+                                            data-id="@u.Id"
+                                            data-hoten="@u.HoTen"
+                                            data-vaitro="@u.VaiTro"
+                                            title="Thay đổi vai trò">
+                                        <i class="bi bi-pencil-square me-1"></i>Sửa vai trò
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* ══ MODAL: TẠO TÀI KHOẢN MỚI ══ *@
+<div class="modal fade" id="modalCreateTK" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="createModalLabel">
+                    <i class="bi bi-person-plus-fill me-2"></i>Tạo tài khoản mới
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="create-alert" class="alert alert-danger d-none py-2 small"></div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Họ tên <span class="text-danger">*</span></label>
+                    <input type="text" id="cr-hoTen" class="form-control" placeholder="Nguyễn Văn A" maxlength="100" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                    <input type="email" id="cr-email" class="form-control" placeholder="email@example.com" maxlength="256" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Vai trò <span class="text-danger">*</span></label>
+                    <select id="cr-vaiTro" class="form-select">
+                        <option value="HocVien">Học viên</option>
+                        <option value="GiangVien">Giảng viên</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mật khẩu <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" id="cr-matKhau" class="form-control"
+                               placeholder="Tối thiểu 6 ký tự" maxlength="128" />
+                        <button class="btn btn-outline-secondary" type="button"
+                                onclick="togglePw('cr-matKhau',this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" id="cr-xacNhan" class="form-control"
+                               placeholder="Nhập lại mật khẩu" maxlength="128" />
+                        <button class="btn btn-outline-secondary" type="button"
+                                onclick="togglePw('cr-xacNhan',this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="btn-create-submit">
+                    <i class="bi bi-check-lg me-1"></i>Tạo tài khoản
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ══ MODAL: SỬA VAI TRÒ ══ *@
+<div class="modal fade" id="modalSuaVaiTro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil-square me-2"></i>Sửa vai trò
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="svt-alert" class="alert alert-danger d-none py-2 small"></div>
+                <p class="mb-1 text-muted small">Tài khoản</p>
+                <p class="fw-bold mb-3" id="svt-hoten"></p>
+                <label class="form-label fw-semibold">Vai trò mới</label>
+                <select id="svt-vaiTro" class="form-select">
+                    <option value="HocVien">Học viên</option>
+                    <option value="GiangVien">Giảng viên</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <div class="mt-2 text-warning small d-none" id="svt-warning">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Đổi vai trò sẽ xóa dữ liệu hồ sơ cũ (nếu không có ràng buộc).
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-info text-white" id="btn-svt-submit">
+                    <i class="bi bi-check-lg me-1"></i>Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// ── Globals ──────────────────────────────────────────────────────
+var csrf        = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? '';
+var currentUid  = parseInt(document.getElementById('page-data').dataset.currentUserId);
+var svtId       = 0;  // id tài khoản đang sửa vai trò
+
+// ── Toast ─────────────────────────────────────────────────────────
+function showToast(html, type) {
+    var id  = 'toast_' + Date.now();
+    var bg  = type === 'success' ? 'bg-success' : 'bg-danger';
+    var el  = Object.assign(document.createElement('div'), {
+        id        : id,
+        className : `toast align-items-center text-white ${bg} border-0 show mb-2`,
+        innerHTML : `<div class="d-flex"><div class="toast-body">${html}</div>
+                     <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.closest('.toast').remove()"></button></div>`
+    });
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+}
+
+// ── AJAX helper ───────────────────────────────────────────────────
+async function post(url, body) {
+    body['__RequestVerificationToken'] = csrf;
+    const r = await fetch(url, {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body    : new URLSearchParams(body)
+    });
+    return r.json();
+}
+
+// ── UI helpers ────────────────────────────────────────────────────
+function togglePw(inputId, btn) {
+    var inp = document.getElementById(inputId);
+    var show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.querySelector('i').className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+
+function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateCount() {
+    var n = document.querySelectorAll('#tk-tbody tr:not(.no-data-row)').length;
+    document.getElementById('tk-count').textContent = n;
+}
+
+function removeNoDataRow() {
+    var row = document.querySelector('#tk-tbody .no-data-row');
+    if (row) row.remove();
+}
+
+// ── MODAL: Tạo tài khoản ─────────────────────────────────────────
+function openCreateModal() {
+    ['cr-hoTen','cr-email','cr-matKhau','cr-xacNhan'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('cr-vaiTro').value = 'HocVien';
+    document.getElementById('create-alert').classList.add('d-none');
+    new bootstrap.Modal(document.getElementById('modalCreateTK')).show();
+}
+
+document.getElementById('btn-create-submit').addEventListener('click', async function() {
+    var hoTen   = document.getElementById('cr-hoTen').value.trim();
+    var email   = document.getElementById('cr-email').value.trim();
+    var vaiTro  = document.getElementById('cr-vaiTro').value;
+    var matKhau = document.getElementById('cr-matKhau').value;
+    var xacNhan = document.getElementById('cr-xacNhan').value;
+
+    // Client-side pre-validate
+    var alertEl = document.getElementById('create-alert');
+    var err = '';
+    if (!hoTen)           err = 'Vui lòng nhập họ tên.';
+    else if (!email)      err = 'Vui lòng nhập email.';
+    else if (matKhau.length < 6) err = 'Mật khẩu phải có ít nhất 6 ký tự.';
+    else if (matKhau !== xacNhan) err = 'Mật khẩu xác nhận không khớp.';
+    if (err) { alertEl.textContent = err; alertEl.classList.remove('d-none'); return; }
+    alertEl.classList.add('d-none');
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang tạo...';
+
+    try {
+        var data = await post('/TaiKhoan/Create', { hoTen, email, vaiTro, matKhau, xacNhan });
+        if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('modalCreateTK')).hide();
+            showToast(data.message, 'success');
+            // Thêm dòng mới vào đầu bảng
+            removeNoDataRow();
+            var u = data.user;
+            var isSelf = (u.id === currentUid); // false for new user
+            var lockBtn = `<button class="btn btn-warning btn-sm btn-khoa" data-id="${u.id}" title="Khóa tài khoản">
+                            <i class="bi bi-lock-fill me-1"></i>Khóa</button>`;
+            var svtBtn  = `<button class="btn btn-info btn-sm btn-sua-vaitro" data-id="${u.id}"
+                            data-hoten="${escHtml(u.hoTen)}" data-vaitro="${u.vaiTro}" title="Sửa vai trò">
+                            <i class="bi bi-pencil-square me-1"></i>Sửa vai trò</button>`;
+            var newRow = `
+            <tr id="row-tk-${u.id}" class="table-success">
+              <td class="fw-semibold">${escHtml(u.hoTen)} <span class="badge bg-warning text-dark ms-1">Mới</span></td>
+              <td class="small text-muted">${escHtml(u.email)}</td>
+              <td><span class="badge ${u.roleClass}" id="badge-role-${u.id}">${escHtml(u.roleTxt)}</span></td>
+              <td class="small">${u.ngayTao}</td>
+              <td class="text-center" id="status-${u.id}"><span class="badge bg-success">Hoạt động</span></td>
+              <td id="actions-${u.id}" class="text-center">
+                <div class="d-flex flex-column gap-1 align-items-center">
+                  <div class="d-flex gap-1 flex-wrap justify-content-center">
+                    ${lockBtn}
+                    <button class="btn btn-secondary btn-sm btn-reset" data-id="${u.id}" title="Reset mật khẩu">
+                      <i class="bi bi-key-fill me-1"></i>Reset MK</button>
+                  </div>
+                  ${svtBtn}
+                </div>
+              </td>
+            </tr>`;
+            document.getElementById('tk-tbody').insertAdjacentHTML('afterbegin', newRow);
+            updateCount();
+            // Remove "Mới" badge after 5s
+            setTimeout(() => {
+                var badge = document.querySelector(`#row-tk-${u.id} .badge.bg-warning`);
+                var row   = document.getElementById(`row-tk-${u.id}`);
+                if (badge) badge.remove();
+                if (row)   row.classList.remove('table-success');
+            }, 5000);
+        } else {
+            alertEl.textContent = data.message;
+            alertEl.classList.remove('d-none');
+        }
+    } catch { alertEl.textContent = 'Lỗi kết nối. Vui lòng thử lại.'; alertEl.classList.remove('d-none'); }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Tạo tài khoản';
+});
+
+// ── MODAL: Sửa vai trò ────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.btn-sua-vaitro');
+    if (!btn) return;
+    svtId = parseInt(btn.dataset.id);
+    document.getElementById('svt-hoten').textContent  = btn.dataset.hoten;
+    document.getElementById('svt-vaiTro').value       = btn.dataset.vaitro;
+    document.getElementById('svt-alert').classList.add('d-none');
+    document.getElementById('svt-warning').classList.remove('d-none');
+    new bootstrap.Modal(document.getElementById('modalSuaVaiTro')).show();
+});
+
+document.getElementById('btn-svt-submit').addEventListener('click', async function() {
+    var vaiTroMoi = document.getElementById('svt-vaiTro').value;
+    var alertEl   = document.getElementById('svt-alert');
+    alertEl.classList.add('d-none');
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang lưu...';
+
+    try {
+        var data = await post('/TaiKhoan/SuaVaiTro', { id: svtId, vaiTroMoi });
+        if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('modalSuaVaiTro')).hide();
+            showToast(data.message, 'success');
+            // Cập nhật badge vai trò
+            var badge = document.getElementById('badge-role-' + svtId);
+            if (badge) { badge.className = `badge ${data.roleClass}`; badge.textContent = data.roleTxt; }
+            // Cập nhật data-vaitro trên nút sửa vai trò
+            var svtBtn = document.querySelector(`.btn-sua-vaitro[data-id="${svtId}"]`);
+            if (svtBtn) svtBtn.dataset.vaitro = data.vaiTroMoi;
+        } else {
+            alertEl.textContent = data.message;
+            alertEl.classList.remove('d-none');
+        }
+    } catch { alertEl.textContent = 'Lỗi kết nối. Vui lòng thử lại.'; alertEl.classList.remove('d-none'); }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Lưu thay đổi';
+});
+
+// ── Khóa / Mở khóa ────────────────────────────────────────────────
+document.addEventListener('click', async function(e) {
+    var btn = e.target.closest('.btn-khoa');
+    if (!btn) return;
+    var id      = parseInt(btn.dataset.id);
+    var isLock  = btn.classList.contains('btn-warning'); // đang Hoạt động → sắp Khóa
+    var action  = isLock ? 'khóa' : 'mở khóa';
+    if (!confirm(`Bạn có chắc muốn ${action} tài khoản này?`)) return;
+
+    btn.disabled = true;
+    try {
+        var data = await post('/TaiKhoan/KhoaTaiKhoan/' + id, {});
+        if (data.success) {
+            showToast(data.message, 'success');
+            // Cập nhật badge trạng thái
+            var status = document.getElementById('status-' + id);
+            if (status) status.innerHTML = data.isActive
+                ? '<span class="badge bg-success">Hoạt động</span>'
+                : '<span class="badge bg-danger">Đã khóa</span>';
+            // Đổi nút
+            if (data.isActive) {
+                btn.className = 'btn btn-warning btn-sm btn-khoa';
+                btn.innerHTML = '<i class="bi bi-lock-fill me-1"></i>Khóa';
+                btn.title     = 'Khóa tài khoản';
+            } else {
+                btn.className = 'btn btn-success btn-sm btn-khoa';
+                btn.innerHTML = '<i class="bi bi-unlock-fill me-1"></i>Mở khóa';
+                btn.title     = 'Mở khóa tài khoản';
+            }
+        } else {
+            showToast(data.message, 'error');
+        }
+    } catch { showToast('Lỗi kết nối. Vui lòng thử lại.', 'error'); }
+    btn.disabled = false;
+});
+
+// ── Reset mật khẩu ────────────────────────────────────────────────
+document.addEventListener('click', async function(e) {
+    var btn = e.target.closest('.btn-reset');
+    if (!btn) return;
+    var id = parseInt(btn.dataset.id);
+    if (!confirm('Reset mật khẩu về mặc định cho tài khoản này?')) return;
+
+    btn.disabled = true;
+    try {
+        var data = await post('/TaiKhoan/ResetMatKhau/' + id, {});
+        showToast(data.message, data.success ? 'success' : 'error');
+    } catch { showToast('Lỗi kết nối. Vui lòng thử lại.', 'error'); }
+    btn.disabled = false;
+});
+</script>
+}

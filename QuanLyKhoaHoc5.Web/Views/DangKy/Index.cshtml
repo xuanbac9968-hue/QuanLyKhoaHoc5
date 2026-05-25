@@ -1,0 +1,238 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.DangKyFilterViewModel
+@{
+    ViewData["Title"] = "Quản lý Đăng ký";
+    int totalPages = Model.TotalItems > 0 ? (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize) : 1;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"><i class="bi bi-clipboard-check me-2 text-primary"></i>Quản lý Đăng ký</h4>
+    <span class="badge bg-secondary fs-6">Tổng: @Model.TotalItems đơn</span>
+</div>
+
+<!-- Bộ lọc -->
+<div class="card mb-4">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Tìm kiếm học viên</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Tên hoặc mã học viên..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Trạng thái</label>
+                <select name="trangThai" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="ChoDuyet" selected="@(Model.TrangThai == "ChoDuyet")">Chờ duyệt</option>
+                    <option value="DaDuyet" selected="@(Model.TrangThai == "DaDuyet")">Đã duyệt</option>
+                    <option value="TuChoi" selected="@(Model.TrangThai == "TuChoi")">Từ chối</option>
+                    <option value="DaHuy" selected="@(Model.TrangThai == "DaHuy")">Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-funnel me-1"></i>Lọc
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Xóa lọc
+                </a>
+            </div>
+            <input type="hidden" name="page" value="1" />
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Items.Count == 0)
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>
+                Không có đơn đăng ký nào
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Học viên</th>
+                            <th>Lớp / Khóa học</th>
+                            <th>Ngôn ngữ</th>
+                            <th class="text-center">Ngày đăng ký</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Người duyệt</th>
+                            <th class="text-center" style="width:150px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dk in Model.Items)
+                        {
+                            <tr>
+                                <td class="text-muted small">@dk.Id</td>
+                                <td>
+                                    <div class="fw-semibold">@dk.TenHocVien</div>
+                                    <code class="small">@dk.MaHocVien</code>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@dk.TenLop</div>
+                                    <div class="small text-muted">@dk.TenKhoaHoc</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle">@dk.NgonNgu</span>
+                                </td>
+                                <td class="text-center small">@dk.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-center">
+                                    @{
+                                        var badgeDk = dk.TrangThai switch {
+                                            "DaDuyet" => "bg-success",
+                                            "ChoDuyet" => "bg-warning text-dark",
+                                            "TuChoi" => "bg-danger",
+                                            "DaHuy" => "bg-secondary",
+                                            _ => "bg-light text-dark"
+                                        };
+                                        var tenDk = dk.TrangThai switch {
+                                            "DaDuyet" => "Đã duyệt",
+                                            "ChoDuyet" => "Chờ duyệt",
+                                            "TuChoi" => "Từ chối",
+                                            "DaHuy" => "Đã hủy",
+                                            _ => dk.TrangThai
+                                        };
+                                    }
+                                    <span class="badge @badgeDk">@tenDk</span>
+                                    @if (!string.IsNullOrEmpty(dk.LyDoTuChoi))
+                                    {
+                                        <i class="bi bi-info-circle ms-1 text-muted" title="@dk.LyDoTuChoi" style="cursor:pointer"></i>
+                                    }
+                                </td>
+                                <td class="text-center small">
+                                    @if (!string.IsNullOrEmpty(dk.TenNguoiDuyet))
+                                    {
+                                        <span>@dk.TenNguoiDuyet</span>
+                                        @if (dk.NgayDuyet.HasValue)
+                                        {
+                                            <div class="text-muted" style="font-size:.7rem">@dk.NgayDuyet.Value.ToString("dd/MM/yyyy")</div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        @if (dk.TrangThai == "ChoDuyet")
+                                        {
+                                            <form asp-action="Duyet" asp-route-id="@dk.Id" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-success" title="Duyệt">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </form>
+                                            <button type="button" class="btn btn-sm btn-warning"
+                                                    onclick="showTuChoiModal(@dk.Id)" title="Từ chối">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        }
+                                        @if (dk.TrangThai != "DaHuy" && dk.TrangThai != "TuChoi")
+                                        {
+                                            <form asp-action="Huy" asp-route-id="@dk.Id" method="post" class="d-inline"
+                                                  onsubmit="return confirm('Hủy đơn đăng ký này?')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hủy đơn">
+                                                    <i class="bi bi-ban"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (totalPages > 1)
+            {
+                <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top">
+                    <small class="text-muted">
+                        Trang @Model.Page / @totalPages (tổng @Model.TotalItems đơn)
+                    </small>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index"
+                                   asp-route-page="@(Model.Page - 1)"
+                                   asp-route-search="@Model.Search"
+                                   asp-route-trangThai="@Model.TrangThai">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                            @for (int p = Math.Max(1, Model.Page - 2); p <= Math.Min(totalPages, Model.Page + 2); p++)
+                            {
+                                <li class="page-item @(p == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-action="Index"
+                                       asp-route-page="@p"
+                                       asp-route-search="@Model.Search"
+                                       asp-route-trangThai="@Model.TrangThai">@p</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.Page >= totalPages ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index"
+                                   asp-route-page="@(Model.Page + 1)"
+                                   asp-route-search="@Model.Search"
+                                   asp-route-trangThai="@Model.TrangThai">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal từ chối -->
+<div class="modal fade" id="tuChoiModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-x-circle text-warning me-2"></i>Từ chối đăng ký</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="tuChoiForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Lý do từ chối <span class="text-danger">*</span></label>
+                        <textarea name="lyDo" class="form-control" rows="3" required
+                                  placeholder="Nhập lý do từ chối đăng ký..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-x-circle me-1"></i>Xác nhận từ chối
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showTuChoiModal(id) {
+    document.getElementById('tuChoiForm').action = '/DangKy/TuChoi/' + id;
+    document.querySelector('#tuChoiModal textarea[name="lyDo"]').value = '';
+    new bootstrap.Modal(document.getElementById('tuChoiModal')).show();
+}
+</script>
+}

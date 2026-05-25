@@ -1,0 +1,236 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.KhoaHocFilterViewModel
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+    var isAdmin = User.IsInRole("Admin");
+    int totalPages = Model.TotalItems > 0 ? (int)Math.Ceiling((double)Model.TotalItems / Model.PageSize) : 1;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="bi bi-book me-2"></i>Danh sách khóa học</h2>
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Thêm khóa học
+        </a>
+    }
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Tìm kiếm</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" name="Search" value="@Model.Search" class="form-control" placeholder="Tên khóa học..." />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Ngôn ngữ</label>
+                    <select name="NgonNgu" class="form-select">
+                        <option value="">Tất cả</option>
+                        @foreach (var ngon in ViewBag.NgonNguList as List<string> ?? new List<string>())
+                        {
+                            <option value="@ngon" selected="@(Model.NgonNgu == ngon)">@ngon</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Trình độ</label>
+                    <select name="TrinhDo" class="form-select">
+                        <option value="">Tất cả</option>
+                        @foreach (var td in new[] { "Sơ cấp", "Trung cấp", "Cao cấp", "IELTS", "TOEIC", "N5", "N4", "N3", "N2", "N1" })
+                        {
+                            <option value="@td" selected="@(Model.TrinhDo == td)">@td</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Trạng thái</label>
+                    <select name="TrangThai" class="form-select">
+                        <option value="">Tất cả</option>
+                        <option value="DangMo" selected="@(Model.TrangThai == "DangMo")">Đang mở</option>
+                        <option value="DaDong" selected="@(Model.TrangThai == "DaDong")">Đã đóng</option>
+                        <option value="TamDung" selected="@(Model.TrangThai == "TamDung")">Tạm dừng</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-funnel me-1"></i>Lọc
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-x-circle me-1"></i>Xóa lọc
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info text-center py-5">
+        <i class="bi bi-info-circle fs-1 d-block mb-3"></i>
+        <h5>Không tìm thấy khóa học nào</h5>
+        <p class="mb-0">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.</p>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        @foreach (var kh in Model.Items)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    @if (!string.IsNullOrEmpty(kh.AnhBia))
+                    {
+                        <img src="@kh.AnhBia" class="card-img-top" alt="@kh.TenKhoaHoc" style="height:180px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <div class="course-thumb">
+                            <i class="bi bi-book-fill"></i>
+                        </div>
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-info text-dark">@kh.NgonNgu</span>
+                            @{
+                                var badgeClass = kh.TrangThai switch
+                                {
+                                    "DangMo" => "bg-success",
+                                    "DaDong" => "bg-danger",
+                                    "TamDung" => "bg-warning text-dark",
+                                    _ => "bg-secondary"
+                                };
+                                var trangThaiText = kh.TrangThai switch
+                                {
+                                    "DangMo" => "Đang mở",
+                                    "DaDong" => "Đã đóng",
+                                    "TamDung" => "Tạm dừng",
+                                    _ => kh.TrangThai
+                                };
+                            }
+                            <span class="badge @badgeClass">@trangThaiText</span>
+                        </div>
+                        <h5 class="card-title fw-bold">@kh.TenKhoaHoc</h5>
+                        <div class="text-muted small mb-2">
+                            <i class="bi bi-bar-chart me-1"></i>@kh.TrinhDo &nbsp;
+                            <i class="bi bi-calendar3 me-1"></i>@kh.ThoiLuong buổi
+                        </div>
+                        <div class="fw-bold text-primary fs-5 mb-3">
+                            @kh.HocPhi.ToString("N0") VNĐ
+                        </div>
+                        <div class="mt-auto d-flex gap-2 flex-wrap">
+                            <a asp-action="Details" asp-route-id="@kh.Id" class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="bi bi-eye me-1"></i>Chi tiết
+                            </a>
+                            @if (isAdmin)
+                            {
+                                <a asp-action="Edit" asp-route-id="@kh.Id" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@kh.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc muốn xóa khóa học này?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" title="Đổi trạng thái"
+                                        onclick="showChangeStatus(@kh.Id, '@kh.TrangThai')">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted small d-flex justify-content-between">
+                        <span><i class="bi bi-people-fill me-1"></i>@kh.SoHocVien học viên</span>
+                        <span><i class="bi bi-door-open me-1"></i>@kh.SoLopHoc lớp</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Phân trang">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Page="@(Model.Page - 1)"
+                       asp-route-Search="@Model.Search"
+                       asp-route-NgonNgu="@Model.NgonNgu"
+                       asp-route-TrinhDo="@Model.TrinhDo"
+                       asp-route-TrangThai="@Model.TrangThai">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min(totalPages, Model.Page + 2); i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-Page="@i"
+                           asp-route-Search="@Model.Search"
+                           asp-route-NgonNgu="@Model.NgonNgu"
+                           asp-route-TrinhDo="@Model.TrinhDo"
+                           asp-route-TrangThai="@Model.TrangThai">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Page >= totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Page="@(Model.Page + 1)"
+                       asp-route-Search="@Model.Search"
+                       asp-route-NgonNgu="@Model.NgonNgu"
+                       asp-route-TrinhDo="@Model.TrinhDo"
+                       asp-route-TrangThai="@Model.TrangThai">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <p class="text-center text-muted small">
+            Hiển thị @((Model.Page - 1) * Model.PageSize + 1) - @Math.Min(Model.Page * Model.PageSize, Model.TotalItems)
+            trong tổng số @Model.TotalItems khóa học
+        </p>
+    }
+}
+
+<!-- Modal đổi trạng thái -->
+<div class="modal fade" id="changeStatusModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Đổi trạng thái khóa học</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="changeStatusForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <select name="trangThai" class="form-select">
+                        <option value="DangMo">Đang mở đăng ký</option>
+                        <option value="DaDong">Đã đóng</option>
+                        <option value="TamDung">Tạm dừng</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function showChangeStatus(id, currentStatus) {
+    const form = document.getElementById('changeStatusForm');
+    form.action = '/KhoaHoc/ChangeStatus/' + id;
+    form.querySelector('select[name=trangThai]').value = currentStatus;
+    new bootstrap.Modal(document.getElementById('changeStatusModal')).show();
+}
+</script>
+}

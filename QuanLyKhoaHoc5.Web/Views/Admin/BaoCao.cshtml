@@ -1,0 +1,70 @@
+@model QuanLyKhoaHoc5.Web.Models.ViewModels.BaoCaoFilterViewModel
+@{ ViewData["Title"] = "Báo cáo"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-file-earmark-bar-graph me-2 text-primary"></i>Xuất báo cáo</h4>
+</div>
+
+<div class="card">
+    <div class="card-header"><i class="bi bi-funnel me-2 text-primary"></i>Bộ lọc thời gian</div>
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Từ ngày</label>
+                <input type="date" name="tuNgay" class="form-control" value="@(Model.TuNgay?.ToString("yyyy-MM-dd") ?? DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Đến ngày</label>
+                <input type="date" name="denNgay" class="form-control" value="@(Model.DenNgay?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mt-2">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-file-earmark-excel fs-1 text-success mb-3 d-block"></i>
+                <h5 class="fw-bold">Xuất Excel</h5>
+                <p class="text-muted small mb-3">Danh sách học viên và lịch sử đăng ký dạng bảng tính Excel (.xlsx)</p>
+                <a asp-action="ExportExcel"
+                   asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                   asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                   class="btn btn-success btn-lg">
+                    <i class="bi bi-download me-2"></i>Tải xuống Excel
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-file-earmark-pdf fs-1 text-danger mb-3 d-block"></i>
+                <h5 class="fw-bold">Xuất PDF</h5>
+                <p class="text-muted small mb-3">Báo cáo tổng hợp học viên dạng PDF, phù hợp in ấn và lưu trữ</p>
+                <a asp-action="ExportPdf"
+                   asp-route-tuNgay="@(Model.TuNgay?.ToString("yyyy-MM-dd"))"
+                   asp-route-denNgay="@(Model.DenNgay?.ToString("yyyy-MM-dd"))"
+                   class="btn btn-danger btn-lg">
+                    <i class="bi bi-download me-2"></i>Tải xuống PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+// Auto-submit form when dates change to update download links
+document.querySelectorAll('input[type=date]').forEach(el => el.addEventListener('change', function() {
+    const form = this.closest('form');
+    const params = new URLSearchParams(new FormData(form));
+    document.querySelectorAll('a[asp-action]').forEach(a => {
+        const url = new URL(a.href, location.origin);
+        params.forEach((v, k) => v && url.searchParams.set(k, v));
+        a.href = url.toString();
+    });
+}));
+</script>
+}
