@@ -1,6 +1,6 @@
-# HƯỚNG DẪN CHẠY KIỂM THỬ – QuanLyKhoaHoc5
+﻿# HƯỚNG DẪN CHẠY KIỂM THỬ – QuanLyKhoaHoc5
 
-> **Phiên bản:** 1.0 | **Cập nhật:** 25/05/2026
+> **Phiên bản:** 1.1 | **Cập nhật:** 26/05/2026
 
 ---
 
@@ -86,7 +86,7 @@ dotnet ef database update
 
 # 4. Chạy ứng dụng
 dotnet run
-# App sẽ chạy tại: http://localhost:5299
+# App sẽ chạy tại: http://localhost:5125
 ```
 
 ### 2.2 Chạy thông thường
@@ -100,7 +100,7 @@ dotnet run --no-launch-profile
 
 ```powershell
 # Mở trình duyệt hoặc:
-curl -o /dev/null -s -w "%{http_code}" http://localhost:5299/Account/Login
+curl -o /dev/null -s -w "%{http_code}" http://localhost:5125/Account/Login
 # Phải trả về: 200
 ```
 
@@ -133,7 +133,7 @@ npx playwright install
 ### 3.2 Chạy toàn bộ test suite
 
 ```powershell
-# Đảm bảo app đang chạy tại :5299
+# Đảm bảo app đang chạy tại :5125
 npm test
 # Hoặc:
 node tests/run_all.js
@@ -147,7 +147,7 @@ node tests/run_all.js
 
 ▶ Running: 01_login_test.js
 ══════════ MODULE 1: ĐĂNG NHẬP / ĐĂNG XUẤT ══════════
-[TC-001] ✅ Admin đăng nhập → redirect /Admin | URL: http://localhost:5299/Admin
+[TC-001] ✅ Admin đăng nhập → redirect /Admin | URL: http://localhost:5125/Admin
 [TC-009] ✅ Đăng xuất → redirect Login
 ...
 ✅ PASSED: 01_login_test.js
@@ -237,7 +237,7 @@ Start-Process results\html_report_*\index.html
 Sửa các biến trong Test Plan → User Defined Variables:
 ```
 BASE_URL = localhost
-PORT = 5299
+PORT = 5125
 PROTOCOL = http
 ADMIN_EMAIL = admin@nnl.com
 ADMIN_PW = Admin@123
@@ -263,49 +263,105 @@ HV_PW = Hv@123
 
 ---
 
-## 5. CHẠY KATALON STUDIO
+## 5. CHẠY KATALON STUDIO (DATA-DRIVEN)
+
+Dự án Katalon đã có sẵn tại: `KiemThu\03_katalon\QuanLyKhoaHoc5\`  
+Script data-driven (Groovy): `KiemThu\Scripts\TC01_DangNhap.groovy` … `TC06_PhanCongGiangVien.groovy`  
+Dữ liệu Excel: `KiemThu\TestData\TC01_DangNhap.xlsx` … `TC06_PhanCong.xlsx`
 
 ### 5.1 Cài đặt
 
-1. Download Katalon Studio từ https://katalon.com/katalon-studio
-2. Giải nén và chạy `katalon.exe`
-3. Đăng nhập tài khoản Katalon (miễn phí)
+1. Download **Katalon Studio** (Free) từ https://katalon.com/katalon-studio
+2. Giải nén → chạy `katalon.exe`
+3. Đăng nhập tài khoản Katalon (free tier)
+4. Mở project có sẵn: **File → Open Project** → `D:\QuanLyKhoaHoc5\KiemThu\03_katalon\QuanLyKhoaHoc5`
 
-### 5.2 Tạo dự án mới
+### 5.2 Chuẩn bị dữ liệu kiểm thử
 
-1. File → New → Project
-2. Project Name: `QuanLyKhoaHoc5_Katalon`
-3. Project Type: `Web`
-4. Chọn thư mục: `D:\QuanLyKhoaHoc5\KiemThu\katalon`
+Dữ liệu Excel đã được sinh sẵn bằng **GenTestData**:
 
-### 5.3 Record test case
+```powershell
+# Chỉ cần chạy 1 lần (hoặc chạy lại để reset dữ liệu)
+cd D:\QuanLyKhoaHoc5\KiemThu\TestData\GenTestData
+dotnet run
 
-1. Toolbar → **Record Web** → mở browser
-2. Nhập URL: `http://localhost:5299/Account/Login`
-3. Thực hiện hành động (điền form, click, etc.)
-4. Dừng recording → tự động sinh Test Case
-5. **Run** để chạy lại
-
-### 5.4 Viết test case bằng Script
-
-```groovy
-import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-
-WebUI.openBrowser('')
-WebUI.navigateToUrl('http://localhost:5299/Account/Login')
-WebUI.setText(findTestObject('Page_Login/input_Email'), 'admin@nnl.com')
-WebUI.setText(findTestObject('Page_Login/input_MatKhau'), 'Admin@123')
-WebUI.click(findTestObject('Page_Login/button_Submit'))
-WebUI.verifyElementPresent(findTestObject('Page_Admin/div_Dashboard'), 5)
-WebUI.closeBrowser()
+# Kết quả: 6 file Excel tại D:\QuanLyKhoaHoc5\KiemThu\TestData\
+#   TC01_DangNhap.xlsx        (8 test cases)
+#   TC02_DoiMatKhau.xlsx      (6 test cases)
+#   TC03_TaoTaiKhoan.xlsx     (7 test cases)
+#   TC04_ThemKhoaHoc.xlsx     (6 test cases)
+#   TC05_TaoThanhToan.xlsx    (6 test cases)
+#   TC06_PhanCong.xlsx        (8 test cases)
 ```
 
-### 5.5 Chạy Test Suite
+### 5.3 Chạy từng Test Case script (cách thủ công)
 
+Trong Katalon Studio, mỗi script là một **Test Case** riêng:
+
+| Script | Chức năng | Excel data |
+|--------|-----------|-----------|
+| TC01_DangNhap | Đăng nhập / Đăng xuất | TC01_DangNhap.xlsx |
+| TC02_DoiMatKhau | Đổi mật khẩu | TC02_DoiMatKhau.xlsx |
+| TC03_TaoTaiKhoan | Tạo tài khoản (Admin) | TC03_TaoTaiKhoan.xlsx |
+| TC04_ThemKhoaHoc | Thêm khóa học (Admin) | TC04_ThemKhoaHoc.xlsx |
+| TC05_TaoThanhToan | Tạo yêu cầu thanh toán (HV) | TC05_TaoThanhToan.xlsx |
+| TC06_PhanCongGiangVien | Phân công giảng viên (Admin) | TC06_PhanCong.xlsx |
+
+**Cách chạy:**
+1. Mở Katalon Studio → Test Explorer → **Test Cases**
+2. Import các file `.groovy` từ `KiemThu\Scripts\` vào Katalon project
+3. Đảm bảo app đang chạy tại **http://localhost:5125**
+4. Click chuột phải vào Test Case → **Run** → chọn **Chrome**
+5. Cột **KetQua** trong file Excel sẽ tự động điền `Pass` / `Fail – <note>`
+
+**Chạy tuần tự tất cả (Test Suite):**
 1. New → Test Suite
-2. Thêm các Test Case vào suite
-3. **Run** → chọn browser (Chrome)
-4. Xem báo cáo HTML trong **Reports** folder
+2. Add Test Cases: TC01 → TC02 → TC03 → TC04 → TC05 → TC06
+3. **Run** → Chrome
+
+### 5.4 Chạy Groovy script trực tiếp (không cần Katalon GUI)
+
+```powershell
+# Yêu cầu: Katalon đã cài và thêm vào PATH
+# Hoặc dùng Katalon Runtime Engine (CLI)
+katalonc -projectPath="D:\QuanLyKhoaHoc5\KiemThu\03_katalon\QuanLyKhoaHoc5" ^
+         -testSuitePath="Test Suites/TS_Login" ^
+         -browserType="Chrome" ^
+         -executionProfile="default"
+```
+
+### 5.5 Đọc kết quả trong Excel
+
+Sau khi chạy, mở file Excel:
+- Cột **KetQua** = `Pass` → test case thành công ✅
+- Cột **KetQua** = `Fail – <lý do>` → test case thất bại ❌
+- Log chi tiết xem trong Katalon Reports → **Reports** folder
+
+### 5.6 Cấu hình quan trọng trong các Scripts
+
+```groovy
+// Tất cả script đều dùng:
+final String BASE_URL   = 'http://localhost:5125'
+final String EXCEL_PATH = 'D:\\QuanLyKhoaHoc5\\KiemThu\\TestData\\TC0X_*.xlsx'
+final int    TIMEOUT    = 10  // giây
+
+// Tài khoản admin (TC03, TC04, TC06):
+final String ADMIN_EMAIL = 'admin@nnl.com'
+final String ADMIN_PASS  = 'Admin@123'
+```
+
+**Lưu ý:** Nếu đổi port, sửa `BASE_URL` trong tất cả 6 file `.groovy`.
+
+### 5.7 Ghi chú đặc biệt cho từng TC
+
+| TC | Lưu ý |
+|----|-------|
+| TC01 | Script bỏ qua hàng có Email rỗng (`continue`). |
+| TC02 | Row 4 đổi MK hv01, Row 5 đổi lại → cần chạy theo thứ tự. |
+| TC03 | Tạo account mới → chạy lần 2 sẽ fail "email đã tồn tại" ở row 1-2, 6. |
+| TC04 | Row 5 có TenKhoaHoc > 200 ký tự để test MaxLength validation. |
+| TC05 | Chạy lần 2 có thể fail row 1-3 vì đã tạo ThanhToan (trùng). |
+| TC06 | GiangVienId=0 = bỏ phân công (nếu select có option value="0"). |
 
 ---
 
@@ -325,7 +381,7 @@ sudo apt install zaproxy
 
 1. Mở ZAP Desktop
 2. **Quick Start** → **Automated Scan**
-3. URL to attack: `http://localhost:5299`
+3. URL to attack: `http://localhost:5125`
 4. Click **Attack**
 5. ZAP sẽ:
    - Spider – khám phá tất cả URL
@@ -335,10 +391,10 @@ sudo apt install zaproxy
 
 ```powershell
 # Baseline scan (passive, không destructive)
-zap-baseline.py -t http://localhost:5299 -r zap_report.html
+zap-baseline.py -t http://localhost:5125 -r zap_report.html
 
 # Full scan (active + passive)
-zap-full-scan.py -t http://localhost:5299 -r zap_full_report.html
+zap-full-scan.py -t http://localhost:5125 -r zap_full_report.html
 ```
 
 ### 6.4 Đọc báo cáo
@@ -531,10 +587,10 @@ Thêm vào cuối workflow:
 
 ```powershell
 # Kiểm tra port
-netstat -an | findstr 5299
+netstat -an | findstr 5125
 
 # Kill process nếu port đang bị chiếm
-Get-NetTCPConnection -LocalPort 5299 | ForEach-Object {
+Get-NetTCPConnection -LocalPort 5125 | ForEach-Object {
   Stop-Process -Id $_.OwningProcess -Force
 }
 
@@ -602,7 +658,7 @@ D:\tools\sonarqube\bin\windows-x86-64\StartSonar.bat
 ## PHỤ LỤC: CHECKLIST CHẠY FULL TEST
 
 ```
-□ App đang chạy tại http://localhost:5299
+□ App đang chạy tại http://localhost:5125
 □ Có thể truy cập /Account/Login (HTTP 200)
 □ DB có seed data (3 users, ≥3 KH, ≥2 LH, ≥1 DangKy DaDuyet)
 □ Node.js đã install: node --version
@@ -626,6 +682,6 @@ D:\tools\sonarqube\bin\windows-x86-64\StartSonar.bat
   □ Quality Gate: Green
 
 ▶ OWASP ZAP (optional):
-  □ zap-baseline.py -t http://localhost:5299
+  □ zap-baseline.py -t http://localhost:5125
   □ 0 High alerts, ≤5 Medium alerts
 ```
