@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalVariableEntities>
+   <description>Profile mặc định – QuanLyKhoaHoc5</description>
+   <name>default</name>
+   <tag></tag>
+   <defaultProfile>true</defaultProfile>
+   <GlobalVariableEntity>
+      <description>Base URL của ứng dụng web</description>
+      <initValue>'http://localhost:5125'</initValue>
+      <name>BASE_URL</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description>Email tài khoản Admin</description>
+      <initValue>'admin@nnl.com'</initValue>
+      <name>ADMIN_EMAIL</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description>Mật khẩu tài khoản Admin</description>
+      <initValue>'Admin@123'</initValue>
+      <name>ADMIN_PASS</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description>Thư mục chứa file Excel test data</description>
+      <initValue>'D:\\QuanLyKhoaHoc5\\KiemThu\\TestData'</initValue>
+      <name>TEST_DATA_DIR</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description>Timeout chờ element (giây)</description>
+      <initValue>10</initValue>
+      <name>TIMEOUT</name>
+   </GlobalVariableEntity>
+</GlobalVariableEntities>

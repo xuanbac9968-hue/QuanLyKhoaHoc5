@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description>Checkbox "Ghi nhớ đăng nhập" – asp-for="GhiNho" → id="GhiNho"</description>
+   <name>chk_GhiNho</name>
+   <tag></tag>
+   <elementGuidId>1a000001-0000-0000-0000-000000000003</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>CSS</key>
+         <value>input#GhiNho</value>
+      </entry>
+      <entry>
+         <key>XPATH</key>
+         <value>//input[@id='GhiNho']</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>CSS</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>id</name>
+      <type>Main</type>
+      <value>GhiNho</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>type</name>
+      <type>Main</type>
+      <value>checkbox</value>
+   </webElementProperties>
+</WebElementEntity>
