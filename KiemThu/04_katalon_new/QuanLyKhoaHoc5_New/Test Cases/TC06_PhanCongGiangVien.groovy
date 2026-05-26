@@ -2,7 +2,6 @@ import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.model.FailureHandling
 import com.kms.katalon.core.testobject.ConditionType
-import com.kms.katalon.core.testobject.TestObjectProperty
 import com.kms.katalon.core.testobject.TestObject
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -10,104 +9,100 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 /**
- * TC06 – Phân công giảng viên
- * Data-Driven: đọc từ TestData/TC06_PhanCong.xlsx
- * Columns: 0=STT, 1=MoTa, 2=KhoaHocId, 3=GiangVienId, 4=GhiChu, 5=KetQuaMongDoi, 6=KetQua
- *
- * URL: /Admin/PhanCong
- * GiangVienId = 0 → "Bỏ phân công"
- * Select giảng viên: XPath động //form[.//input[@name='KhoaHocId' and @value='X']]//select[@name='GiangVienId']
- * Kết quả: luôn ThanhCong nếu submit được (controller redirect về PhanCong với TempData["Success"])
+ * TC06 – Phân công giảng viên (Admin)
+ * URL: /Admin/PhanCong ✓ (AdminController.PhanCong)
+ * XPath động: //form[.//input[@name='KhoaHocId' and @value='X']]//select[@name='GiangVienId']
+ * GiangVienId=0 → "Bỏ phân công"
+ * Kết quả: controller luôn redirect về PhanCong với TempData["Success"] nếu submit được form
+ * Columns: 0=STT,1=MoTa,2=KhoaHocId,3=GiangVienId,4=GhiChu,5=KetQuaMongDoi,6=KetQua
  */
 
 String testDataPath = GlobalVariable.TEST_DATA_DIR + '\\TC06_PhanCong.xlsx'
+DataFormatter fmt = new DataFormatter()
+
 FileInputStream fis = new FileInputStream(testDataPath)
 Workbook wb = new XSSFWorkbook(fis)
 Sheet sheet = wb.getSheetAt(0)
 fis.close()
 
 int totalRows = sheet.getLastRowNum()
+int timeout = GlobalVariable.TIMEOUT as int
 
 for (int i = 1; i <= totalRows; i++) {
     Row row = sheet.getRow(i)
     if (row == null) continue
 
-    String stt          = row.getCell(0)?.toString()?.trim() ?: ''
-    String moTa         = row.getCell(1)?.toString()?.trim() ?: ''
-    String khoaHocId    = row.getCell(2)?.toString()?.trim() ?: ''
-    String giangVienId  = row.getCell(3)?.toString()?.trim() ?: ''
-    String ghiChu       = row.getCell(4)?.toString()?.trim() ?: ''
-    String ketQuaMong   = row.getCell(5)?.toString()?.trim() ?: ''
+    String stt         = fmt.formatCellValue(row.getCell(0))?.trim() ?: ''
+    String moTa        = fmt.formatCellValue(row.getCell(1))?.trim() ?: ''
+    String khoaHocId   = fmt.formatCellValue(row.getCell(2))?.trim() ?: ''
+    String giangVienId = fmt.formatCellValue(row.getCell(3))?.trim() ?: ''
+    String ghiChu      = fmt.formatCellValue(row.getCell(4))?.trim() ?: ''
+    String ketQuaMong  = fmt.formatCellValue(row.getCell(5))?.trim() ?: ''
 
-    // Loại bỏ .0 nếu Excel đọc số thành decimal
-    if (khoaHocId.endsWith('.0')) khoaHocId = khoaHocId.replace('.0', '')
-    if (giangVienId.endsWith('.0')) giangVienId = giangVienId.replace('.0', '')
+    // Bỏ .0 phòng trường hợp DataFormatter vẫn trả decimal
+    khoaHocId   = khoaHocId.replace('.0','')
+    giangVienId = giangVienId.replace('.0','')
 
     if (khoaHocId.isEmpty()) continue
 
-    WebUI.comment("=== TC06 Row ${stt}: ${moTa} ===")
-
+    WebUI.comment("=== TC06 Row ${stt}: ${moTa} (KH${khoaHocId} → GV${giangVienId}) ===")
     String ketQua = 'FAIL'
+
     try {
         // Đăng nhập admin
         WebUI.openBrowser(GlobalVariable.BASE_URL + '/Account/Login')
         WebUI.maximizeWindow()
+        WebUI.waitForElementVisible(findTestObject('Object Repository/Page_Login/input_Email'), timeout)
         WebUI.setText(findTestObject('Object Repository/Page_Login/input_Email'), GlobalVariable.ADMIN_EMAIL)
         WebUI.setText(findTestObject('Object Repository/Page_Login/input_MatKhau'), GlobalVariable.ADMIN_PASS)
         WebUI.click(findTestObject('Object Repository/Page_Login/btn_DangNhap'))
-        WebUI.waitForPageLoad(GlobalVariable.TIMEOUT as int)
+        WebUI.waitForPageLoad(timeout)
 
-        // Vào trang phân công
-        WebUI.navigateToUrl(GlobalVariable.BASE_URL + '/Admin/PhanCong')
-        WebUI.waitForPageLoad(GlobalVariable.TIMEOUT as int)
+        if (WebUI.getUrl().contains('/Account/Login')) {
+            ketQua = 'ERROR: Đăng nhập admin thất bại'
+            WebUI.comment(ketQua)
+        } else {
+            // Vào trang phân công
+            WebUI.navigateToUrl(GlobalVariable.BASE_URL + '/Admin/PhanCong')
+            WebUI.waitForPageLoad(timeout)
 
-        // Tạo TestObject động cho select giảng viên của khóa học cụ thể
-        TestObject selectGV = new TestObject('select_GiangVien_KH' + khoaHocId)
-        selectGV.addProperty(
-            'xpath',
-            ConditionType.EQUALS,
-            "//form[.//input[@name='KhoaHocId' and @value='${khoaHocId}']]//select[@name='GiangVienId']"
-        )
+            // Tạo TestObject động: select giảng viên trong form của KhoaHocId cụ thể
+            TestObject selectGV = new TestObject("select_GV_KH${khoaHocId}")
+            selectGV.addProperty('xpath', ConditionType.EQUALS,
+                "//form[.//input[@name='KhoaHocId' and @value='${khoaHocId}']]//select[@name='GiangVienId']")
 
-        // Chọn giảng viên
-        WebUI.selectOptionByValue(selectGV, giangVienId, false)
+            WebUI.waitForElementVisible(selectGV, timeout)
+            WebUI.selectOptionByValue(selectGV, giangVienId, false)
 
-        // Tạo TestObject động cho nút submit của form khóa học cụ thể
-        TestObject btnSubmit = new TestObject('btn_Submit_KH' + khoaHocId)
-        btnSubmit.addProperty(
-            'xpath',
-            ConditionType.EQUALS,
-            "//form[.//input[@name='KhoaHocId' and @value='${khoaHocId}']]//button[@type='submit']"
-        )
+            // Tạo TestObject động: nút submit của form đó
+            TestObject btnSubmit = new TestObject("btn_Submit_KH${khoaHocId}")
+            btnSubmit.addProperty('xpath', ConditionType.EQUALS,
+                "//form[.//input[@name='KhoaHocId' and @value='${khoaHocId}']]//button[@type='submit']")
 
-        WebUI.click(btnSubmit)
-        WebUI.waitForPageLoad(GlobalVariable.TIMEOUT as int)
+            WebUI.click(btnSubmit)
+            WebUI.waitForPageLoad(timeout)
 
-        // Kết quả: luôn có TempData["Success"] nếu submit thành công
-        boolean hasSuccess = WebUI.verifyElementPresent(
-            findTestObject('Object Repository/Page_PhanCong/div_AlertSuccess'),
-            GlobalVariable.TIMEOUT as int,
-            FailureHandling.OPTIONAL
-        )
+            // Controller luôn redirect về PhanCong với TempData["Success"]
+            boolean hasSuccess = WebUI.verifyElementPresent(
+                findTestObject('Object Repository/Page_PhanCong/div_AlertSuccess'),
+                timeout, FailureHandling.OPTIONAL)
 
-        ketQua = hasSuccess ? 'PASS' : 'FAIL'
-        WebUI.comment(ketQua == 'PASS'
-            ? "PASS: Phân công KH${khoaHocId} → GV${giangVienId} thành công"
-            : "FAIL: Không thấy thông báo thành công")
-
+            ketQua = hasSuccess ? 'PASS' : 'FAIL'
+            WebUI.comment(ketQua == 'PASS'
+                ? "PASS: Phân công KH${khoaHocId} → GV${giangVienId} thành công"
+                : "FAIL: Không thấy alert thành công tại ${WebUI.getUrl()}")
+        }
     } catch (Exception e) {
         ketQua = 'ERROR: ' + e.getMessage()
-        WebUI.comment("ERROR tại row ${stt}: ${e.getMessage()}")
+        WebUI.comment("ERROR row ${stt}: ${e.getMessage()}")
     } finally {
         try { WebUI.closeBrowser() } catch (Exception ignored) {}
     }
 
-    // Ghi kết quả
     FileInputStream fisW = new FileInputStream(testDataPath)
     Workbook wbW = new XSSFWorkbook(fisW)
-    Sheet sheetW = wbW.getSheetAt(0)
     fisW.close()
-    sheetW.getRow(i).createCell(6).setCellValue(ketQua)
+    wbW.getSheetAt(0).getRow(i).createCell(6).setCellValue(ketQua)
     FileOutputStream fos = new FileOutputStream(testDataPath)
     wbW.write(fos)
     fos.close()
