@@ -65,11 +65,21 @@ public class ThanhToanController : Controller
     }
 
     [AuthorizeRole("HocVien")]
+    [HttpGet]
+    // Hỗ trợ cả query-string (?khoaHocId=) và route segment (/TaoYeuCau/2)
+    [Route("ThanhToan/TaoYeuCau/{khoaHocId:int}")]
+    [Route("ThanhToan/TaoYeuCau")]
     public async Task<IActionResult> TaoYeuCau(int khoaHocId)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        // Kiểm tra đăng ký hợp lệ
+        if (khoaHocId <= 0)
+        {
+            TempData["Error"] = "Khóa học không hợp lệ.";
+            return RedirectToAction(nameof(CuaToi));
+        }
+
+        // Kiểm tra đăng ký hợp lệ (DaDuyet)
         var isEnrolled = await _db.DangKyKhoaHocs
             .AnyAsync(d => d.HocVienId == userId
                         && d.LopHoc.KhoaHocId == khoaHocId
@@ -109,6 +119,8 @@ public class ThanhToanController : Controller
 
     [AuthorizeRole("HocVien")]
     [HttpPost, ValidateAntiForgeryToken]
+    [Route("ThanhToan/TaoYeuCau/{khoaHocId:int}")]
+    [Route("ThanhToan/TaoYeuCau")]
     public async Task<IActionResult> TaoYeuCau(ThanhToanCreateViewModel vm)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
