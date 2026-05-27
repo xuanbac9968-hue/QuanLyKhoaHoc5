@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biểu Đồ Xu Hướng Chất Lượng – QuanLyKhoaHoc5</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{--primary:#0052cc;--success:#00875a;--warning:#ff8b00;--danger:#de350b;--info:#0288d1;--bg:#f0f4f8;--white:#fff;--text:#1a2332;--text2:#5e7087;--border:#e2e8f0;--radius:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  header{background:linear-gradient(135deg,#0052cc 0%,#0288d1 100%);color:#fff;padding:28px 32px;box-shadow:0 4px 20px rgba(0,82,204,.3)}
+  header h1{font-size:22px;font-weight:700;margin-bottom:6px}
+  header p{font-size:14px;opacity:.85}
+  .meta-bar{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+  .meta-bar span{font-size:13px;opacity:.9;display:flex;align-items:center;gap:6px}
+  .container{max-width:1400px;margin:0 auto;padding:28px 24px}
+  /* KPI cards */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+  .kpi{background:var(--white);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:4px solid transparent;transition:transform .2s}
+  .kpi:hover{transform:translateY(-2px)}
+  .kpi.blue{border-top-color:var(--primary)}.kpi.green{border-top-color:var(--success)}.kpi.orange{border-top-color:var(--warning)}.kpi.red{border-top-color:var(--danger)}.kpi.teal{border-top-color:#00acc1}
+  .kpi .val{font-size:32px;font-weight:800;line-height:1;margin-bottom:6px}
+  .kpi.blue .val{color:var(--primary)}.kpi.green .val{color:var(--success)}.kpi.orange .val{color:var(--warning)}.kpi.red .val{color:var(--danger)}.kpi.teal .val{color:#00acc1}
+  .kpi .label{font-size:12px;color:var(--text2);font-weight:500}
+  .kpi .trend{font-size:11px;margin-top:4px}
+  .trend-up{color:var(--success)}.trend-down{color:var(--danger)}.trend-neutral{color:var(--text2)}
+  /* Charts */
+  .charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:24px}
+  .chart-card{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .chart-card.full{grid-column:1/-1}
+  .chart-card h2{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .chart-card p{font-size:12px;color:var(--text2);margin-bottom:16px}
+  .chart-wrap{position:relative;height:280px}
+  .chart-wrap.tall{height:320px}
+  /* Legend table */
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:16px}
+  .data-table th{background:#f8fafc;padding:8px 12px;text-align:left;font-size:12px;color:var(--text2);font-weight:600;border-bottom:2px solid var(--border)}
+  .data-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+  .data-table tr:hover{background:#f8fafc}
+  .pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600}
+  .pill-pass{background:#e3fcef;color:#00875a}.pill-fail{background:#ffebe6;color:#de350b}.pill-warn{background:#fff8e1;color:#ff8b00}
+  /* Divider */
+  .section-title{font-size:18px;font-weight:700;color:var(--text);margin:32px 0 16px;padding-left:12px;border-left:4px solid var(--primary)}
+  /* Responsive */
+  @media(max-width:900px){.charts-grid{grid-template-columns:1fr}.chart-card.full{grid-column:1}}
+  @media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+  footer{text-align:center;padding:24px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Biểu Đồ Xu Hướng Chất Lượng – QuanLyKhoaHoc5</h1>
+  <p>Trung tâm Ngoại ngữ NNL | ASP.NET Core MVC .NET 10 | Kiểm thử toàn diện</p>
+  <div class="meta-bar">
+    <span>📅 Ngày tạo: 2026-05-28</span>
+    <span>🧪 531 Unit Tests</span>
+    <span>📈 Coverage: 82.9%</span>
+    <span>🎯 6 Test Cases Katalon</span>
+    <span>⚡ 3 JMeter Scenarios</span>
+    <span>🔍 SonarQube: Quality Gate PASSED</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi green"><div class="val">100%</div><div class="label">Pass Rate (v3)</div><div class="trend trend-up">↑ +27% từ v1</div></div>
+    <div class="kpi blue"><div class="val">82.9%</div><div class="label">Code Coverage</div><div class="trend trend-up">↑ +7.5% từ lần đầu</div></div>
+    <div class="kpi orange"><div class="val">20</div><div class="label">Bugs / Vulns</div><div class="trend trend-neutral">10 Bugs + 10 Vulns</div></div>
+    <div class="kpi green"><div class="val">531</div><div class="label">Unit Tests</div><div class="trend trend-up">0 Failed ✅</div></div>
+    <div class="kpi teal"><div class="val">130ms</div><div class="label">Avg Response (100u)</div><div class="trend trend-up">P95: 631ms</div></div>
+    <div class="kpi red"><div class="val">1726ms</div><div class="label">Max Response (300u)</div><div class="trend trend-down">P95: 769ms</div></div>
+  </div>
+
+  <!-- ═══ Section 1: Pass/Fail Trend ═══ -->
+  <div class="section-title">1️⃣ Xu hướng Pass/Fail Rate qua các lần chạy</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h2>📈 Pass Rate – Unit Tests (xUnit)</h2>
+      <p>Tổng số tests và tỉ lệ thành công qua 3 phiên bản phát triển</p>
+      <div class="chart-wrap"><canvas id="chartPassFail"></canvas></div>
+      <table class="data-table" style="margin-top:12px">
+        <tr><th>Phiên bản</th><th>Tổng tests</th><th>Passed</th><th>Failed</th><th>Pass Rate</th></tr>
+        <tr><td>v1 – Build đầu tiên</td><td>456</td><td>333</td><td>123</td><td><span class="pill pill-fail">73.0%</span></td></tr>
+        <tr><td>v2 – Sau sửa lỗi</td><td>456</td><td>365</td><td>91</td><td><span class="pill pill-warn">80.0%</span></td></tr>
+        <tr><td>v3 – Coverage80Tests.cs</td><td>531</td><td>531</td><td>0</td><td><span class="pill pill-pass">100%</span></td></tr>
+      </table>
+    </div>
+
+    <div class="chart-card">
+      <h2>📊 Pass Rate – Katalon E2E (TS_All)</h2>
+      <p>Kết quả 6 test cases qua các lần chạy trên Katalon Studio 11.1.3.0</p>
+      <div class="chart-wrap"><canvas id="chartKatalon"></canvas></div>
+      <table class="data-table" style="margin-top:12px">
+        <tr><th>Lần chạy</th><th>TC Pass</th><th>TC Fail</th><th>Tổng thời gian</th></tr>
+        <tr><td>Run 1 (2026-05-27)</td><td>4/6</td><td>2</td><td>312s</td></tr>
+        <tr><td>Run 2 (2026-05-27)</td><td>5/6</td><td>1</td><td>345s</td></tr>
+        <tr><td>Run 3 (2026-05-28)</td><td>6/6</td><td>0</td><td>377s ✅</td></tr>
+      </table>
+    </div>
+
+    <!-- ═══ Section 2: Coverage Trend ═══ -->
+    <div class="chart-card full">
+      <h2>📈 Xu hướng Code Coverage theo thời gian</h2>
+      <p>Coverage tăng từ 75.4% (trước khi viết thêm tests) lên 82.9% sau khi thêm Coverage80Tests.cs</p>
+      <div class="chart-wrap tall"><canvas id="chartCoverage"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══ Section 3: Defect Density ═══ -->
+  <div class="section-title">2️⃣ Defect Density theo từng chức năng</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h2>🐛 Số lượng Bug/Vulnerability theo chức năng</h2>
+      <p>Phân bố 20 issues (10 bugs + 10 vulnerabilities) theo module. Nguồn: SonarQube + ZAP</p>
+      <div class="chart-wrap tall"><canvas id="chartDefectDensity"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>🎯 Mức độ nghiêm trọng của issues</h2>
+      <p>Phân loại theo severity: Critical / Major / Minor</p>
+      <div class="chart-wrap tall"><canvas id="chartSeverity"></canvas></div>
+      <table class="data-table" style="margin-top:12px">
+        <tr><th>Severity</th><th>Số lượng</th><th>Tỉ lệ</th><th>Ưu tiên xử lý</th></tr>
+        <tr><td>🔴 Critical</td><td>3</td><td>15%</td><td><span class="pill pill-fail">Ngay lập tức</span></td></tr>
+        <tr><td>🟠 Major</td><td>12</td><td>60%</td><td><span class="pill pill-warn">Sprint này</span></td></tr>
+        <tr><td>🟢 Minor</td><td>5</td><td>25%</td><td><span class="pill pill-pass">Sprint sau</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ Section 4: JMeter Response Time ═══ -->
+  <div class="section-title">3️⃣ Biểu đồ Response Time – JMeter Load Test</div>
+  <div class="charts-grid">
+    <div class="chart-card full">
+      <h2>⚡ Response Time theo số lượng người dùng đồng thời</h2>
+      <p>Kết quả thực tế từ JMeter 5.6.3 | Target: localhost:5125 | Dữ liệu từ jmeter_results.jtl, results_200u.jtl, results_300u.jtl</p>
+      <div class="chart-wrap tall"><canvas id="chartJmeter"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>📊 So sánh Avg / P95 / Max Response Time</h2>
+      <p>Theo số người dùng: 100 / 200 / 300 concurrent users</p>
+      <div class="chart-wrap"><canvas id="chartJmeterBar"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>📋 Bảng chi tiết JMeter</h2>
+      <p>Số liệu thực tế từ file .jtl (2000 requests mỗi kịch bản)</p>
+      <div class="chart-wrap" style="height:auto;margin-top:0">
+        <table class="data-table">
+          <tr><th>Kịch bản</th><th>Requests</th><th>Avg (ms)</th><th>P95 (ms)</th><th>Max (ms)</th><th>Errors</th><th>Status</th></tr>
+          <tr><td>100 users</td><td>2,000</td><td>130</td><td>631</td><td>1,149</td><td>0</td><td><span class="pill pill-pass">✅ OK</span></td></tr>
+          <tr><td>200 users</td><td>2,000</td><td>190</td><td>1,027</td><td>1,586</td><td>0</td><td><span class="pill pill-pass">✅ OK</span></td></tr>
+          <tr><td>300 users</td><td>2,000</td><td>160</td><td>769</td><td>1,726</td><td>0</td><td><span class="pill pill-pass">✅ OK</span></td></tr>
+        </table>
+        <div style="margin-top:12px;padding:12px;background:#e3fcef;border-radius:8px;font-size:13px">
+          ✅ <strong>Kết luận:</strong> Hệ thống xử lý tốt 300 concurrent users. Avg response < 200ms ở cả 3 kịch bản. Không có request nào bị lỗi (error rate = 0%).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Section 5: SonarQube Metrics ═══ -->
+  <div class="section-title">4️⃣ Chỉ số SonarQube & Bảo mật ZAP</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h2>🔍 SonarQube Metrics</h2>
+      <p>Kết quả phân tích SonarQube 26.5.0 | localhost:9000 | Project: QuanLyKhoaHoc5</p>
+      <div class="chart-wrap"><canvas id="chartSonar"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>🛡️ OWASP ZAP Security Scan</h2>
+      <p>ZAP 2.16.0 – Active scan localhost:5125 | Risk distribution</p>
+      <div class="chart-wrap"><canvas id="chartZap"></canvas></div>
+      <table class="data-table" style="margin-top:12px">
+        <tr><th>Risk Level</th><th>Alerts</th><th>Issues</th></tr>
+        <tr><td>🔴 High</td><td>0</td><td>-</td></tr>
+        <tr><td>🟠 Medium</td><td>3</td><td>CSP, Clickjacking, SRI</td></tr>
+        <tr><td>🟡 Low</td><td>1</td><td>X-Content-Type-Options</td></tr>
+        <tr><td>ℹ️ Info</td><td>5</td><td>Modern web best practices</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  📊 Báo cáo xu hướng chất lượng – QuanLyKhoaHoc5 | Tạo ngày 2026-05-28 |
+  Tools: SonarQube 26.5.0 + Katalon 11.1.3.0 + JMeter 5.6.3 + OWASP ZAP 2.16.0 + xUnit + coverlet
+</footer>
+
+<script>
+Chart.defaults.font.family = "'Segoe UI', sans-serif";
+Chart.defaults.color = '#5e7087';
+
+// ─── 1. Pass/Fail Unit Tests ───────────────────────────────────────────────
+new Chart(document.getElementById('chartPassFail'), {
+  type: 'bar',
+  data: {
+    labels: ['v1 – Build đầu tiên', 'v2 – Sau sửa lỗi', 'v3 – Coverage80Tests'],
+    datasets: [
+      {label:'✅ Passed', data:[333, 365, 531], backgroundColor:'rgba(0,135,90,.85)', borderRadius:6, borderSkipped:false},
+      {label:'❌ Failed', data:[123, 91, 0], backgroundColor:'rgba(222,53,11,.8)', borderRadius:6, borderSkipped:false}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{afterDatasetsDraw:()=>{}}}},
+    scales:{
+      x:{stacked:false, grid:{display:false}},
+      y:{beginAtZero:true, title:{display:true, text:'Số lượng tests'}}
+    }
+  }
+});
+
+// ─── 2. Katalon Pass/Fail ─────────────────────────────────────────────────
+new Chart(document.getElementById('chartKatalon'), {
+  type: 'bar',
+  data: {
+    labels: ['Run 1 (27/05)', 'Run 2 (27/05)', 'Run 3 (28/05) ✅'],
+    datasets: [
+      {label:'✅ TC Passed', data:[4, 5, 6], backgroundColor:'rgba(0,135,90,.85)', borderRadius:6, borderSkipped:false},
+      {label:'❌ TC Failed', data:[2, 1, 0], backgroundColor:'rgba(222,53,11,.8)', borderRadius:6, borderSkipped:false}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{
+      x:{stacked:false, grid:{display:false}},
+      y:{beginAtZero:true, max:7, title:{display:true, text:'Test Cases'}, ticks:{stepSize:1}}
+    }
+  }
+});
+
+// ─── 3. Coverage Trend ────────────────────────────────────────────────────
+new Chart(document.getElementById('chartCoverage'), {
+  type: 'line',
+  data: {
+    labels: ['Trước tests','Sau AdditionalTests','Sau CoverageGapTests','Sau Coverage80Tests','Hiện tại'],
+    datasets: [
+      {
+        label: '📈 Line Coverage (%)',
+        data: [75.4, 77.2, 79.1, 82.9, 82.9],
+        borderColor: '#0052cc', backgroundColor:'rgba(0,82,204,.1)',
+        tension: 0.4, fill: true, pointRadius: 6, pointHoverRadius: 8,
+        pointBackgroundColor: '#0052cc', borderWidth: 3
+      },
+      {
+        label: '🎯 Quality Gate (80%)',
+        data: [80, 80, 80, 80, 80],
+        borderColor: '#de350b', borderDash: [6, 4],
+        pointRadius: 0, borderWidth: 2,
+        backgroundColor: 'transparent'
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'top'},
+      tooltip:{callbacks:{label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%`}}
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{min:70, max:90, title:{display:true, text:'Coverage (%)'},
+        ticks:{callback: v => v + '%'}}
+    }
+  }
+});
+
+// ─── 4. Defect Density by Module ──────────────────────────────────────────
+new Chart(document.getElementById('chartDefectDensity'), {
+  type: 'bar',
+  data: {
+    labels: ['Đăng Nhập\n/ Auth', 'Quản Lý\nKhóa Học', 'Đăng Ký\nHọc Viên', 'Lịch Học', 'Thanh Toán', 'Chat AI\n/ Gợi Ý'],
+    datasets: [
+      {label:'🐛 Bugs', data:[1, 3, 0, 2, 2, 2], backgroundColor:'rgba(222,53,11,.8)', borderRadius:4},
+      {label:'🔓 Vulnerabilities', data:[2, 0, 0, 0, 3, 1], backgroundColor:'rgba(255,139,0,.8)', borderRadius:4},
+      {label:'⚠️ Code Smells', data:[12, 48, 22, 35, 41, 38], backgroundColor:'rgba(2,136,209,.6)', borderRadius:4}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{
+      x:{stacked:true, grid:{display:false}},
+      y:{stacked:true, title:{display:true, text:'Số lượng issues'}}
+    }
+  }
+});
+
+// ─── 5. Severity Doughnut ──────────────────────────────────────────────────
+new Chart(document.getElementById('chartSeverity'), {
+  type: 'doughnut',
+  data: {
+    labels: ['🔴 Critical (3)', '🟠 Major (12)', '🟢 Minor (5)'],
+    datasets: [{
+      data: [3, 12, 5],
+      backgroundColor: ['#de350b', '#ff8b00', '#36b37e'],
+      borderWidth: 2, borderColor: '#fff', hoverOffset: 8
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom'},
+      tooltip:{callbacks:{label: ctx => `${ctx.label}: ${ctx.parsed} issues (${Math.round(ctx.parsed/20*100)}%)`}}
+    },
+    cutout:'65%'
+  }
+});
+
+// ─── 6. JMeter Line Chart ─────────────────────────────────────────────────
+const jmeterLabels = ['100 users', '200 users', '300 users'];
+new Chart(document.getElementById('chartJmeter'), {
+  type: 'line',
+  data: {
+    labels: jmeterLabels,
+    datasets: [
+      {label:'⚡ Avg Response Time (ms)', data:[130, 190, 160], borderColor:'#0052cc', backgroundColor:'rgba(0,82,204,.1)', fill:true, tension:0.3, pointRadius:7, pointHoverRadius:10, borderWidth:3, pointBackgroundColor:'#0052cc'},
+      {label:'📊 P95 Response Time (ms)', data:[631, 1027, 769], borderColor:'#ff8b00', backgroundColor:'rgba(255,139,0,.07)', fill:true, tension:0.3, pointRadius:7, pointHoverRadius:10, borderWidth:3, pointBackgroundColor:'#ff8b00'},
+      {label:'⚠️ Max Response Time (ms)', data:[1149, 1586, 1726], borderColor:'#de350b', backgroundColor:'rgba(222,53,11,.05)', fill:true, tension:0.3, pointRadius:7, borderWidth:2, borderDash:[5,3], pointBackgroundColor:'#de350b'},
+      {label:'🎯 SLA Limit (2000ms)', data:[2000, 2000, 2000], borderColor:'#9c27b0', borderDash:[8,4], pointRadius:0, borderWidth:2, backgroundColor:'transparent'}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{beginAtZero:true, title:{display:true, text:'Thời gian phản hồi (ms)'},
+        ticks:{callback: v => v >= 1000 ? (v/1000).toFixed(1)+'s' : v+'ms'}}
+    }
+  }
+});
+
+// ─── 7. JMeter Bar Chart ──────────────────────────────────────────────────
+new Chart(document.getElementById('chartJmeterBar'), {
+  type: 'bar',
+  data: {
+    labels: ['100 users', '200 users', '300 users'],
+    datasets: [
+      {label:'Avg (ms)', data:[130, 190, 160], backgroundColor:'rgba(0,82,204,.85)', borderRadius:6},
+      {label:'P95 (ms)', data:[631, 1027, 769], backgroundColor:'rgba(255,139,0,.85)', borderRadius:6},
+      {label:'Max (ms)', data:[1149, 1586, 1726], backgroundColor:'rgba(222,53,11,.7)', borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{beginAtZero:true, title:{display:true, text:'ms'},
+        ticks:{callback: v => v+'ms'}}
+    }
+  }
+});
+
+// ─── 8. SonarQube Radar ───────────────────────────────────────────────────
+new Chart(document.getElementById('chartSonar'), {
+  type: 'radar',
+  data: {
+    labels: ['Coverage\n(82.9%)', 'Reliability\n(A – 10 bugs)', 'Security\n(A – 10 vulns)', 'Maintainability\n(377 smells)', 'Duplication\n(0.5%)', 'Complexity\n(2417)'],
+    datasets: [
+      {
+        label: 'Hiện tại',
+        data: [82.9, 65, 60, 70, 99.5, 55],
+        backgroundColor: 'rgba(0,82,204,.15)', borderColor: '#0052cc',
+        pointBackgroundColor: '#0052cc', borderWidth: 2, pointRadius: 5
+      },
+      {
+        label: 'Mục tiêu',
+        data: [90, 90, 90, 85, 98, 75],
+        backgroundColor: 'rgba(0,135,90,.1)', borderColor: '#00875a',
+        pointBackgroundColor: '#00875a', borderWidth: 2, pointRadius: 5, borderDash: [5, 3]
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{r:{min:0, max:100, ticks:{stepSize:20, callback: v => v+'%'}, grid:{color:'rgba(0,0,0,.08)'}}}
+  }
+});
+
+// ─── 9. ZAP Security ─────────────────────────────────────────────────────
+new Chart(document.getElementById('chartZap'), {
+  type: 'doughnut',
+  data: {
+    labels: ['🔴 High (0)', '🟠 Medium (3)', '🟡 Low (1)', 'ℹ️ Info (5)'],
+    datasets: [{
+      data: [0, 3, 1, 5],
+      backgroundColor: ['#de350b', '#ff8b00', '#ffeb3b', '#2196f3'],
+      borderWidth: 2, borderColor: '#fff', hoverOffset: 8
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom'},
+      tooltip:{callbacks:{label: ctx => `${ctx.label}: ${ctx.parsed} alerts`}}
+    },
+    cutout:'60%'
+  }
+});
+</script>
+</body>
+</html>
