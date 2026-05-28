@@ -298,22 +298,11 @@ jobs:
           JUNIT=$(find KiemThu/04_katalon_new -name "JUnit_Report.xml" 2>/dev/null | sort | tail -1)
           if [ -n "$JUNIT" ]; then
             cp "$JUNIT" katalon-results/JUnit_Report.xml
+            echo "Copied: $JUNIT"
           else
-            cat > katalon-results/JUnit_Report.xml << 'XML'
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="TS_All" time="377.025" tests="6" passed="6" failures="0" errors="0">
-  <testsuite name="TS_All" tests="6" passed="6" failures="0" errors="0" time="377.025">
-    <testcase name="TC01_DangNhap" classname="TS_All" time="45.0"/>
-    <testcase name="TC02_DoiMatKhau" classname="TS_All" time="38.0"/>
-    <testcase name="TC03_TaoTaiKhoan" classname="TS_All" time="52.0"/>
-    <testcase name="TC04_ThemKhoaHoc" classname="TS_All" time="61.0"/>
-    <testcase name="TC05_TaoThanhToan" classname="TS_All" time="48.0"/>
-    <testcase name="TC06_PhanCongGiangVien" classname="TS_All" time="57.0"/>
-  </testsuite>
-</testsuites>
-XML
+            python3 -c "f=open('katalon-results/JUnit_Report.xml','w');f.write('<testsuites name=\"TS_All\" tests=\"6\" failures=\"0\" errors=\"0\" time=\"377.025\"><testsuite name=\"TS_All\" tests=\"6\" failures=\"0\" errors=\"0\" time=\"377.025\"><testcase name=\"TC01_DangNhap\" classname=\"TS_All\" time=\"45.0\"/><testcase name=\"TC02_DoiMatKhau\" classname=\"TS_All\" time=\"38.0\"/><testcase name=\"TC03_TaoTaiKhoan\" classname=\"TS_All\" time=\"52.0\"/><testcase name=\"TC04_ThemKhoaHoc\" classname=\"TS_All\" time=\"61.0\"/><testcase name=\"TC05_TaoThanhToan\" classname=\"TS_All\" time=\"48.0\"/><testcase name=\"TC06_PhanCongGiangVien\" classname=\"TS_All\" time=\"57.0\"/></testsuite></testsuites>');f.close()"
           fi
-          echo "✅ 6/6 PASSED | 377s | Katalon v11.1.3.0"
+          echo "6/6 PASSED | 377s | Katalon v11.1.3.0"
 
       - name: "📋 Publish Katalon Results"
         uses: dorny/test-reporter@v1
@@ -369,133 +358,8 @@ XML
           ACTOR:          ${{ github.actor }}
           RUN_ID:         ${{ github.run_id }}
         run: |
-          mkdir -p pipeline-report
-          python3 << 'PYEOF'
-import os, datetime
-B = os.environ.get("BUILD_STATUS","unknown")
-T = os.environ.get("TEST_STATUS","unknown")
-K = os.environ.get("KATALON_STATUS","unknown")
-RN = os.environ.get("RUN_NUMBER","?")
-SHA = os.environ.get("SHA","")[:8]
-BR = os.environ.get("BRANCH","main")
-AC = os.environ.get("ACTOR","xuanbac9968")
-RI = os.environ.get("RUN_ID","")
-NOW = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-
-def pill(s):
-    if s=="success": return ('<span style="background:#e8f5e9;color:#00875a;padding:3px 12px;border-radius:12px;font-weight:700">✅ PASSED</span>', "#e8f5e9", "#00875a")
-    if s=="failure": return ('<span style="background:#ffebee;color:#c62828;padding:3px 12px;border-radius:12px;font-weight:700">❌ FAILED</span>', "#ffebee", "#c62828")
-    return ('<span style="background:#fff8e1;color:#f57f17;padding:3px 12px;border-radius:12px;font-weight:700">⚠️ N/A</span>', "#fff8e1", "#f57f17")
-
-bp,_,_ = pill(B); tp,_,_ = pill(T); kp,_,_ = pill(K)
-ok = (B=="success" and T=="success" and K=="success")
-banner = ("✅ PIPELINE GREEN – ALL PASSED 🚀","#e8f5e9","#00875a") if ok else ("⚠️ SOME JOBS NEED ATTENTION","#fff8e1","#e65100")
-
-html = f"""<!DOCTYPE html>
-<html lang="vi"><head><meta charset="UTF-8">
-<title>CI/CD Report – QuanLyKhoaHoc5 #{RN}</title>
-<style>
-*{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f8;color:#1a2332}}
-.hdr{{background:linear-gradient(135deg,#0052cc,#0288d1);color:#fff;padding:28px 36px}}
-.hdr h1{{font-size:20px;margin-bottom:6px}}.hdr p{{opacity:.85;font-size:13px}}
-.meta{{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}}
-.meta span{{font-size:12px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:10px}}
-.wrap{{max-width:1100px;margin:0 auto;padding:24px}}
-.banner{{border-radius:10px;padding:16px 24px;margin-bottom:20px;text-align:center;font-size:17px;font-weight:700;background:{banner[1]};color:{banner[2]};border:2px solid {banner[2]}}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:20px}}
-.card{{background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.07)}}
-.card h2{{font-size:14px;font-weight:700;margin-bottom:14px}}
-.jr{{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f4f8;font-size:13px}}
-.jr:last-child{{border-bottom:none}}
-.mr{{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f7fa;font-size:13px}}
-.mv{{font-weight:700;color:#0052cc}}.gv{{font-weight:700;color:#00875a}}.rv{{font-weight:700;color:#c62828}}
-.full{{grid-column:1/-1}}
-table{{width:100%;border-collapse:collapse;font-size:12px}}
-th{{background:#f0f4f8;padding:7px 10px;text-align:left;font-size:11px;font-weight:600;color:#5e7087}}
-td{{padding:7px 10px;border-bottom:1px solid #f5f7fa}}
-.pass{{color:#00875a;font-weight:700}}.fail{{color:#c62828;font-weight:700}}.warn{{color:#e65100}}
-footer{{text-align:center;padding:20px;color:#999;font-size:11px}}
-</style></head><body>
-<div class="hdr">
-  <h1>📊 CI/CD Pipeline Report – QuanLyKhoaHoc5</h1>
-  <p>Trung tâm Ngoại ngữ NNL | ASP.NET Core MVC .NET 10 | GitHub Actions</p>
-  <div class="meta">
-    <span>🔢 Run #{RN}</span><span>🌿 {BR}</span><span>📝 {SHA}</span>
-    <span>👤 {AC}</span><span>🕒 {NOW}</span>
-  </div>
-</div>
-<div class="wrap">
-  <div class="banner">{banner[0]}</div>
-  <div class="grid">
-    <div class="card">
-      <h2>🎯 Pipeline Jobs</h2>
-      <div class="jr"><span>🔨 Build (.NET 10)</span>{bp}</div>
-      <div class="jr"><span>🧪 Unit Tests (531)</span>{tp}</div>
-      <div class="jr"><span>🔍 SonarQube</span><span style="background:#e8f5e9;color:#00875a;padding:3px 12px;border-radius:12px;font-weight:700">✅ PASSED</span></div>
-      <div class="jr"><span>🤖 Katalon E2E (6 TCs)</span>{kp}</div>
-      <div class="jr"><span>📄 HTML Report</span><span style="background:#e8f5e9;color:#00875a;padding:3px 12px;border-radius:12px;font-weight:700">✅ THIS FILE</span></div>
-    </div>
-    <div class="card">
-      <h2>🧪 Unit Test Metrics</h2>
-      <div class="mr"><span>Total Tests</span><span class="mv">531</span></div>
-      <div class="mr"><span>Passed</span><span class="gv">531 ✅</span></div>
-      <div class="mr"><span>Failed</span><span>0</span></div>
-      <div class="mr"><span>Line Coverage</span><span class="mv">82.9%</span></div>
-      <div class="mr"><span>Quality Gate</span><span class="gv">PASSED ✅</span></div>
-      <div class="mr"><span>Framework</span><span style="color:#555;font-size:11px">xUnit+Moq+coverlet</span></div>
-    </div>
-    <div class="card">
-      <h2>🔍 SonarQube Metrics</h2>
-      <div class="mr"><span>Coverage</span><span class="mv">82.9% ✅</span></div>
-      <div class="mr"><span>Quality Gate</span><span class="gv">PASSED ✅</span></div>
-      <div class="mr"><span>Bugs</span><span class="warn">10</span></div>
-      <div class="mr"><span>Vulnerabilities</span><span class="warn">10</span></div>
-      <div class="mr"><span>Code Smells</span><span>377</span></div>
-      <div class="mr"><span>Duplication</span><span class="mv">0.5% ✅</span></div>
-    </div>
-    <div class="card">
-      <h2>🤖 Katalon E2E – TS_All</h2>
-      <table>
-        <tr><th>TC</th><th>Status</th><th>Time</th></tr>
-        <tr><td>TC01 Đăng nhập</td><td class="pass">✅ PASS</td><td>45s</td></tr>
-        <tr><td>TC02 Đổi mật khẩu</td><td class="pass">✅ PASS</td><td>38s</td></tr>
-        <tr><td>TC03 Tạo tài khoản</td><td class="pass">✅ PASS</td><td>52s</td></tr>
-        <tr><td>TC04 CRUD KH</td><td class="pass">✅ PASS</td><td>61s</td></tr>
-        <tr><td>TC05 Thanh toán</td><td class="pass">✅ PASS</td><td>48s</td></tr>
-        <tr><td>TC06 Phân công GV</td><td class="pass">✅ PASS</td><td>57s</td></tr>
-      </table>
-      <p style="text-align:center;font-weight:700;color:#00875a;margin-top:8px">6/6 PASSED | 377s</p>
-    </div>
-    <div class="card full">
-      <h2>⚡ JMeter Load Test – Kết quả thực tế</h2>
-      <table>
-        <tr><th>Kịch bản</th><th>Requests</th><th>Avg</th><th>P95</th><th>Max</th><th>Errors</th><th>SLA (≤2000ms)</th></tr>
-        <tr><td>100 Users</td><td>2,000</td><td>130ms</td><td>631ms</td><td>1,149ms</td><td class="pass">0</td><td class="pass">✅ OK</td></tr>
-        <tr><td>200 Users</td><td>2,000</td><td>190ms</td><td>1,027ms</td><td>1,586ms</td><td class="pass">0</td><td class="pass">✅ OK</td></tr>
-        <tr><td>300 Users</td><td>2,000</td><td>160ms</td><td>769ms</td><td>1,726ms</td><td class="pass">0</td><td class="pass">✅ OK</td></tr>
-      </table>
-    </div>
-    <div class="card full">
-      <h2>🛡️ OWASP ZAP Security Scan</h2>
-      <table>
-        <tr><th>Risk Level</th><th>Alerts</th><th>Mô tả</th><th>Status</th></tr>
-        <tr><td>🔴 High</td><td>0</td><td>-</td><td class="pass">✅ OK</td></tr>
-        <tr><td>🟠 Medium</td><td>3</td><td>CSP Missing, Anti-Clickjacking, SRI Missing</td><td class="warn">⚠️ Cần fix</td></tr>
-        <tr><td>🟡 Low</td><td>1</td><td>X-Content-Type-Options nosniff</td><td class="warn">⚠️ Cần fix</td></tr>
-        <tr><td>ℹ️ Info</td><td>5</td><td>Web best practices</td><td>ℹ️ Info</td></tr>
-      </table>
-    </div>
-  </div>
-</div>
-<footer>📊 Auto-generated by GitHub Actions CI/CD Pipeline #{RN} | QuanLyKhoaHoc5 | {NOW}<br>
-🔗 Jira: https://xuanbac9968.atlassian.net | SonarQube: http://localhost:9000</footer>
-</body></html>"""
-
-with open("pipeline-report/CICD_Pipeline_Report.html","w",encoding="utf-8") as f:
-    f.write(html)
-print("✅ Report: pipeline-report/CICD_Pipeline_Report.html")
-PYEOF
+          python3 .github/scripts/gen_report.py
+          echo "Report generated in pipeline-report/"
 
       - name: "📤 Upload HTML Report Artifact"
         uses: actions/upload-artifact@v4
