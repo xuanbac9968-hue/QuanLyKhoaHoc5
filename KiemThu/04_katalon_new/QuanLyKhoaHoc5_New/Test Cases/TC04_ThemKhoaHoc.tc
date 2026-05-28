@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Kiểm thử chức năng thêm khóa học mới (Admin)</description>
+   <name>TC04_ThemKhoaHoc</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>tc04-0004-0000-0000-000000000004</testCaseGuid>
+</TestCaseEntity>

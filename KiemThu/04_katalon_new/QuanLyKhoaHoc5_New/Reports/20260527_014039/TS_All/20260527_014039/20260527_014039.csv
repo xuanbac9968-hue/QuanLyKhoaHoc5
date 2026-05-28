@@ -1,0 +1,14 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS_All,,Test Suite chạy toàn bộ 6 Test Case kiểm thử tự động hệ thống QuanLyKhoaHoc5,,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,301s",SKIPPED
+,,,,,,,
+Test Cases/TC01_DangNhap,,Kiểm thử chức năng đăng nhập hệ thống,,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,006s",SKIPPED
+,,,,,,,
+Test Cases/TC02_DoiMatKhau,,Kiểm thử chức năng đổi mật khẩu,,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,004s",SKIPPED
+,,,,,,,
+Test Cases/TC03_TaoTaiKhoan,,Kiểm thử chức năng tạo tài khoản người dùng (Admin),,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,005s",SKIPPED
+,,,,,,,
+Test Cases/TC04_ThemKhoaHoc,,Kiểm thử chức năng thêm khóa học mới (Admin),,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,008s",SKIPPED
+,,,,,,,
+Test Cases/TC05_TaoThanhToan,,Kiểm thử chức năng tạo yêu cầu thanh toán học phí (HocVien),,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,006s",SKIPPED
+,,,,,,,
+Test Cases/TC06_PhanCongGiangVien,,Kiểm thử chức năng phân công giảng viên cho khóa học (Admin),,27-05-2026 01:40:46,27-05-2026 01:40:46,"0,003s",SKIPPED

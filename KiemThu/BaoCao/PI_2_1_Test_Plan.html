@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><title>PI 2.1 – Kế Hoạch Kiểm Thử | QuanLyKhoaHoc5</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#F0F4F8;color:#1a2332;font-size:14px}
+header{background:linear-gradient(135deg,#00695C,#00897B);color:#fff;padding:28px 36px}
+header h1{font-size:20px;font-weight:700;margin-bottom:6px}header p{opacity:.85;font-size:13px}
+.wrap{max-width:1300px;margin:0 auto;padding:24px 20px}
+.section{background:#fff;border-radius:10px;padding:22px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+.section h2{font-size:16px;font-weight:700;color:#00695C;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #E0F2F1}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#00695C;color:#fff;padding:9px 12px;text-align:left;font-size:12px;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #EEF2F7;vertical-align:top;line-height:1.5}
+tr:nth-child(even){background:#F1FFFE}tr:hover{background:#E0F2F1}
+.pill{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700}
+.ph{background:#FFCDD2;color:#C62828}.pm{background:#FFE0B2;color:#E65100}.pl{background:#C8E6C9;color:#2E7D32}
+.badge-ok{background:#C8E6C9;color:#2E7D32;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;display:inline-block}
+.badge-warn{background:#FFE0B2;color:#E65100;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;display:inline-block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+.info-box{background:#E8F5E9;border-left:4px solid #4CAF50;border-radius:6px;padding:14px;margin-bottom:12px}
+.warn-box{background:#FFF8E1;border-left:4px solid #FFC107;border-radius:6px;padding:14px;margin-bottom:12px}
+.info-box h4,.warn-box h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.info-box p,.warn-box p,.info-box ul,.warn-box ul{font-size:13px;color:#546E7A;line-height:1.7}
+.info-box ul,.warn-box ul{padding-left:16px}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:#B2DFDB}
+.tl-item{position:relative;margin-bottom:16px}
+.tl-dot{position:absolute;left:-24px;width:14px;height:14px;background:#00897B;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px #00897B}
+.tl-content{background:#F1FFFE;border-radius:6px;padding:10px 14px;border-left:3px solid #00897B}
+.tl-content h4{font-size:13px;font-weight:700;color:#00695C}
+.tl-content p{font-size:12px;color:#546E7A;margin-top:3px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:800px){.kpi-row{grid-template-columns:1fr 1fr}}
+.kpi{background:#fff;border-radius:8px;padding:14px;text-align:center;border:1px solid #E0F2F1}
+.kpi .val{font-size:24px;font-weight:700;color:#00695C}.kpi .lbl{font-size:11px;color:#78909C;margin-top:4px}
+footer{text-align:center;padding:16px;color:#888;font-size:12px}
+a{color:#00695C;text-decoration:none}.nav{margin-bottom:16px;font-size:13px}
+.scope-in{color:#2E7D32;font-weight:600}
+.scope-out{color:#B71C1C;text-decoration:line-through;color:#999}
+</style></head><body>
+<header>
+  <h1>PI 2.1 – Kế Hoạch Kiểm Thử (Test Plan)</h1>
+  <p>QuanLyKhoaHoc5 – Trung tâm Ngoại ngữ NNL | Phiên bản: 1.0 | Ngày: 2026-05-28</p>
+</header>
+<div class="wrap">
+<div class="nav"><a href="index.html">← Trang chủ</a> | PI 2.1 Kế Hoạch Kiểm Thử</div>
+
+<!-- 1. THÔNG TIN TÀI LIỆU -->
+<div class="section">
+<h2>📄 1. Thông Tin Tài Liệu</h2>
+<table>
+<tr><th style="width:220px">Thuộc tính</th><th>Nội dung</th></tr>
+<tr><td><strong>Tên dự án</strong></td><td>QuanLyKhoaHoc5 – Hệ thống Quản lý Khóa học Trung tâm Ngoại ngữ NNL</td></tr>
+<tr><td><strong>Mã tài liệu</strong></td><td>TP-NNL-2026-001</td></tr>
+<tr><td><strong>Phiên bản</strong></td><td>1.0 (Final)</td></tr>
+<tr><td><strong>Ngày tạo</strong></td><td>2026-05-25</td></tr>
+<tr><td><strong>Ngày cập nhật</strong></td><td>2026-05-28</td></tr>
+<tr><td><strong>Tác giả</strong></td><td>Nguyễn Xuân Bắc – QA Lead</td></tr>
+<tr><td><strong>Người phê duyệt</strong></td><td>Product Owner (NNL)</td></tr>
+<tr><td><strong>Trạng thái</strong></td><td><span class="badge-ok">✅ APPROVED</span></td></tr>
+<tr><td><strong>Repository</strong></td><td><a href="https://github.com/xuanbac9968-hue/QuanLyKhoaHoc5" target="_blank">github.com/xuanbac9968-hue/QuanLyKhoaHoc5</a></td></tr>
+</table>
+</div>
+
+<!-- 2. MỤC TIÊU -->
+<div class="section">
+<h2>🎯 2. Mục Tiêu Kiểm Thử</h2>
+<div class="info-box">
+  <h4>Mục tiêu tổng quát</h4>
+  <p>Đảm bảo hệ thống QuanLyKhoaHoc5 hoạt động đúng theo yêu cầu nghiệp vụ của Trung tâm Ngoại ngữ NNL, bao gồm tính đúng đắn (correctness), độ tin cậy (reliability), bảo mật (security), và hiệu năng (performance) trước khi đưa vào vận hành.</p>
+</div>
+<table>
+<tr><th>#</th><th>Mục tiêu cụ thể</th><th>Phương pháp đo</th><th>Ngưỡng chấp nhận</th></tr>
+<tr><td>1</td><td>Kiểm tra tất cả chức năng nghiệp vụ chính (8 module)</td><td>55 test cases manual + 531 unit tests</td><td>100% TC thực thi, ≥ 95% PASS</td></tr>
+<tr><td>2</td><td>Đảm bảo code coverage đủ cao</td><td>coverlet 6.0 – opencover format</td><td>≥ 80% line coverage</td></tr>
+<tr><td>3</td><td>Phát hiện lỗ hổng bảo mật OWASP Top 10</td><td>OWASP ZAP 2.16.0</td><td>0 High alerts</td></tr>
+<tr><td>4</td><td>Đảm bảo hiệu năng dưới tải cao</td><td>JMeter 5.6.3 (100/200/300 users)</td><td>Error rate &lt; 1%, P95 &lt; 2000ms</td></tr>
+<tr><td>5</td><td>Xác nhận E2E flow với người dùng thực</td><td>Katalon Studio 11.1.3.0 – 6 TCs</td><td>6/6 PASSED</td></tr>
+<tr><td>6</td><td>Đảm bảo chất lượng mã nguồn</td><td>SonarQube 26.5.0</td><td>Quality Gate PASSED (Coverage80)</td></tr>
+</table>
+</div>
+
+<!-- 3. PHẠM VI -->
+<div class="section">
+<h2>🗂️ 3. Phạm Vi Kiểm Thử</h2>
+<div class="grid2">
+  <div>
+    <h3 style="font-size:14px;font-weight:700;color:#2E7D32;margin-bottom:10px">✅ Trong phạm vi (In-scope)</h3>
+    <table>
+    <tr><th>Module</th><th>Chức năng</th></tr>
+    <tr><td class="scope-in">🔐 Xác thực</td><td>Login 3 roles, logout, đổi mật khẩu, cookie remember</td></tr>
+    <tr><td class="scope-in">📚 Khóa học</td><td>CRUD, filter, đổi trạng thái, phân quyền xem</td></tr>
+    <tr><td class="scope-in">🏫 Lớp học</td><td>CRUD, phân quyền GV/Admin</td></tr>
+    <tr><td class="scope-in">📝 Đăng ký</td><td>Đăng ký/hủy/duyệt/từ chối, kiểm tra slot</td></tr>
+    <tr><td class="scope-in">📊 Điểm số</td><td>Nhập điểm, công thức, khóa bảng điểm</td></tr>
+    <tr><td class="scope-in">💰 Thanh toán</td><td>Tạo yêu cầu, duyệt, từ chối, thống kê</td></tr>
+    <tr><td class="scope-in">👤 Tài khoản</td><td>Tạo, khóa, reset mật khẩu, đổi vai trò</td></tr>
+    <tr><td class="scope-in">📅 Phân công</td><td>Gán/đổi/hủy phân công giảng viên</td></tr>
+    <tr><td class="scope-in">🤖 Chat AI</td><td>Grok API, Groq fallback, gợi ý khóa học</td></tr>
+    <tr><td class="scope-in">🔒 Bảo mật</td><td>CSRF, XSS, HTTPS, session, OWASP Top 10</td></tr>
+    <tr><td class="scope-in">⚡ Hiệu năng</td><td>100/200/300 concurrent users</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3 style="font-size:14px;font-weight:700;color:#B71C1C;margin-bottom:10px">❌ Ngoài phạm vi (Out-of-scope)</h3>
+    <table>
+    <tr><th>Hạng mục</th><th>Lý do</th></tr>
+    <tr><td class="scope-out">Thanh toán online (VNPay/MoMo)</td><td>Chưa tích hợp</td></tr>
+    <tr><td class="scope-out">Mobile app</td><td>Chưa có</td></tr>
+    <tr><td class="scope-out">Email notification</td><td>Không trong scope sprint</td></tr>
+    <tr><td class="scope-out">Production deployment</td><td>Chỉ test trên localhost/CI</td></tr>
+    <tr><td class="scope-out">Database clustering/HA</td><td>Out-of-scope version này</td></tr>
+    <tr><td class="scope-out">Browser: Firefox/Safari</td><td>Chỉ Chrome 148</td></tr>
+    <tr><td class="scope-out">Load > 300 users</td><td>MVP scope</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- 4. TÀI NGUYÊN -->
+<div class="section">
+<h2>👥 4. Tài Nguyên & Nhân Lực</h2>
+<table>
+<tr><th>Vai trò</th><th>Tên</th><th>Trách nhiệm</th><th>% thời gian</th></tr>
+<tr>
+  <td><strong>QA Lead / Developer</strong></td>
+  <td>Nguyễn Xuân Bắc</td>
+  <td>Viết và thực thi tất cả test cases, setup CI/CD, chạy JMeter/ZAP/Katalon, viết báo cáo</td>
+  <td>100%</td>
+</tr>
+<tr>
+  <td><strong>Product Owner</strong></td>
+  <td>NNL Team</td>
+  <td>Review requirements, phê duyệt acceptance tests, xác nhận exit criteria</td>
+  <td>10%</td>
+</tr>
+<tr>
+  <td><strong>CI/CD (GitHub Actions)</strong></td>
+  <td>ubuntu-latest runner</td>
+  <td>Build, unit tests, SonarQube scan, artifact upload – tự động 24/7</td>
+  <td>Auto</td>
+</tr>
+</table>
+
+<h3 style="font-size:14px;font-weight:700;margin:16px 0 10px">Công cụ & Phần mềm</h3>
+<table>
+<tr><th>Công cụ</th><th>Phiên bản</th><th>Mục đích</th><th>License</th></tr>
+<tr><td>xUnit</td><td>2.9</td><td>Unit testing framework (.NET)</td><td>Apache 2.0</td></tr>
+<tr><td>Moq</td><td>4.20</td><td>Mocking framework</td><td>BSD-3</td></tr>
+<tr><td>coverlet</td><td>6.0</td><td>Code coverage collection</td><td>MIT</td></tr>
+<tr><td>SonarQube Community</td><td>26.5.0</td><td>Static analysis, Quality Gate</td><td>LGPL 3.0</td></tr>
+<tr><td>OWASP ZAP</td><td>2.16.0</td><td>Security scan (DAST)</td><td>Apache 2.0</td></tr>
+<tr><td>Apache JMeter</td><td>5.6.3</td><td>Load/performance testing</td><td>Apache 2.0</td></tr>
+<tr><td>Katalon Studio</td><td>11.1.3.0</td><td>E2E automation</td><td>Free tier</td></tr>
+<tr><td>GitHub Actions</td><td>Latest</td><td>CI/CD pipeline</td><td>Free tier</td></tr>
+<tr><td>Chrome</td><td>148</td><td>Browser for E2E tests</td><td>Free</td></tr>
+<tr><td>SQLite / EF InMemory</td><td>Latest</td><td>Test database</td><td>MIT</td></tr>
+</table>
+</div>
+
+<!-- 5. MÔI TRƯỜNG -->
+<div class="section">
+<h2>🖥️ 5. Môi Trường Kiểm Thử</h2>
+<div class="grid2">
+  <div>
+    <div class="info-box">
+      <h4>🖥️ Môi trường Local (Development)</h4>
+      <ul>
+        <li>OS: Windows 11 Home 26100</li>
+        <li>Runtime: .NET 10.0, SDK 10.x</li>
+        <li>IDE: Visual Studio 2022 / VS Code</li>
+        <li>DB: SQLite (dev) + In-Memory (test)</li>
+        <li>URL: http://localhost:5125</li>
+        <li>Browser: Chrome 148 (Katalon)</li>
+        <li>RAM: ≥ 8GB, CPU: 4+ cores</li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <div class="info-box">
+      <h4>☁️ Môi trường CI/CD (GitHub Actions)</h4>
+      <ul>
+        <li>Runner: ubuntu-latest (GitHub-hosted)</li>
+        <li>Runtime: .NET 10.0.x (actions/setup-dotnet)</li>
+        <li>Dotnet restore + build Release</li>
+        <li>531 unit tests (XPlat Code Coverage)</li>
+        <li>SonarQube: localhost:9000 (token-based)</li>
+        <li>Artifact: CICD_Pipeline_Report.html</li>
+        <li>Retention: 30 days</li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <div class="info-box">
+      <h4>🔬 Công cụ kiểm thử đặc thù</h4>
+      <ul>
+        <li>SonarQube: localhost:9000 (token: sqa_d40db0...)</li>
+        <li>JMeter 5.6.3: ThreadGroup 100/200/300u</li>
+        <li>ZAP 2.16.0: Spider + Active scan</li>
+        <li>Katalon: Project QuanLyKhoaHoc5_Katalon</li>
+      </ul>
+    </div>
+  </div>
+  <div>
+    <div class="warn-box">
+      <h4>⚠️ Ràng buộc môi trường</h4>
+      <ul>
+        <li>Grok AI API: cần GROK_API_KEY env var</li>
+        <li>JIRA: cần JIRA_TOKEN (atlassian.net)</li>
+        <li>Katalon: chỉ chạy local (Chrome headful)</li>
+        <li>ZAP: cần app chạy trên localhost:5125</li>
+        <li>SonarQube: token hết hạn nếu không dùng 30 ngày</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 6. LỊCH TRÌNH -->
+<div class="section">
+<h2>📅 6. Lịch Trình Kiểm Thử</h2>
+<div class="timeline">
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Sprint 1 – Chuẩn bị (2026-05-20 → 05-22)</h4>
+      <p>Phân tích yêu cầu, thiết kế 55 test cases, setup môi trường xUnit + SonarQube, seed data. <span class="badge-ok">✅ Done</span></p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Sprint 2 – Unit Tests (2026-05-22 → 05-24)</h4>
+      <p>Viết và chạy 531 unit tests (xUnit + Moq). Coverage: 82.9%. SonarQube Quality Gate PASSED. <span class="badge-ok">✅ Done</span></p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Sprint 3 – Integration Tests (2026-05-24 → 05-25)</h4>
+      <p>Kiểm tra tích hợp Controller↔Service↔DB, Chat API, ThanhToan flow. Postman collections. <span class="badge-ok">✅ Done</span></p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Sprint 4 – System Tests (2026-05-25 → 05-27)</h4>
+      <p>JMeter load test (100/200/300u), OWASP ZAP security scan, SonarQube final. Kết quả: 0 High ZAP, error rate 0%. <span class="badge-ok">✅ Done</span></p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Sprint 5 – Acceptance Testing (2026-05-27 → 05-28)</h4>
+      <p>Katalon Studio TS_All: 6/6 TCs PASSED (377s). CI/CD pipeline xanh. Báo cáo hoàn thiện. <span class="badge-ok">✅ Done</span></p>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot"></div>
+    <div class="tl-content">
+      <h4>Release – Sign-off (2026-05-28)</h4>
+      <p>Product Owner review, exit criteria met, release candidate ready. <span class="badge-ok">✅ Approved</span></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 7. ENTRY / EXIT CRITERIA -->
+<div class="section">
+<h2>✅ 7. Entry / Exit Criteria</h2>
+<table>
+<tr><th>Mức</th><th>Entry Criteria (điều kiện bắt đầu)</th><th>Exit Criteria (điều kiện kết thúc)</th><th>Trạng thái</th></tr>
+<tr>
+  <td><strong>Unit</strong></td>
+  <td>
+    ✅ Code compile 0 error/warning<br>
+    ✅ Test project restore thành công<br>
+    ✅ Seed data chuẩn
+  </td>
+  <td>
+    ✅ ≥ 80% line coverage (đạt: 82.9%)<br>
+    ✅ 0 test failures (531/531 PASSED)<br>
+    ✅ Không có CS errors mới
+  </td>
+  <td><span class="badge-ok">✅ MET</span></td>
+</tr>
+<tr>
+  <td><strong>Integration</strong></td>
+  <td>
+    ✅ Unit tests PASSED<br>
+    ✅ DB seed data chuẩn<br>
+    ✅ API endpoints hoạt động
+  </td>
+  <td>
+    ✅ Tất cả integration flows hoạt động<br>
+    ✅ 0 unhandled exceptions<br>
+    ✅ Postman collection chạy xanh
+  </td>
+  <td><span class="badge-ok">✅ MET</span></td>
+</tr>
+<tr>
+  <td><strong>System</strong></td>
+  <td>
+    ✅ Integration tests PASSED<br>
+    ✅ App chạy localhost:5125<br>
+    ✅ SonarQube/ZAP/JMeter online
+  </td>
+  <td>
+    ✅ 0 High ZAP alerts (đạt: 0 High)<br>
+    ✅ JMeter error rate &lt; 1% (đạt: 0%)<br>
+    ✅ SonarQube Quality Gate PASSED
+  </td>
+  <td><span class="badge-ok">✅ MET</span></td>
+</tr>
+<tr>
+  <td><strong>Acceptance</strong></td>
+  <td>
+    ✅ System tests PASSED<br>
+    ✅ Katalon đã setup với Chrome 148<br>
+    ✅ App ổn định 30 phút liên tục
+  </td>
+  <td>
+    ✅ 6/6 Katalon TCs PASSED (377s)<br>
+    ✅ Product Owner approve<br>
+    ✅ Release candidate ready
+  </td>
+  <td><span class="badge-ok">✅ MET</span></td>
+</tr>
+</table>
+</div>
+
+<!-- 8. RỦI RO -->
+<div class="section">
+<h2>⚠️ 8. Rủi Ro & Biện Pháp Giảm Thiểu</h2>
+<table>
+<tr><th>Rủi ro</th><th>Xác suất</th><th>Ảnh hưởng</th><th>Mức độ</th><th>Biện pháp</th></tr>
+<tr>
+  <td>Grok API down (AI service)</td>
+  <td><span class="pill pm">Trung bình</span></td>
+  <td><span class="pill pm">Cao</span></td>
+  <td><span class="pill pm">🟠 TB</span></td>
+  <td>Fallback sang Groq API, Moq trong unit tests</td>
+</tr>
+<tr>
+  <td>JMeter tạo race condition trên SQLite</td>
+  <td><span class="pill pl">Thấp</span></td>
+  <td><span class="pill ph">Rất cao</span></td>
+  <td><span class="pill pm">🟠 TB</span></td>
+  <td>Dùng connection pooling, test trên SQL Server staging</td>
+</tr>
+<tr>
+  <td>GitHub Actions runner hết disk space</td>
+  <td><span class="pill pl">Thấp</span></td>
+  <td><span class="pill pm">Trung bình</span></td>
+  <td><span class="pill pl">🟢 Thấp</span></td>
+  <td>Retention 14-30 ngày, cleanup artifacts cũ</td>
+</tr>
+<tr>
+  <td>SonarQube token hết hạn</td>
+  <td><span class="pill pm">Trung bình</span></td>
+  <td><span class="pill pm">Trung bình</span></td>
+  <td><span class="pill pm">🟠 TB</span></td>
+  <td>Tạo token 90 ngày, lưu vào GitHub Secrets</td>
+</tr>
+<tr>
+  <td>Katalon Chrome driver version mismatch</td>
+  <td><span class="pill pm">Trung bình</span></td>
+  <td><span class="pill ph">Cao</span></td>
+  <td><span class="pill pm">🟠 TB</span></td>
+  <td>Pin Chrome 148, cập nhật ChromeDriver đúng version</td>
+</tr>
+<tr>
+  <td>Thiếu test data phù hợp</td>
+  <td><span class="pill pl">Thấp</span></td>
+  <td><span class="pill pm">Cao</span></td>
+  <td><span class="pill pm">🟠 TB</span></td>
+  <td>Seed data script chuẩn trong SeedData.cs, backup JSON</td>
+</tr>
+</table>
+</div>
+
+<!-- 9. PHÂN CÔNG TRÁCH NHIỆM -->
+<div class="section">
+<h2>📋 9. Ma Trận RACI</h2>
+<table>
+<tr><th>Hoạt động</th><th>QA Lead (Bắc)</th><th>Product Owner</th><th>CI/CD Bot</th></tr>
+<tr><td>Viết test cases</td><td style="text-align:center;color:#00695C;font-weight:700">R</td><td style="text-align:center">C</td><td style="text-align:center">–</td></tr>
+<tr><td>Thực thi unit tests</td><td style="text-align:center">A</td><td style="text-align:center">I</td><td style="text-align:center;color:#00695C;font-weight:700">R</td></tr>
+<tr><td>Review kết quả</td><td style="text-align:center;color:#00695C;font-weight:700">R</td><td style="text-align:center">A</td><td style="text-align:center">–</td></tr>
+<tr><td>Chạy JMeter / ZAP</td><td style="text-align:center;color:#00695C;font-weight:700">R, A</td><td style="text-align:center">I</td><td style="text-align:center">–</td></tr>
+<tr><td>Chạy Katalon E2E</td><td style="text-align:center;color:#00695C;font-weight:700">R</td><td style="text-align:center">A, C</td><td style="text-align:center">–</td></tr>
+<tr><td>Sign-off release</td><td style="text-align:center">C</td><td style="text-align:center;color:#00695C;font-weight:700">R, A</td><td style="text-align:center">–</td></tr>
+<tr><td>CI/CD pipeline</td><td style="text-align:center">A</td><td style="text-align:center">I</td><td style="text-align:center;color:#00695C;font-weight:700">R</td></tr>
+</table>
+<p style="font-size:12px;color:#78909C;margin-top:8px">R=Responsible, A=Accountable, C=Consulted, I=Informed</p>
+</div>
+
+<!-- 10. KPI TỔNG KẾT -->
+<div class="section">
+<h2>📊 10. KPI Tổng Kết – Kết Quả Thực Tế</h2>
+<div class="kpi-row">
+  <div class="kpi"><div class="val">531</div><div class="lbl">Unit Tests PASSED</div></div>
+  <div class="kpi"><div class="val">82.9%</div><div class="lbl">Line Coverage</div></div>
+  <div class="kpi"><div class="val">6/6</div><div class="lbl">Katalon E2E PASSED</div></div>
+  <div class="kpi"><div class="val">0</div><div class="lbl">ZAP High Alerts</div></div>
+</div>
+<div class="kpi-row">
+  <div class="kpi"><div class="val">0%</div><div class="lbl">JMeter Error Rate</div></div>
+  <div class="kpi"><div class="val">130ms</div><div class="lbl">Avg Response (100u)</div></div>
+  <div class="kpi"><div class="val">PASSED</div><div class="lbl">SonarQube QG</div></div>
+  <div class="kpi"><div class="val">55</div><div class="lbl">Manual TCs</div></div>
+</div>
+<div class="info-box" style="margin-top:12px">
+  <h4>✅ Kết luận: Tất cả exit criteria đã được thỏa mãn. Hệ thống sẵn sàng release.</h4>
+  <p>Pipeline CI/CD tự động chạy với mọi commit, đảm bảo chất lượng liên tục. Báo cáo HTML được sinh tự động và upload làm artifact GitHub Actions.</p>
+</div>
+</div>
+
+</div>
+<footer>PI 2.1 – Kế Hoạch Kiểm Thử | QuanLyKhoaHoc5 | 2026-05-28 | <a href="index.html">← Trang chủ</a></footer>
+</body></html>

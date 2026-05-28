@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="UTF-8"><title>PI 1.1 – Phân Tích Yêu Cầu | QuanLyKhoaHoc5</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#F0F4F8;color:#1a2332;font-size:14px}
+header{background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;padding:28px 36px}
+header h1{font-size:20px;font-weight:700;margin-bottom:6px}header p{opacity:.85;font-size:13px}
+.wrap{max-width:1300px;margin:0 auto;padding:24px 20px}
+.section{background:#fff;border-radius:10px;padding:22px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+.section h2{font-size:16px;font-weight:700;color:#1565C0;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #E3F2FD;display:flex;align-items:center;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#1565C0;color:#fff;padding:9px 12px;text-align:left;font-size:12px;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #EEF2F7;vertical-align:top}
+tr:nth-child(even){background:#F8FAFF}tr:hover{background:#E3F2FD}
+.pill{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600}
+.ph{background:#FFCDD2;color:#C62828}.pm{background:#FFE0B2;color:#E65100}.pl{background:#C8E6C9;color:#2E7D32}
+.s-done{background:#E8F5E9;color:#2E7D32}.s-partial{background:#FFF3E0;color:#E65100}
+.tc{font-family:monospace;font-size:11px;background:#E3F2FD;padding:2px 6px;border-radius:3px}
+footer{text-align:center;padding:16px;color:#888;font-size:12px}
+a{color:#1565C0;text-decoration:none}.nav{margin-bottom:16px;font-size:13px}
+</style></head><body>
+<header>
+  <h1>PI 1.1 – Phân Tích Yêu Cầu Chức Năng & Phi Chức Năng</h1>
+  <p>QuanLyKhoaHoc5 – Trung tâm Ngoại ngữ NNL | Ngày: 2026-05-28 | Nguyễn Xuân Bắc</p>
+</header>
+<div class="wrap">
+<div class="nav"><a href="index.html">← Trang chủ</a> | PI 1.1 Phân Tích Yêu Cầu</div>
+
+<!-- YÊU CẦU CHỨC NĂNG -->
+<div class="section">
+<h2>📌 1. Yêu Cầu Chức Năng (Functional Requirements)</h2>
+<table>
+<tr><th>ID</th><th>Module</th><th>Chức năng</th><th>Mô tả chi tiết</th><th>Actor</th><th>Ưu tiên</th><th>Trạng thái</th><th>Test Case</th></tr>
+<tr><td>FR-01</td><td>Xác thực</td><td>Đăng nhập hệ thống</td><td>Xác thực bằng Email+Password qua Cookie Auth. Phân quyền 3 role: Admin/GiangVien/HocVien</td><td>Tất cả</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-001→TC-003</span></td></tr>
+<tr><td>FR-02</td><td>Xác thực</td><td>Đăng xuất</td><td>Xóa cookie, chấm dứt session, redirect về /Account/Login</td><td>Tất cả</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-009</span></td></tr>
+<tr><td>FR-03</td><td>Xác thực</td><td>Đổi mật khẩu</td><td>Verify mật khẩu cũ, validate policy (min 8 chars, có hoa/thường/số/ký tự đặc biệt), lưu hash mới</td><td>Tất cả</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-010</span></td></tr>
+<tr><td>FR-04</td><td>Xác thực</td><td>Phân quyền theo role</td><td>Admin: toàn quyền. GiangVien: xem lớp, chấm điểm. HocVien: xem khóa học, đăng ký. Custom AuthorizeRoleAttribute</td><td>System</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-001→TC-003</span></td></tr>
+
+<tr><td>FR-05</td><td>Khóa học</td><td>Xem danh sách khóa học</td><td>Phân trang, lọc theo ngôn ngữ/trạng thái/học phí. HocVien thấy khóa DangMo, Admin thấy tất cả</td><td>Tất cả</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-011</span></td></tr>
+<tr><td>FR-06</td><td>Khóa học</td><td>CRUD khóa học</td><td>Admin: thêm/sửa/xóa/đổi trạng thái (DangMo/DaDong/TamDung). Upload hình ảnh. Validate fields bắt buộc</td><td>Admin</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-011→TC-020</span></td></tr>
+<tr><td>FR-07</td><td>Khóa học</td><td>Xem chi tiết khóa học</td><td>Thông tin đầy đủ, danh sách lịch học, số lượng học viên, giảng viên phụ trách</td><td>Tất cả</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-012</span></td></tr>
+
+<tr><td>FR-08</td><td>Đăng ký</td><td>Đăng ký khóa học</td><td>HocVien gửi yêu cầu đăng ký. Kiểm tra slot còn trống, trạng thái khóa học. Trạng thái: ChoDuyet→DaDuyet/TuChoi</td><td>HocVien</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-021→TC-025</span></td></tr>
+<tr><td>FR-09</td><td>Đăng ký</td><td>Duyệt/từ chối đăng ký</td><td>Admin duyệt yêu cầu. Ghi chú lý do từ chối. Cập nhật slot đã đăng ký</td><td>Admin</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-026→TC-028</span></td></tr>
+
+<tr><td>FR-10</td><td>Lịch học</td><td>Quản lý lịch học</td><td>Admin tạo lịch học cho khóa học (ThuTrongTuan, GioBatDau, GioKetThuc, PhongHoc, NgayBatDau/KetThuc)</td><td>Admin</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-031→TC-035</span></td></tr>
+<tr><td>FR-11</td><td>Lịch học</td><td>Xem lịch học cá nhân</td><td>Calendar view dạng lưới tháng. Màu theo trạng thái khóa. Click xem chi tiết buổi học</td><td>Tất cả</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-036→TC-038</span></td></tr>
+<tr><td>FR-12</td><td>Lịch học</td><td>Phân công giảng viên</td><td>Admin phân công GV vào khóa học. Phát hiện xung đột lịch. IsActive flag</td><td>Admin</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-039→TC-040</span></td></tr>
+
+<tr><td>FR-13</td><td>Thanh toán</td><td>Tạo yêu cầu thanh toán</td><td>HocVien chọn phương thức (ChuyenKhoan/TienMat), upload ảnh bill. Lưu vào /uploads/bills/</td><td>HocVien</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-041→TC-044</span></td></tr>
+<tr><td>FR-14</td><td>Thanh toán</td><td>Duyệt/từ chối thanh toán</td><td>Admin duyệt → DaThanhToan. Admin từ chối → TuChoi + lý do. Cập nhật thống kê dashboard</td><td>Admin</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-045→TC-047</span></td></tr>
+
+<tr><td>FR-15</td><td>Chat AI</td><td>Chat với NNL Assistant</td><td>Chat box với Grok API (grok-3-latest). Fallback sang Groq/Llama-3.3-70B. Lịch sử lưu DB (ChatHistories)</td><td>Tất cả</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-048→TC-050</span></td></tr>
+<tr><td>FR-16</td><td>Chat AI</td><td>Gợi ý khóa học AI</td><td>AI phân tích lịch sử học tập, đề xuất khóa học phù hợp. Lưu gợi ý vào DB. Hiển thị trang /GoiY</td><td>HocVien</td><td><span class="pill pl">Thấp</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-051→TC-053</span></td></tr>
+
+<tr><td>FR-17</td><td>Điểm số</td><td>Nhập/xem điểm</td><td>GiangVien nhập điểm GiuaKy, CuoiKy. Tự động tính DiemTongKet = (GK + CK×2)/3. XepLoai theo thang điểm</td><td>GV, Admin</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-054→TC-055</span></td></tr>
+
+<tr><td>FR-18</td><td>Báo cáo</td><td>Xuất Excel/PDF</td><td>Xuất bảng điểm (ClosedXML), báo cáo học viên theo kỳ (iTextSharp). Lọc theo ngày tháng</td><td>Admin, GV</td><td><span class="pill pl">Thấp</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td></td></tr>
+
+<tr><td>FR-19</td><td>Admin</td><td>Dashboard thống kê</td><td>Chart.js: tổng học viên, doanh thu, khóa học active. Số thanh toán chờ duyệt. Responsive</td><td>Admin</td><td><span class="pill pm">Trung bình</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td></td></tr>
+<tr><td>FR-20</td><td>Admin</td><td>Quản lý tài khoản</td><td>CRUD NguoiDung. Gán role. Lock/Unlock tài khoản (IsActive). Reset mật khẩu</td><td>Admin</td><td><span class="pill ph">Cao</span></td><td><span class="s-done">✅ Hoàn thành</span></td><td><span class="tc">TC-003</span></td></tr>
+</table>
+</div>
+
+<!-- YÊU CẦU PHI CHỨC NĂNG -->
+<div class="section">
+<h2>⚙️ 2. Yêu Cầu Phi Chức Năng (Non-Functional Requirements)</h2>
+<table>
+<tr><th>ID</th><th>Loại</th><th>Yêu cầu</th><th>Chỉ số / Ngưỡng</th><th>Phương pháp kiểm tra</th><th>Kết quả thực tế</th><th>Đạt</th></tr>
+<tr><td>NFR-01</td><td>⚡ Hiệu năng</td><td>Response time dưới tải bình thường (100 users)</td><td>P95 &lt; 1500ms, Avg &lt; 500ms</td><td>JMeter 5.6.3, 100 concurrent users</td><td>P95=631ms, Avg=130ms ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-02</td><td>⚡ Hiệu năng</td><td>Response time dưới tải cao (200 users)</td><td>P95 &lt; 2000ms, Avg &lt; 1000ms</td><td>JMeter 5.6.3, 200 concurrent users</td><td>P95=1027ms, Avg=190ms ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-03</td><td>⚡ Hiệu năng</td><td>Tỉ lệ lỗi dưới tải</td><td>Error rate &lt; 1%</td><td>JMeter 6000 requests (3 scenarios)</td><td>Error rate = 0% ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-04</td><td>🔒 Bảo mật</td><td>Không có lỗ hổng severity High</td><td>0 High alerts</td><td>OWASP ZAP 2.16.0 active scan</td><td>0 High, 3 Medium ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-05</td><td>🔒 Bảo mật</td><td>Xác thực và phân quyền</td><td>Không thể truy cập resource của role khác</td><td>Kiểm thử penetration, test role-based access</td><td>Custom AuthorizeRoleAttribute hoạt động ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-06</td><td>🔒 Bảo mật</td><td>Mật khẩu được hash an toàn</td><td>BCrypt hash, không lưu plaintext</td><td>Code review, DB inspection</td><td>BCrypt.HashPassword() ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-07</td><td>📈 Bảo trì</td><td>Code coverage</td><td>≥ 70% line coverage</td><td>coverlet + SonarQube</td><td>82.9% ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-08</td><td>📈 Bảo trì</td><td>Code quality (SonarQube)</td><td>Quality Gate PASSED</td><td>SonarQube 26.5.0 analysis</td><td>Gate "Coverage80" PASSED ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-09</td><td>🖥️ Khả dụng</td><td>Responsive design</td><td>Hiển thị tốt trên mobile (≥360px) và desktop</td><td>Bootstrap 5 responsive test</td><td>Bootstrap 5 responsive ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-10</td><td>🖥️ Khả dụng</td><td>Thời gian startup</td><td>&lt; 5 giây cold start</td><td>Đo thời gian từ dotnet run đến first request</td><td>~2.5s ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-11</td><td>🔄 Tích hợp</td><td>Tích hợp CI/CD</td><td>Pipeline tự động khi push code</td><td>GitHub Actions trigger test</td><td>7-job pipeline ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+<tr><td>NFR-12</td><td>🔄 Tích hợp</td><td>External API resilience</td><td>Fallback khi API chính down</td><td>Unit test mock Grok timeout → Groq fallback</td><td>Groq/Llama fallback hoạt động ✅</td><td><span class="s-done">✅ ĐẠT</span></td></tr>
+</table>
+</div>
+
+<!-- TRACEABILITY -->
+<div class="section">
+<h2>🔗 3. Ma Trận Truy Vết (Requirements Traceability)</h2>
+<table>
+<tr><th>Module</th><th>Yêu cầu chức năng</th><th>Test Cases thủ công</th><th>Unit Tests</th><th>E2E (Katalon)</th><th>Coverage</th></tr>
+<tr><td>🔐 Xác thực</td><td>FR-01→FR-04</td><td>TC-001→TC-010 (10 TCs)</td><td>ChatService auth tests</td><td>TC01_DangNhap</td><td>✅ 100%</td></tr>
+<tr><td>📚 Khóa học</td><td>FR-05→FR-07</td><td>TC-011→TC-020 (10 TCs)</td><td>KhoaHocController tests</td><td>TC04_ThemKhoaHoc</td><td>✅ 90%</td></tr>
+<tr><td>📝 Đăng ký</td><td>FR-08→FR-09</td><td>TC-021→TC-028 (8 TCs)</td><td>DangKyService tests</td><td>TC03_TaoTaiKhoan</td><td>✅ 85%</td></tr>
+<tr><td>📅 Lịch học</td><td>FR-10→FR-12</td><td>TC-031→TC-040 (10 TCs)</td><td>LichHocHelper tests</td><td>TC06_PhanCong</td><td>✅ 80%</td></tr>
+<tr><td>💰 Thanh toán</td><td>FR-13→FR-14</td><td>TC-041→TC-047 (7 TCs)</td><td>ThanhToanController tests</td><td>TC05_TaoThanhToan</td><td>✅ 85%</td></tr>
+<tr><td>🤖 Chat AI</td><td>FR-15→FR-16</td><td>TC-048→TC-053 (6 TCs)</td><td>ChatService, GoiYService</td><td>Chat widget test</td><td>✅ 90%</td></tr>
+<tr><td>📊 Điểm/BC</td><td>FR-17→FR-18</td><td>TC-054→TC-055 (2 TCs)</td><td>ExcelService, DiemService</td><td>-</td><td>✅ 75%</td></tr>
+</table>
+</div>
+</div>
+<footer>PI 1.1 – Phân Tích Yêu Cầu | QuanLyKhoaHoc5 | 2026-05-28 | <a href="index.html">← Trang chủ</a></footer>
+</body></html>

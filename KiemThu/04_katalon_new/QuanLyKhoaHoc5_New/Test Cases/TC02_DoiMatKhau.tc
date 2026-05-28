@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Kiểm thử chức năng đổi mật khẩu</description>
+   <name>TC02_DoiMatKhau</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>tc02-0002-0000-0000-000000000002</testCaseGuid>
+</TestCaseEntity>

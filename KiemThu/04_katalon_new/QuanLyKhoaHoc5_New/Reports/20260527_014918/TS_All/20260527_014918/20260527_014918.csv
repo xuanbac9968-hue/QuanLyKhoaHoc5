@@ -1,0 +1,20 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS_All,,Test Suite chạy toàn bộ 6 Test Case kiểm thử tự động hệ thống QuanLyKhoaHoc5,,27-05-2026 01:49:24,27-05-2026 01:49:27,"2,859s",ERROR
+,,,,,,,
+Test Cases/TC01_DangNhap,,Kiểm thử chức năng đăng nhập hệ thống,,27-05-2026 01:49:24,27-05-2026 01:49:25,"0,830s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC01_DangNhap.xlsx""",,,,27-05-2026 01:49:25,27-05-2026 01:49:25,"0,023s",ERROR
+,,,,,,,
+Test Cases/TC02_DoiMatKhau,,Kiểm thử chức năng đổi mật khẩu,,27-05-2026 01:49:25,27-05-2026 01:49:26,"0,341s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC02_DoiMatKhau.xlsx""",,,,27-05-2026 01:49:25,27-05-2026 01:49:25,"0,010s",ERROR
+,,,,,,,
+Test Cases/TC03_TaoTaiKhoan,,Kiểm thử chức năng tạo tài khoản người dùng (Admin),,27-05-2026 01:49:26,27-05-2026 01:49:26,"0,467s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC03_TaoTaiKhoan.xlsx""",,,,27-05-2026 01:49:26,27-05-2026 01:49:26,"0,006s",ERROR
+,,,,,,,
+Test Cases/TC04_ThemKhoaHoc,,Kiểm thử chức năng thêm khóa học mới (Admin),,27-05-2026 01:49:26,27-05-2026 01:49:26,"0,305s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC04_ThemKhoaHoc.xlsx""",,,,27-05-2026 01:49:26,27-05-2026 01:49:26,"0,004s",ERROR
+,,,,,,,
+Test Cases/TC05_TaoThanhToan,,Kiểm thử chức năng tạo yêu cầu thanh toán học phí (HocVien),,27-05-2026 01:49:26,27-05-2026 01:49:27,"0,303s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC05_TaoThanhToan.xlsx""",,,,27-05-2026 01:49:27,27-05-2026 01:49:27,"0,012s",ERROR
+,,,,,,,
+Test Cases/TC06_PhanCongGiangVien,,Kiểm thử chức năng phân công giảng viên cho khóa học (Admin),,27-05-2026 01:49:27,27-05-2026 01:49:27,"0,346s",ERROR
+"testDataPath = TEST_DATA_DIR + ""\TC06_PhanCong.xlsx""",,,,27-05-2026 01:49:27,27-05-2026 01:49:27,"0,011s",ERROR

@@ -1,0 +1,80 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+TS_All,Chrome 148.0.7778.179,Test Suite chạy toàn bộ 6 Test Case kiểm thử tự động hệ thống QuanLyKhoaHoc5,,27-05-2026 10:03:13,27-05-2026 10:09:30,"6m - 17,055s",PASSED
+,,,,,,,
+Test Cases/TC01_DangNhap,Chrome 148.0.7778.179,Kiểm thử chức năng đăng nhập hệ thống,,27-05-2026 10:03:13,27-05-2026 10:03:52,"38,882s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC01_DangNhap.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:03:14,27-05-2026 10:03:14,"0,103s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:03:14,27-05-2026 10:03:14,"0,112s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:03:14,27-05-2026 10:03:14,"0,010s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:03:14,27-05-2026 10:03:15,"0,637s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:03:15,27-05-2026 10:03:15,"0,007s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:03:15,27-05-2026 10:03:15,"0,002s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:03:15,27-05-2026 10:03:15,"0,039s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:03:15,27-05-2026 10:03:15,"0,005s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:03:15,27-05-2026 10:03:52,"37,259s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,002s",PASSED
+"comment(""=== TC01 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,001s",PASSED
+,,,,,,,
+Test Cases/TC02_DoiMatKhau,Chrome 148.0.7778.179,Kiểm thử chức năng đổi mật khẩu,,27-05-2026 10:03:52,27-05-2026 10:05:04,"1m - 11,688s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC02_DoiMatKhau.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,003s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,001s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,003s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,015s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,001s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,002s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,002s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:03:52,"0,001s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:03:52,27-05-2026 10:05:04,"1m - 11,403s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,000s",PASSED
+"comment(""=== TC02 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,001s",PASSED
+,,,,,,,
+Test Cases/TC03_TaoTaiKhoan,Chrome 148.0.7778.179,Kiểm thử chức năng tạo tài khoản người dùng (Admin),,27-05-2026 10:05:04,27-05-2026 10:06:51,"1m - 47,715s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC03_TaoTaiKhoan.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,001s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,004s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,012s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,012s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,001s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,000s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,000s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:05:04,"0,001s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:05:04,27-05-2026 10:06:51,"1m - 47,463s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:06:51,27-05-2026 10:06:51,"0,001s",PASSED
+"comment(""=== TC03 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:06:51,27-05-2026 10:06:51,"0,002s",PASSED
+,,,,,,,
+Test Cases/TC04_ThemKhoaHoc,Chrome 148.0.7778.179,Kiểm thử chức năng thêm khóa học mới (Admin),,27-05-2026 10:06:51,27-05-2026 10:08:25,"1m - 33,177s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC04_ThemKhoaHoc.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,001s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,001s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,003s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,014s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,001s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,001s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,001s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:06:52,"0,000s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:06:52,27-05-2026 10:08:25,"1m - 32,954s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+"comment(""=== TC04 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+,,,,,,,
+Test Cases/TC05_TaoThanhToan,Chrome 148.0.7778.179,Kiểm thử chức năng tạo yêu cầu thanh toán học phí (HocVien),,27-05-2026 10:08:25,27-05-2026 10:08:46,"21,362s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC05_TaoThanhToan.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,002s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,014s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,029s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,001s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:25,"0,000s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:08:25,27-05-2026 10:08:46,"21,130s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,001s",PASSED
+"comment(""=== TC05 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,001s",PASSED
+,,,,,,,
+Test Cases/TC06_PhanCongGiangVien,Chrome 148.0.7778.179,Kiểm thử chức năng phân công giảng viên cho khóa học (Admin),,27-05-2026 10:08:46,27-05-2026 10:09:30,"44,048s",PASSED
+"testDataPath = TEST_DATA_DIR + ""\TC06_PhanCong.xlsx""",Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,002s",PASSED
+fmt = new org.apache.poi.ss.usermodel.DataFormatter(),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,002s",PASSED
+fis = new java.io.FileInputStream(testDataPath),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,002s",PASSED
+wb = new org.apache.poi.xssf.usermodel.XSSFWorkbook(fis),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,008s",PASSED
+sheet = wb.getSheetAt(0),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,001s",PASSED
+fis.close(),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,002s",PASSED
+totalRows = sheet.getLastRowNum(),Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,001s",PASSED
+timeout = TIMEOUT,Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:08:46,"0,001s",PASSED
+"for ([i = 1, i <= totalRows, (i++)])",Chrome 148.0.7778.179,,,27-05-2026 10:08:46,27-05-2026 10:09:30,"43,899s",PASSED
+wb.close(),Chrome 148.0.7778.179,,,27-05-2026 10:09:30,27-05-2026 10:09:30,"0,001s",PASSED
+"comment(""=== TC06 Hoàn tất ==="")",Chrome 148.0.7778.179,,,27-05-2026 10:09:30,27-05-2026 10:09:30,"0,001s",PASSED

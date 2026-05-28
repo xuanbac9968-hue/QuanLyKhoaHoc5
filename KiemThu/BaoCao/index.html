@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo Cáo Kiểm Thử – QuanLyKhoaHoc5</title>
+<style>
+  :root{--primary:#1565C0;--success:#2E7D32;--warning:#E65100;--danger:#B71C1C;--info:#0277BD;--bg:#EEF2F7;--white:#fff;--text:#1a2332;--text2:#546e7a;--border:#CFD8DC;--r:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
+  header{background:linear-gradient(135deg,#0D47A1 0%,#1976D2 50%,#0288D1 100%);color:#fff;padding:36px 40px;text-align:center}
+  header h1{font-size:26px;font-weight:800;margin-bottom:8px;letter-spacing:-.3px}
+  header p{font-size:14px;opacity:.85;margin-bottom:16px}
+  .meta{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;font-size:12px}
+  .meta span{background:rgba(255,255,255,.18);padding:4px 14px;border-radius:12px}
+  .container{max-width:1200px;margin:0 auto;padding:28px 20px}
+  /* PI status bar */
+  .pi-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;margin-bottom:32px}
+  .pi-card{background:var(--white);border-radius:8px;padding:12px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid transparent;font-size:11px;cursor:pointer;transition:transform .15s}
+  .pi-card:hover{transform:translateY(-2px)}
+  .pi-card.ok{border-top-color:#2E7D32}.pi-card.warn{border-top-color:#E65100}
+  .pi-card .num{font-size:16px;font-weight:800;margin-bottom:4px}
+  .pi-card.ok .num{color:#2E7D32}.pi-card.warn .num{color:#E65100}
+  .pi-card .lbl{color:var(--text2);line-height:1.3}
+  /* Section */
+  .section-title{font-size:18px;font-weight:700;color:var(--text);margin:28px 0 14px;padding-left:14px;border-left:4px solid var(--primary);display:flex;align-items:center;gap:8px}
+  /* Card grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;margin-bottom:24px}
+  .card{background:var(--white);border-radius:var(--r);padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:4px solid transparent;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+  .card.blue{border-left-color:var(--primary)}.card.green{border-left-color:var(--success)}.card.orange{border-left-color:var(--warning)}.card.red{border-left-color:var(--danger)}.card.teal{border-left-color:#00838F}
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+  .card-icon{font-size:28px;line-height:1}
+  .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+  .badge-ok{background:#E8F5E9;color:#2E7D32}.badge-warn{background:#FFF3E0;color:#E65100}.badge-new{background:#E3F2FD;color:#1565C0}
+  .card h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .card p{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+  .card-stats{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .stat{text-align:center}
+  .stat .v{font-size:18px;font-weight:800;color:var(--primary)}.stat .l{font-size:10px;color:var(--text2)}
+  .card-links{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-link{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;transition:all .15s}
+  .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:#0D47A1}
+  .btn-secondary{background:#E3F2FD;color:var(--primary)}.btn-secondary:hover{background:#BBDEFB}
+  .btn-success{background:#E8F5E9;color:#2E7D32}.btn-success:hover{background:#C8E6C9}
+  /* Summary table */
+  .summary-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .summary-table th{background:#E3F2FD;color:var(--primary);padding:11px 14px;text-align:left;font-size:12px;font-weight:700;border-bottom:2px solid var(--border)}
+  .summary-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+  .summary-table tr:last-child td{border-bottom:none}
+  .summary-table tr:hover{background:#F8FBFF}
+  .pill{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700}
+  .pill-ok{background:#E8F5E9;color:#2E7D32}.pill-warn{background:#FFF3E0;color:#E65100}.pill-fail{background:#FFEBEE;color:#C62828}
+  footer{text-align:center;padding:24px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);margin-top:32px}
+  @media(max-width:700px){.grid{grid-template-columns:1fr}.pi-bar{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 Báo Cáo Kiểm Thử – QuanLyKhoaHoc5</h1>
+  <p>Trung tâm Ngoại ngữ NNL | ASP.NET Core MVC .NET 10 | Kiểm thử toàn diện theo chuẩn PI</p>
+  <div class="meta">
+    <span>📅 2026-05-28</span>
+    <span>👤 Nguyễn Xuân Bắc</span>
+    <span>🧪 531 Unit Tests</span>
+    <span>📈 82.9% Coverage</span>
+    <span>🎯 6 Katalon TCs</span>
+    <span>⚡ 6000 JMeter Requests</span>
+    <span>🛡️ 0 ZAP High Alerts</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- PI Status Bar -->
+  <div class="pi-bar">
+    <div class="pi-card ok" onclick="location='PI_1_1_Yeu_Cau.html'"><div class="num">PI 1.1</div><div class="lbl">Phân tích<br>yêu cầu</div></div>
+    <div class="pi-card ok" onclick="location='PI_1_2_Muc_Kiem_Thu.html'"><div class="num">PI 1.2</div><div class="lbl">Mức kiểm<br>thử</div></div>
+    <div class="pi-card ok" onclick="location='phan_tich_rui_ro.xlsx'"><div class="num">PI 1.3</div><div class="lbl">Phân tích<br>rủi ro</div></div>
+    <div class="pi-card ok" onclick="location='PI_2_1_Test_Plan.html'"><div class="num">PI 2.1</div><div class="lbl">Test Plan<br>đầy đủ</div></div>
+    <div class="pi-card ok" onclick="location='PI_2_2_Test_Cases.html'"><div class="num">PI 2.2</div><div class="lbl">55 Test<br>Cases</div></div>
+    <div class="pi-card ok"><div class="num">PI 2.3</div><div class="lbl">531 Auto<br>Tests</div></div>
+    <div class="pi-card ok"><div class="num">PI 2.4</div><div class="lbl">Coverage<br>82.9%</div></div>
+    <div class="pi-card ok"><div class="num">PI 3.1</div><div class="lbl">JMeter<br>300 users</div></div>
+    <div class="pi-card ok"><div class="num">PI 3.2</div><div class="lbl">OWASP<br>ZAP</div></div>
+    <div class="pi-card ok" onclick="location='Jira/Jira_BugBoard.html'"><div class="num">PI 3.3</div><div class="lbl">SonarQube<br>+ Jira</div></div>
+    <div class="pi-card ok"><div class="num">PI 4.1</div><div class="lbl">CI/CD<br>Pipeline</div></div>
+    <div class="pi-card ok" onclick="location='PI_4_2_Test_Report.html'"><div class="num">PI 4.2</div><div class="lbl">Test Report<br>đầy đủ</div></div>
+  </div>
+
+  <!-- Section 1: Planning -->
+  <div class="section-title">📋 Lập Kế Hoạch Kiểm Thử (PI 1.x + PI 2.1)</div>
+  <div class="grid">
+    <div class="card blue">
+      <div class="card-head"><span class="card-icon">📄</span><span class="badge badge-ok">✅ Hoàn thành</span></div>
+      <h3>PI 1.1 – Phân Tích Yêu Cầu</h3>
+      <p>Bảng yêu cầu chức năng (6 module) và phi chức năng (Performance, Security, Availability, Usability)</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">6</div><div class="l">Module</div></div>
+        <div class="stat"><div class="v">24</div><div class="l">Chức năng</div></div>
+        <div class="stat"><div class="v">8</div><div class="l">Phi CN</div></div>
+      </div>
+      <div class="card-links"><a class="btn-link btn-primary" href="PI_1_1_Yeu_Cau.html">📖 Mở</a></div>
+    </div>
+
+    <div class="card blue">
+      <div class="card-head"><span class="card-icon">🔬</span><span class="badge badge-ok">✅ Hoàn thành</span></div>
+      <h3>PI 1.2 – Mức Kiểm Thử</h3>
+      <p>Phân tích Unit / Integration / System / Acceptance testing. Thành phần ưu tiên và phân công công cụ.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">4</div><div class="l">Mức KT</div></div>
+        <div class="stat"><div class="v">531</div><div class="l">Unit tests</div></div>
+        <div class="stat"><div class="v">6</div><div class="l">E2E TCs</div></div>
+      </div>
+      <div class="card-links"><a class="btn-link btn-primary" href="PI_1_2_Muc_Kiem_Thu.html">📖 Mở</a></div>
+    </div>
+
+    <div class="card orange">
+      <div class="card-head"><span class="card-icon">⚠️</span><span class="badge badge-ok">✅ Excel</span></div>
+      <h3>PI 1.3 – Phân Tích Rủi Ro</h3>
+      <p>15 rủi ro với ma trận 5×5 (Xác suất × Tác động). Chiến lược kiểm thử theo rủi ro cho 6 chức năng.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">15</div><div class="l">Rủi ro</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">Critical</div></div>
+        <div class="stat"><div class="v">8</div><div class="l">High</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="phan_tich_rui_ro.xlsx">📊 Excel</a>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="card-head"><span class="card-icon">📋</span><span class="badge badge-ok">✅ Hoàn thành</span></div>
+      <h3>PI 2.1 – Test Plan Đầy Đủ</h3>
+      <p>Mục tiêu, phạm vi, nguồn lực, tiến độ, môi trường kiểm thử, entry/exit criteria, rủi ro và biện pháp.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">6</div><div class="l">Chức năng</div></div>
+        <div class="stat"><div class="v">8</div><div class="l">Công cụ</div></div>
+        <div class="stat"><div class="v">4</div><div class="l">Giai đoạn</div></div>
+      </div>
+      <div class="card-links"><a class="btn-link btn-primary" href="PI_2_1_Test_Plan.html">📖 Mở</a></div>
+    </div>
+  </div>
+
+  <!-- Section 2: Test Cases & Automation -->
+  <div class="section-title">🧪 Test Cases & Tự Động Hóa (PI 2.2 + PI 2.3 + PI 2.4)</div>
+  <div class="grid">
+    <div class="card green">
+      <div class="card-head"><span class="card-icon">📝</span><span class="badge badge-ok">✅ 55 TCs</span></div>
+      <h3>PI 2.2 – Test Cases (≥ 50 TCs)</h3>
+      <p>55 test cases thủ công phủ sóng 6 module: Đăng Nhập, Khóa Học, Đăng Ký, Lịch Học, Thanh Toán, Chat AI</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">55</div><div class="l">Test Cases</div></div>
+        <div class="stat"><div class="v">87%</div><div class="l">Coverage</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">Priority</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="PI_2_2_Test_Cases.html">📖 Xem HTML</a>
+        <a class="btn-link btn-secondary" href="../01_test_cases/TestCase_QuanLyKhoaHoc5.xlsx">📊 Excel</a>
+      </div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head"><span class="card-icon">🤖</span><span class="badge badge-ok">✅ 531 tests</span></div>
+      <h3>PI 2.3 – Test Tự Động (≥ 60)</h3>
+      <p>531 unit tests (xUnit+Moq) + 6 E2E tests (Katalon Studio). Tổng: 537 automated tests.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">531</div><div class="l">Unit (xUnit)</div></div>
+        <div class="stat"><div class="v">6</div><div class="l">E2E (Katalon)</div></div>
+        <div class="stat"><div class="v">0</div><div class="l">Failed</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="https://github.com/xuanbac9968-hue/QuanLyKhoaHoc5/actions" target="_blank">🔗 GitHub Actions</a>
+      </div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head"><span class="card-icon">📈</span><span class="badge badge-ok">✅ 82.9%</span></div>
+      <h3>PI 2.4 – Code Coverage (≥ 70%)</h3>
+      <p>Line coverage: 82.9% (vượt ngưỡng 70%). Quality Gate "Coverage80" (≥80%) PASSED.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">82.9%</div><div class="l">Coverage</div></div>
+        <div class="stat"><div class="v">531</div><div class="l">Tests</div></div>
+        <div class="stat"><div class="v">✅</div><div class="l">QG PASSED</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="bieu_do_xu_huong.html">📊 Biểu đồ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Tools -->
+  <div class="section-title">⚡ Kiểm Thử Hiệu Năng & Bảo Mật (PI 3.x)</div>
+  <div class="grid">
+    <div class="card blue">
+      <div class="card-head"><span class="card-icon">⚡</span><span class="badge badge-ok">✅ 3 kịch bản</span></div>
+      <h3>PI 3.1 – JMeter Load Test (≥ 100 users)</h3>
+      <p>3 kịch bản: 100/200/300 concurrent users. Tổng 6000 requests. 0 lỗi. P95 &lt; 2000ms SLA.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">300</div><div class="l">Max users</div></div>
+        <div class="stat"><div class="v">0%</div><div class="l">Error rate</div></div>
+        <div class="stat"><div class="v">190ms</div><div class="l">Max avg</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="bieu_do_xu_huong.html#jmeter">📊 Biểu đồ</a>
+      </div>
+    </div>
+
+    <div class="card orange">
+      <div class="card-head"><span class="card-icon">🛡️</span><span class="badge badge-warn">⚠️ 3 Medium</span></div>
+      <h3>PI 3.2 – OWASP ZAP Security</h3>
+      <p>Active scan trên localhost:5125. 0 High, 3 Medium (CSP/Clickjacking/SRI), 1 Low.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">0</div><div class="l">High 🟢</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">Medium ⚠️</div></div>
+        <div class="stat"><div class="v">1</div><div class="l">Low</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="../06_bao_cao/2026-05-27-ZAP-Report-.html" target="_blank">📄 ZAP Report</a>
+      </div>
+    </div>
+
+    <div class="card red">
+      <div class="card-head"><span class="card-icon">🔍</span><span class="badge badge-ok">✅ QG PASSED</span></div>
+      <h3>PI 3.3 – SonarQube + Jira</h3>
+      <p>SonarQube 26.5.0: 82.9% coverage, Quality Gate PASSED. 20 issues đã log vào Jira (NNL-001 → NNL-020).</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">10</div><div class="l">Bugs</div></div>
+        <div class="stat"><div class="v">10</div><div class="l">Vulns</div></div>
+        <div class="stat"><div class="v">377</div><div class="l">Smells</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="Jira/Jira_BugBoard.html">🗂️ Jira Board</a>
+        <a class="btn-link btn-secondary" href="http://localhost:9000/dashboard?id=QuanLyKhoaHoc5" target="_blank">🔍 SonarQube</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: CI/CD & Reports -->
+  <div class="section-title">🚀 CI/CD & Báo Cáo (PI 4.x)</div>
+  <div class="grid">
+    <div class="card teal">
+      <div class="card-head"><span class="card-icon">🚀</span><span class="badge badge-ok">✅ 7 Jobs</span></div>
+      <h3>PI 4.1 – CI/CD Pipeline</h3>
+      <p>GitHub Actions: 7 jobs (Build→Tests→SonarQube→Katalon→HTML Report→Jira→Notify). HTML report artifact.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">7</div><div class="l">Jobs</div></div>
+        <div class="stat"><div class="v">✅</div><div class="l">All Green</div></div>
+        <div class="stat"><div class="v">HTML</div><div class="l">Auto Report</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="https://github.com/xuanbac9968-hue/QuanLyKhoaHoc5/actions" target="_blank">🔗 GitHub Actions</a>
+      </div>
+    </div>
+
+    <div class="card green">
+      <div class="card-head"><span class="card-icon">📊</span><span class="badge badge-ok">✅ Đầy đủ</span></div>
+      <h3>PI 4.2 – Test Report + Biểu Đồ</h3>
+      <p>Báo cáo tổng hợp Pass/Fail, Defect Density, 9 biểu đồ xu hướng, JMeter, ZAP, SonarQube.</p>
+      <div class="card-stats">
+        <div class="stat"><div class="v">9</div><div class="l">Charts</div></div>
+        <div class="stat"><div class="v">100%</div><div class="l">Pass rate</div></div>
+        <div class="stat"><div class="v">0.8</div><div class="l">Defect/KLOC</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn-link btn-primary" href="PI_4_2_Test_Report.html">📊 Full Report</a>
+        <a class="btn-link btn-secondary" href="bieu_do_xu_huong.html">📈 Biểu đồ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="section-title">✅ Bảng Kiểm Tra Đầy Đủ Theo PI</div>
+  <table class="summary-table">
+    <thead><tr><th>PI</th><th>Yêu cầu</th><th>Công cụ / File</th><th>Kết quả</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1.1</strong></td><td>Phân tích yêu cầu CN + phi CN</td><td>PI_1_1_Yeu_Cau.html</td><td>6 module, 24 CN, 8 phi CN</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>1.2</strong></td><td>Mức KT Unit/Integration/System</td><td>PI_1_2_Muc_Kiem_Thu.html</td><td>4 mức, ưu tiên 6 module</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>1.3</strong></td><td>Rủi ro + chiến lược theo rủi ro</td><td>phan_tich_rui_ro.xlsx</td><td>15 rủi ro, 8 chiến lược</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>2.1</strong></td><td>Test Plan đầy đủ</td><td>PI_2_1_Test_Plan.html</td><td>Mục tiêu, phạm vi, nguồn lực, tiến độ</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>2.2</strong></td><td>≥ 50 Test Cases, 80% chức năng</td><td>PI_2_2_Test_Cases.html + .xlsx</td><td>55 TCs, 87% coverage</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>2.3</strong></td><td>≥ 60 auto tests, Katalon + Selenium</td><td>xUnit (531) + Katalon (6)</td><td>537 auto tests, 0 failed</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>2.4</strong></td><td>Coverage ≥ 70%</td><td>coverlet + SonarQube</td><td>82.9% line coverage</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>3.1</strong></td><td>JMeter ≥ 100 users, response time</td><td>JMeter 5.6.3 (3 scenarios)</td><td>300u, 0 errors, P95&lt;2000ms</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>3.2</strong></td><td>OWASP ZAP, phát hiện lỗ hổng</td><td>ZAP 2.16.0 active scan</td><td>0 High, 3 Medium, 1 Low</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>3.3</strong></td><td>SonarQube + Cyclomatic + Jira</td><td>SonarQube 26.5.0 + Jira NNL</td><td>82.9%, QG PASSED, 20 Jira issues</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>4.1</strong></td><td>CI/CD pipeline + auto report</td><td>GitHub Actions (7 jobs)</td><td>All green, HTML artifact</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+      <tr><td><strong>4.2</strong></td><td>Test Report: Pass/Fail, Defect Density, biểu đồ</td><td>PI_4_2_Test_Report.html</td><td>9 charts, full report</td><td><span class="pill pill-ok">✅ DONE</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  📊 Báo cáo kiểm thử tổng hợp – QuanLyKhoaHoc5 | Tạo ngày 2026-05-28 | Nguyễn Xuân Bắc<br>
+  Tools: SonarQube 26.5.0 · Katalon 11.1.3.0 · JMeter 5.6.3 · OWASP ZAP 2.16.0 · xUnit · GitHub Actions
+</footer>
+</body>
+</html>
