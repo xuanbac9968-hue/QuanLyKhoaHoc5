@@ -3,7 +3,7 @@
   <Settings>
     <Setting>
       <Key>sonar.cs.opencover.reportsPaths</Key>
-      <Value>D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Tests\TestResults\30bc6dbf-0020-498a-b941-6b04da3d2bfb\coverage.opencover.xml</Value>
+      <Value>**/TestResults/**/coverage.opencover.xml</Value>
     </Setting>
     <Setting>
       <Key>sonar.cs.ignoreHeaderComments</Key>

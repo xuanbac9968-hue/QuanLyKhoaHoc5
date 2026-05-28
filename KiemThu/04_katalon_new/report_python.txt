@@ -1,0 +1,77 @@
+============================================================
+  BÁO CÁO KIỂM THỬ v3 – QuanLyKhoaHoc5
+  Thời gian: 26/05/2026 23:48:44
+  Tổng thời gian: 2161s
+============================================================
+
+▶ TC01 – Đăng nhập
+  Tổng: 8 | ✅ PASS: 8 | ❌ FAIL: 0 | ⚠ ERROR: 0
+  ✅ [1] Admin đăng nhập thành công
+  ✅ [2] GiangVien đăng nhập thành công
+  ✅ [3] HocVien đăng nhập thành công
+  ✅ [4] Đăng nhập sai mật khẩu
+  ✅ [5] Email không tồn tại trong DB
+  ✅ [6] Ghi nhớ đăng nhập (Remember Me)
+  ✅ [7] HocVien 2 đăng nhập thành công
+  ✅ [8] GiangVien 2 đăng nhập thành công
+
+▶ TC02 – Đổi mật khẩu
+  Tổng: 6 | ✅ PASS: 6 | ❌ FAIL: 0 | ⚠ ERROR: 0
+  ✅ [1] Sai mật khẩu cũ
+  ✅ [2] Mật khẩu mới không khớp xác nhận
+  ✅ [3] Mật khẩu mới quá yếu (< 6 ký tự)
+  ✅ [4] Đổi mật khẩu hv01 thành công
+  ✅ [5] Khôi phục mật khẩu hv01 về ban đầu
+  ✅ [6] Sai mật khẩu login (không vào được)
+
+▶ TC03 – Tạo tài khoản
+  Tổng: 7 | ✅ PASS: 7 | ❌ FAIL: 0 | ⚠ ERROR: 0
+  ✅ [1] Tạo tài khoản HocVien mới (hợp lệ)
+  ✅ [2] Tạo tài khoản GiangVien mới (hợp lệ)
+  ✅ [3] Email đã tồn tại trong hệ thống
+  ✅ [4] Mật khẩu xác nhận không khớp
+  ✅ [5] Mật khẩu quá yếu (không đủ độ phức tạp)
+  ✅ [6] Tạo tài khoản Admin mới (hợp lệ)
+  ✅ [7] HoTen để trống (validation)
+
+▶ TC04 – Thêm khóa học
+  Tổng: 6 | ✅ PASS: 6 | ❌ FAIL: 0 | ⚠ ERROR: 0
+  ✅ [1] Tạo KH TOEIC hợp lệ
+  ✅ [2] Tạo KH Nhật N3 hợp lệ
+  ✅ [3] Tạo KH trạng thái TamDung
+  ✅ [4] TrinhDo bỏ trống – validation Required
+  ✅ [5] TenKhoaHoc vượt 200 ký tự – validation
+  ✅ [6] KH miễn phí (HocPhi=0)
+
+▶ TC05 – Tạo thanh toán
+  Tổng: 6 | ✅ PASS: 3 | ❌ FAIL: 0 | ⚠ ERROR: 3
+  ✅ [1] hv01 TT Tiền mặt – KH B1 (ThanhCong)
+  ⚠ [2] hv02 TT Chuyển khoản – KH N5 (ThanhCong)
+      → ERROR: HTTPConnectionPool(host='localhost', port=52420): Read timed out. (read timeout=
+  ⚠ [3] hv03 TT Tiền mặt – KH Hàn (ThanhCong)
+      → ERROR: HTTPConnectionPool(host='localhost', port=59524): Read timed out. (read timeout=
+  ✅ [4] hv01 – KhoaHocId không tồn tại (ThatBai)
+  ✅ [5] hv03 – KH N4 chỉ ChoDuyet (ThatBai)
+  ⚠ [6] hv01 – KH N5 không có đăng ký (ThatBai)
+      → ERROR: HTTPConnectionPool(host='localhost', port=58928): Read timed out. (read timeout=
+
+▶ TC06 – Phân công GV
+  Tổng: 8 | ✅ PASS: 8 | ❌ FAIL: 0 | ⚠ ERROR: 0
+  ✅ [1] KH A1 (1) → GV Hương (2) – Tiếng Anh
+  ✅ [2] KH B1 (2) → GV Hương (2) – Tiếng Anh
+  ✅ [3] KH IELTS (3) → GV Hương (2) – Tiếng Anh
+  ✅ [4] KH N5 (4) → GV Nam (3) – Tiếng Nhật
+  ✅ [5] KH N4 (5) → GV Nam (3) – Tiếng Nhật
+  ✅ [6] KH Hàn (6) → GV Đức (4) – Tiếng Hàn
+  ✅ [7] KH A1 (1) → Đổi sang GV Nam (3)
+  ✅ [8] KH A1 (1) → Bỏ phân công (GV=0)
+
+============================================================
+  TỔNG KẾT: 41 test cases
+  ✅ PASSED : 38
+  ❌ FAILED : 0
+  ⚠  ERRORS : 3
+  Tỉ lệ pass: 92%
+============================================================
+  Kết quả chi tiết → D:\QuanLyKhoaHoc5\KiemThu\TestData
+============================================================

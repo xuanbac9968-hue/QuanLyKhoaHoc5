@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataFileEntity>
+   <name>TC03_TaoTaiKhoan</name>
+   <sheetName>Sheet1</sheetName>
+   <sourceUrl>D:\QuanLyKhoaHoc5\KiemThu\04_katalon_new\QuanLyKhoaHoc5_New\Data Files\TC03_TaoTaiKhoan.xlsx</sourceUrl>
+   <type>EXCEL</type>
+   <dataFileGuid>da030003-0000-4000-a000-000000000003</dataFileGuid>
+   <containsHeaders>true</containsHeaders>
+   <description>Dữ liệu kiểm thử TC03 – Tạo tài khoản</description>
+</DataFileEntity>

@@ -2,5 +2,5 @@ projectKey=QuanLyKhoaHoc5
 serverUrl=http://localhost:9000
 serverVersion=26.5.0.122743
 dashboardUrl=http://localhost:9000/dashboard?id=QuanLyKhoaHoc5
-ceTaskId=bd51e1c7-671e-4e1e-9da8-5ff9a9a5d0dd
-ceTaskUrl=http://localhost:9000/api/ce/task?id=bd51e1c7-671e-4e1e-9da8-5ff9a9a5d0dd
+ceTaskId=b3ffcfdc-b2c8-461f-9dee-0a4610801c06
+ceTaskUrl=http://localhost:9000/api/ce/task?id=b3ffcfdc-b2c8-461f-9dee-0a4610801c06

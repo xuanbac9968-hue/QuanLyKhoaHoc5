@@ -1,0 +1,8 @@
+thg 5 26, 2026 9:33:41 CH org.apache.aries.spifly.BaseActivator log
+INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic
+thg 5 26, 2026 9:33:43 CH org.apache.aries.spifly.BaseActivator log
+INFO: Registered provider org.apache.logging.log4j.util.EnvironmentPropertySource of service org.apache.logging.log4j.util.PropertySource in bundle org.apache.logging.log4j.api
+thg 5 26, 2026 9:33:43 CH org.apache.aries.spifly.BaseActivator log
+INFO: Registered provider org.apache.logging.log4j.util.SystemPropertiesPropertySource of service org.apache.logging.log4j.util.PropertySource in bundle org.apache.logging.log4j.api
+thg 5 26, 2026 9:33:43 CH org.apache.aries.spifly.BaseActivator log
+INFO: Registered provider org.apache.logging.slf4j.SLF4JProvider of service org.apache.logging.log4j.spi.Provider in bundle org.apache.logging.log4j.to.slf4j

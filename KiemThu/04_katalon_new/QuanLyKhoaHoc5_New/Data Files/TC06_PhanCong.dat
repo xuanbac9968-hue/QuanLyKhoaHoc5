@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataFileEntity>
+   <name>TC06_PhanCong</name>
+   <sheetName>Sheet1</sheetName>
+   <sourceUrl>D:\QuanLyKhoaHoc5\KiemThu\04_katalon_new\QuanLyKhoaHoc5_New\Data Files\TC06_PhanCong.xlsx</sourceUrl>
+   <type>EXCEL</type>
+   <dataFileGuid>da060006-0000-4000-a000-000000000006</dataFileGuid>
+   <containsHeaders>true</containsHeaders>
+   <description>Dữ liệu kiểm thử TC06 – Phân công giảng viên</description>
+</DataFileEntity>

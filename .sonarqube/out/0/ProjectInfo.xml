@@ -3,7 +3,7 @@
   <ProjectName>QuanLyKhoaHoc5.Web</ProjectName>
   <ProjectLanguage>C#</ProjectLanguage>
   <ProjectType>Product</ProjectType>
-  <ProjectGuid>5d01e2ad-7012-41f9-b5f8-dd43746b3963</ProjectGuid>
+  <ProjectGuid>6b389f6c-981e-48ee-aeb3-84542aee4219</ProjectGuid>
   <FullPath>D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Web\QuanLyKhoaHoc5.Web.csproj</FullPath>
   <IsExcluded>false</IsExcluded>
   <AnalysisResultFiles>
@@ -14,7 +14,7 @@
     <Property Name="sonar.cs.analyzer.projectOutPaths">D:\QuanLyKhoaHoc5\.sonarqube\out\0</Property>
     <Property Name="sonar.cs.scanner.telemetry">D:\QuanLyKhoaHoc5\.sonarqube\out\0\Telemetry.json</Property>
   </AnalysisSettings>
-  <Configuration>Debug</Configuration>
+  <Configuration>Release</Configuration>
   <Platform>AnyCPU</Platform>
   <TargetFramework>net10.0</TargetFramework>
 </ProjectInfo>

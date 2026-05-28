@@ -1,0 +1,68 @@
+---
+# OWASP ZAP Automation Framework Plan
+# Target: http://localhost:5125 (QuanLyKhoaHoc5)
+# ZAP 2.17.0 | automation-beta-0.58.0
+
+env:
+  contexts:
+  - name: "QuanLyKhoaHoc5"
+    urls:
+    - "http://localhost:5125"
+    includePaths:
+    - "http://localhost:5125.*"
+    excludePaths:
+    - ".*logout.*"
+    - ".*signout.*"
+    - ".*Logout.*"
+  parameters:
+    failOnError: false
+    failOnWarning: false
+    progressToStdout: true
+
+jobs:
+# ─── 1. Traditional Spider ───────────────────────────────────────────
+- type: spider
+  name: "01 Spider - Traditional"
+  parameters:
+    context: "QuanLyKhoaHoc5"
+    url: "http://localhost:5125"
+    maxDuration: 3
+    maxDepth: 10
+    maxChildren: 20
+    acceptCookies: true
+    handleODataParameters: false
+
+# ─── 2. AJAX Spider (cho Single Page / JS-rendered) ─────────────────
+- type: spiderAjax
+  name: "02 Spider - AJAX"
+  parameters:
+    context: "QuanLyKhoaHoc5"
+    url: "http://localhost:5125"
+    maxDuration: 2
+    browserId: "firefox-headless"
+    runOnlyIfModern: false
+
+# ─── 3. Passive Scan – chờ xử lý tất cả responses ──────────────────
+- type: passiveScan-wait
+  name: "03 Passive Scan Wait"
+  parameters:
+    maxDuration: 3
+
+# ─── 4. Active Scan – tìm lỗ hổng chủ động ─────────────────────────
+- type: activeScan
+  name: "04 Active Scan"
+  parameters:
+    context: "QuanLyKhoaHoc5"
+    maxRuleDurationInMins: 2
+    maxScanDurationInMins: 10
+
+# ─── 5. HTML Report ─────────────────────────────────────────────────
+- type: report
+  name: "05 Report - HTML"
+  parameters:
+    template: "traditional-html"
+    reportDir: "D:\\QuanLyKhoaHoc5\\KiemThu\\zap_report"
+    reportFile: "zap_security_report"
+    reportTitle: "Bao cao bao mat - QuanLyKhoaHoc5"
+    reportDescription: "OWASP ZAP Active Scan kiem thu bao mat he thong quan ly khoa hoc"
+    displayReport: false

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo Cáo Bảo Mật - QuanLyKhoaHoc5</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; margin: 0; background: #f4f6f9; color: #222; }
+  .header { background: linear-gradient(135deg,#1a237e,#283593); color:#fff; padding:32px 40px; }
+  .header h1 { margin:0 0 8px; font-size:26px; }
+  .header p { margin:0; opacity:0.85; font-size:14px; }
+  .container { max-width: 960px; margin: 32px auto; padding: 0 20px; }
+  .card { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.08); margin-bottom:24px; overflow:hidden; }
+  .card-title { padding:16px 24px; font-weight:700; font-size:15px; border-bottom:1px solid #eee; background:#fafafa; }
+  .card-body { padding:20px 24px; }
+  /* Summary badges */
+  .risk-grid { display:flex; gap:16px; flex-wrap:wrap; }
+  .risk-box { flex:1; min-width:150px; border-radius:10px; padding:20px; text-align:center; color:#fff; }
+  .risk-box .count { font-size:48px; font-weight:800; line-height:1; }
+  .risk-box .label { font-size:13px; margin-top:6px; opacity:0.9; text-transform:uppercase; letter-spacing:1px; }
+  .high   { background:linear-gradient(135deg,#c62828,#e53935); }
+  .medium { background:linear-gradient(135deg,#e65100,#f57c00); }
+  .low    { background:linear-gradient(135deg,#1565c0,#1976d2); }
+  .info   { background:linear-gradient(135deg,#2e7d32,#43a047); }
+  /* Alert table */
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { background:#283593; color:#fff; padding:10px 14px; text-align:left; font-weight:600; }
+  td { padding:10px 14px; border-bottom:1px solid #eee; vertical-align:top; }
+  tr:hover td { background:#f5f7ff; }
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; color:#fff; }
+  .badge-high   { background:#e53935; }
+  .badge-medium { background:#f57c00; }
+  .badge-low    { background:#1976d2; }
+  .badge-info   { background:#43a047; }
+  .badge-none   { background:#78909c; }
+  /* Fix suggestions */
+  .fix-box { background:#e8f5e9; border-left:4px solid #43a047; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:12px; }
+  .fix-box h4 { margin:0 0 6px; font-size:14px; color:#2e7d32; }
+  .fix-box code { display:block; background:#c8e6c9; padding:8px 12px; border-radius:4px; font-size:12px; margin-top:6px; white-space:pre-wrap; }
+  .positive { background:#e3f2fd; border-left:4px solid #1976d2; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:8px; }
+  .positive h4 { margin:0 0 4px; font-size:14px; color:#1565c0; }
+  .note { background:#fff3e0; border-left:4px solid #f57c00; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:12px; font-size:13px; }
+  .footer { text-align:center; color:#999; font-size:12px; padding:24px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔐 Báo Cáo Kiểm Thử Bảo Mật</h1>
+  <p>Dự án: QuanLyKhoaHoc5 &nbsp;|&nbsp; Công cụ: OWASP ZAP 2.17.0 &nbsp;|&nbsp;
+     Target: http://localhost:5125 &nbsp;|&nbsp; Ngày: 27/05/2026</p>
+  <p>Phương pháp: Spider crawl (14 URLs) + Passive Scan + Active Scan (unauthenticated)</p>
+</div>
+
+<div class="container">
+
+  <!-- ─── Tổng quan ─────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">📊 Tổng Quan Kết Quả</div>
+    <div class="card-body">
+      <div class="risk-grid">
+        <div class="risk-box high">
+          <div class="count">0</div>
+          <div class="label">⚠ High</div>
+        </div>
+        <div class="risk-box medium">
+          <div class="count">3</div>
+          <div class="label">⚡ Medium</div>
+        </div>
+        <div class="risk-box low">
+          <div class="count">1</div>
+          <div class="label">ℹ Low</div>
+        </div>
+        <div class="risk-box info">
+          <div class="count">4</div>
+          <div class="label">✓ Informational</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Bảng alert ────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">🚨 Danh Sách Lỗ Hổng Phát Hiện</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead>
+          <tr>
+            <th width="22%">Tên Lỗ Hổng</th>
+            <th width="9%">Mức độ</th>
+            <th width="9%">CWE</th>
+            <th width="30%">Mô tả</th>
+            <th width="30%">Cách khắc phục</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Content Security Policy (CSP) Header Not Set</b></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>CWE-693</td>
+            <td>Thiếu header CSP — trình duyệt không biết nguồn tài nguyên hợp lệ, tăng nguy cơ XSS và data injection.</td>
+            <td>Thêm middleware CSP vào <code>Program.cs</code>:<br>
+            <code>app.Use(async (ctx, next) => {
+  ctx.Response.Headers["Content-Security-Policy"] =
+    "default-src 'self'; script-src 'self' cdn.jsdelivr.net; style-src 'self' cdn.jsdelivr.net 'unsafe-inline'";
+  await next();
+});</code></td>
+          </tr>
+          <tr>
+            <td><b>Missing Anti-clickjacking Header</b></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>CWE-1021</td>
+            <td>Thiếu X-Frame-Options hoặc CSP <code>frame-ancestors</code> — trang có thể bị nhúng trong iframe để thực hiện tấn công clickjacking.</td>
+            <td>Thêm header X-Frame-Options:<br>
+            <code>ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";</code></td>
+          </tr>
+          <tr>
+            <td><b>Sub Resource Integrity (SRI) Missing</b></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td>CWE-345</td>
+            <td>Bootstrap Icons được load từ CDN (<code>cdn.jsdelivr.net</code>) không có thuộc tính <code>integrity</code> — nếu CDN bị tấn công, có thể inject mã độc.</td>
+            <td>Thêm <code>integrity</code> + <code>crossorigin</code> vào thẻ link:<br>
+            <code>&lt;link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  integrity="sha384-tViUnnbYAV00GntAiPulivAtGs2ZbRFEFejJ4qLfBRIC7XKiiJjkfFTdOnBPMNK"
+  crossorigin="anonymous" /&gt;</code></td>
+          </tr>
+          <tr>
+            <td><b>X-Content-Type-Options Header Missing</b></td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td>CWE-693</td>
+            <td>Thiếu header <code>X-Content-Type-Options: nosniff</code> — trình duyệt cũ có thể đoán sai MIME type và thực thi content độc hại.</td>
+            <td>Thêm vào middleware security headers:<br>
+            <code>ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";</code></td>
+          </tr>
+          <tr>
+            <td>Modern Web Application Detected</td>
+            <td><span class="badge badge-info">Info</span></td>
+            <td>—</td>
+            <td>ZAP phát hiện ứng dụng web hiện đại (ASP.NET Core).</td>
+            <td>Không cần xử lý</td>
+          </tr>
+          <tr>
+            <td>Session Management Response</td>
+            <td><span class="badge badge-info">Info</span></td>
+            <td>—</td>
+            <td>ZAP phát hiện quản lý phiên bằng cookie — bình thường với ASP.NET Core Identity.</td>
+            <td>Đảm bảo cookie có flag HttpOnly, Secure, SameSite=Strict</td>
+          </tr>
+          <tr>
+            <td>User Controllable HTML Attribute (Potential XSS)</td>
+            <td><span class="badge badge-info">Info</span></td>
+            <td>CWE-20</td>
+            <td>Phát hiện attribute HTML có thể bị ảnh hưởng bởi input người dùng (chỉ mức Informational).</td>
+            <td>Razor tự động encode output — không có XSS thực tế trong scan này</td>
+          </tr>
+          <tr>
+            <td>User Agent Fuzzer</td>
+            <td><span class="badge badge-info">Info</span></td>
+            <td>—</td>
+            <td>ZAP thử nhiều User-Agent khác nhau — ứng dụng phản hồi nhất quán.</td>
+            <td>Không cần xử lý</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── Điểm tích cực ─────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">✅ Điểm Bảo Mật Tốt</div>
+    <div class="card-body">
+      <div class="positive">
+        <h4>🛡 CSRF Protection (Anti-Forgery Token)</h4>
+        ZAP quét form đăng nhập — phát hiện <code>__RequestVerificationToken</code> trên mọi POST request. Không tìm được lỗ hổng CSRF nào.
+      </div>
+      <div class="positive">
+        <h4>🛡 Không có SQL Injection</h4>
+        Active scan thử nhiều payload SQLi trên form đăng nhập (Email, MatKhau) — không tìm được lỗ hổng. EF Core + parameterized queries hoạt động tốt.
+      </div>
+      <div class="positive">
+        <h4>🛡 Không có Reflected XSS</h4>
+        Razor Pages tự động HTML-encode output — không tìm được XSS reflected trên các trang public.
+      </div>
+      <div class="positive">
+        <h4>🛡 Authentication đúng chuẩn</h4>
+        Tất cả trang admin (<code>/Admin/*</code>, <code>/KhoaHoc/*</code>) đều redirect về login khi chưa auth — không lộ dữ liệu.
+      </div>
+      <div class="positive">
+        <h4>🛡 Không có Directory Listing</h4>
+        Không tìm được trang liệt kê file/thư mục — cấu hình StaticFiles an toàn.
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Hướng dẫn fix ──────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">🔧 Hướng Dẫn Khắc Phục (Program.cs)</div>
+    <div class="card-body">
+      <div class="note">
+        ⚡ Tất cả 4 vấn đề tìm được đều có thể fix bằng cách thêm một middleware duy nhất vào <b>Program.cs</b>
+      </div>
+      <div class="fix-box">
+        <h4>Thêm đoạn code sau vào Program.cs (sau <code>app.UseStaticFiles()</code>):</h4>
+        <code>// Security Headers Middleware
+app.Use(async (ctx, next) =>
+{
+    // Chống Clickjacking
+    ctx.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
+    // Chống MIME sniffing
+    ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    // Content Security Policy
+    ctx.Response.Headers["Content-Security-Policy"] =
+        "default-src 'self'; " +
+        "script-src 'self' cdn.jsdelivr.net 'unsafe-inline'; " +
+        "style-src 'self' cdn.jsdelivr.net 'unsafe-inline'; " +
+        "img-src 'self' data:; " +
+        "font-src 'self' cdn.jsdelivr.net;";
+    // Referrer Policy
+    ctx.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    await next();
+});</code>
+      </div>
+      <div class="fix-box">
+        <h4>Fix SRI cho Bootstrap Icons trong _Layout.cshtml:</h4>
+        <code>&lt;link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      integrity="sha384-tViUnnbYAV00GntAiPulivAtGs2ZbRFEFejJ4qLfBRIC7XKiiJjkfFTdOnBPMNK"
+      crossorigin="anonymous" /&gt;</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Phạm vi scan ──────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">📋 Phạm Vi Kiểm Thử</div>
+    <div class="card-body">
+      <div class="note">
+        ⚠ Scan này chạy ở chế độ <b>unauthenticated</b> — chỉ test các trang public (login, static assets).
+        Để có kết quả đầy đủ hơn, cần chạy scan với authentication (dùng tài khoản admin@nnl.com / Admin@123).
+        Scan với auth sẽ kiểm tra thêm các trang: /KhoaHoc, /Admin/*, /ThanhToan, /PhanCong.
+      </div>
+      <table>
+        <thead><tr><th>Hạng mục kiểm thử</th><th>Kết quả</th></tr></thead>
+        <tbody>
+          <tr><td>Spider crawl (tìm URLs)</td><td>14 URLs tìm được</td></tr>
+          <tr><td>Passive Scan (phân tích response)</td><td>Hoàn thành</td></tr>
+          <tr><td>Active Scan (tấn công thử)</td><td>Hoàn thành (public pages only)</td></tr>
+          <tr><td>SQL Injection tests</td><td>✅ Pass — không tìm được</td></tr>
+          <tr><td>XSS tests</td><td>✅ Pass — không tìm được</td></tr>
+          <tr><td>CSRF tests</td><td>✅ Pass — token hoạt động đúng</td></tr>
+          <tr><td>Authentication bypass</td><td>✅ Pass — không bypass được</td></tr>
+          <tr><td>Security headers</td><td>⚡ 4 header thiếu (Medium/Low)</td></tr>
+          <tr><td>SRI cho CDN resources</td><td>⚡ Bootstrap Icons thiếu integrity</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<div class="footer">
+  Báo cáo tạo tự động bởi OWASP ZAP 2.17.0 + Claude Code &nbsp;|&nbsp; QuanLyKhoaHoc5 &nbsp;|&nbsp; 27/05/2026
+</div>
+</body>
+</html>

@@ -159,12 +159,12 @@
     <Property Name="sonar.java.jvmframeworkconfig.activate">true</Property>
     <Property Name="sonar.updatecenter.url">https://downloads.sonarsource.com/sonarqube/update/update-center.properties</Property>
     <Property Name="sonar.core.id">147B411E-AZ5d5LXCXUT0UxNSiwtV</Property>
-    <Property Name="sonar.core.startTime">25/05/2026 6:36:59 CH</Property>
+    <Property Name="sonar.core.startTime">27/05/2026 8:29:43 CH</Property>
   </ServerSettings>
   <LocalSettings>
     <Property Name="sonar.host.url">http://localhost:9000</Property>
-    <Property Name="sonar.cs.opencover.reportsPaths">D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Tests\TestResults\30bc6dbf-0020-498a-b941-6b04da3d2bfb\coverage.opencover.xml</Property>
-    <Property Name="sonar.exclusions">D:\QuanLyKhoaHoc5\QuanLyKhoaHoc5.Tests\TestResults\30bc6dbf-0020-498a-b941-6b04da3d2bfb\coverage.opencover.xml</Property>
+    <Property Name="sonar.cs.opencover.reportsPaths">**/TestResults/**/coverage.opencover.xml</Property>
+    <Property Name="sonar.exclusions">KiemThu/**,**/wwwroot/**,**/Migrations/**,**/obj/**,**/bin/**,**/TestResults/**/coverage.opencover.xml</Property>
   </LocalSettings>
   <ScannerOptsSettings />
   <AnalyzersSettings>

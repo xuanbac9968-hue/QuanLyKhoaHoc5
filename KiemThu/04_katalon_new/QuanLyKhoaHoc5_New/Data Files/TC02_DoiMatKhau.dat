@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataFileEntity>
+   <name>TC02_DoiMatKhau</name>
+   <sheetName>Sheet1</sheetName>
+   <sourceUrl>D:\QuanLyKhoaHoc5\KiemThu\04_katalon_new\QuanLyKhoaHoc5_New\Data Files\TC02_DoiMatKhau.xlsx</sourceUrl>
+   <type>EXCEL</type>
+   <dataFileGuid>da020002-0000-4000-a000-000000000002</dataFileGuid>
+   <containsHeaders>true</containsHeaders>
+   <description>Dữ liệu kiểm thử TC02 – Đổi mật khẩu</description>
+</DataFileEntity>

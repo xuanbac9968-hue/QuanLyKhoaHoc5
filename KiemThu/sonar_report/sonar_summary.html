@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo Cáo SonarQube - QuanLyKhoaHoc5</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; margin: 0; background: #f4f6f9; color: #222; }
+  .header { background: linear-gradient(135deg,#0077cc,#005fa3); color:#fff; padding:32px 40px; }
+  .header h1 { margin:0 0 8px; font-size:26px; }
+  .header p { margin:0; opacity:0.85; font-size:14px; }
+  .container { max-width: 980px; margin: 32px auto; padding: 0 20px; }
+  .card { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.08); margin-bottom:24px; overflow:hidden; }
+  .card-title { padding:16px 24px; font-weight:700; font-size:15px; border-bottom:1px solid #eee; background:#fafafa; }
+  .card-body { padding:20px 24px; }
+  /* Metric grid */
+  .metric-grid { display:flex; gap:16px; flex-wrap:wrap; }
+  .metric-box { flex:1; min-width:140px; border-radius:10px; padding:18px 16px; text-align:center; color:#fff; }
+  .metric-box .num { font-size:44px; font-weight:800; line-height:1; }
+  .metric-box .lbl { font-size:12px; margin-top:6px; opacity:0.9; text-transform:uppercase; letter-spacing:1px; }
+  .m-red    { background:linear-gradient(135deg,#c62828,#e53935); }
+  .m-orange { background:linear-gradient(135deg,#e65100,#f57c00); }
+  .m-blue   { background:linear-gradient(135deg,#1565c0,#1976d2); }
+  .m-green  { background:linear-gradient(135deg,#2e7d32,#43a047); }
+  .m-gray   { background:linear-gradient(135deg,#37474f,#546e7a); }
+  .m-purple { background:linear-gradient(135deg,#4a148c,#6a1b9a); }
+  /* Rating */
+  .rating { display:inline-block; width:32px; height:32px; line-height:32px; border-radius:50%; text-align:center; font-weight:800; color:#fff; font-size:16px; }
+  .r-a { background:#2e7d32; }
+  .r-b { background:#7cb342; }
+  .r-c { background:#f9a825; }
+  .r-d { background:#e65100; }
+  .r-e { background:#c62828; }
+  /* Table */
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { background:#0077cc; color:#fff; padding:10px 14px; text-align:left; font-weight:600; }
+  td { padding:9px 14px; border-bottom:1px solid #eee; vertical-align:top; }
+  tr:hover td { background:#f0f7ff; }
+  .badge { display:inline-block; padding:2px 9px; border-radius:10px; font-size:11px; font-weight:700; color:#fff; }
+  .b-critical { background:#c62828; }
+  .b-major    { background:#e65100; }
+  .b-minor    { background:#1976d2; }
+  .b-info     { background:#43a047; }
+  /* Fix box */
+  .fix-box { background:#e8f5e9; border-left:4px solid #43a047; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:10px; }
+  .fix-box h4 { margin:0 0 6px; font-size:14px; color:#2e7d32; }
+  .fix-box code { display:block; background:#c8e6c9; padding:8px 12px; border-radius:4px; font-size:12px; margin-top:6px; font-family:monospace; white-space:pre-wrap; }
+  .warn-box { background:#fff3e0; border-left:4px solid #f57c00; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:10px; font-size:13px; }
+  .info-box { background:#e3f2fd; border-left:4px solid #1976d2; padding:12px 16px; border-radius:0 6px 6px 0; margin-bottom:10px; }
+  .info-box h4 { margin:0 0 4px; font-size:14px; color:#1565c0; }
+  .footer { text-align:center; color:#999; font-size:12px; padding:24px; }
+  .qg-error { background:#ffebee; border:2px solid #e53935; padding:12px 20px; border-radius:8px; color:#c62828; font-weight:700; font-size:15px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 Báo Cáo Phân Tích Code - SonarQube</h1>
+  <p>Dự án: QuanLyKhoaHoc5 &nbsp;|&nbsp; Công cụ: SonarQube 26.5.0 Community + dotnet-sonarscanner 11.2.1</p>
+  <p>Ngôn ngữ: C# (ASP.NET Core MVC) &nbsp;|&nbsp; Ngày: 27/05/2026 &nbsp;|&nbsp; Commit: c52ff2fd</p>
+</div>
+
+<div class="container">
+
+  <!-- Quality Gate -->
+  <div class="qg-error">⚠ Quality Gate: FAILED — Dự án chưa đạt ngưỡng chất lượng (có Bugs + Vulnerabilities mức MAJOR)</div>
+
+  <!-- Tổng quan -->
+  <div class="card">
+    <div class="card-title">📈 Tổng Quan Kết Quả</div>
+    <div class="card-body">
+      <div class="metric-grid">
+        <div class="metric-box m-red">
+          <div class="num">10</div>
+          <div class="lbl">🐛 Bugs</div>
+        </div>
+        <div class="metric-box m-orange">
+          <div class="num">10</div>
+          <div class="lbl">🔒 Vulnerabilities</div>
+        </div>
+        <div class="metric-box m-blue">
+          <div class="num">377</div>
+          <div class="lbl">🔧 Code Smells</div>
+        </div>
+        <div class="metric-box m-gray">
+          <div class="num">0%</div>
+          <div class="lbl">✅ Coverage</div>
+        </div>
+        <div class="metric-box m-green">
+          <div class="num">0.5%</div>
+          <div class="lbl">📋 Duplications</div>
+        </div>
+        <div class="metric-box m-purple">
+          <div class="num">2417</div>
+          <div class="lbl">⚙ Complexity</div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; display:flex; gap:24px; flex-wrap:wrap;">
+        <div><b>Rating Reliability (Bugs):</b> <span class="rating r-c">C</span></div>
+        <div><b>Rating Security (Vulns):</b> <span class="rating r-c">C</span></div>
+        <div><b>Rating Maintainability:</b> <span class="rating r-a">A</span> (Debt ratio 0.4%)</div>
+        <div><b>Lines of Code:</b> 14,411 NCLOC / 16,516 total lines</div>
+        <div><b>Files analyzed:</b> 137 files (164 indexed)</div>
+        <div><b>Technical Debt:</b> ~12 giờ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bugs -->
+  <div class="card">
+    <div class="card-title">🐛 Bugs (10 lỗi)</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead><tr><th width="10%">Mức độ</th><th width="40%">Mô tả</th><th width="50%">File : Dòng</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-minor">MINOR</span></td>
+            <td>Interactive &lt;div&gt; thiếu keyboard event handler (onclick nhưng không có onkeypress/onkeydown)</td>
+            <td>Views/Shared/_Layout.cshtml:101<br>_LayoutAdmin.cshtml:58<br>_LayoutGiangVien.cshtml:46<br>_LayoutHocVien.cshtml:51</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-major">MAJOR</span></td>
+            <td>Thẻ &lt;html&gt; thiếu thuộc tính lang/xml:lang</td>
+            <td>_test/node_modules/.../index.html:4<br>_test2/node_modules/.../index.html:4</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-major">MAJOR</span></td>
+            <td>Trang thiếu thẻ &lt;title&gt;</td>
+            <td>_test*/playwright-core/.../snapshot.html:3 (2 files)</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-minor">MINOR</span></td>
+            <td>Thẻ &lt;iframe&gt; thiếu thuộc tính title</td>
+            <td>_test*/playwright-core/.../snapshot.html:8 (2 files)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Vulnerabilities -->
+  <div class="card">
+    <div class="card-title">🔒 Vulnerabilities (10 lỗ hổng)</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead><tr><th width="10%">Mức độ</th><th width="40%">Mô tả</th><th width="50%">File : Dòng</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-major">MAJOR</span></td>
+            <td>Hardcoded password phát hiện trong file cấu hình (appsettings.json)</td>
+            <td>QuanLyKhoaHoc5.Web/appsettings.json:25</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-minor">MINOR</span></td>
+            <td>CDN resource không có Subresource Integrity (integrity attribute) — tăng nguy cơ supply chain attack</td>
+            <td>
+              Views/Account/Login.cshtml:9<br>
+              Views/Admin/Index.cshtml:169<br>
+              Views/BaoCao/Index.cshtml:71<br>
+              Views/DiemSo/CuaToi.cshtml:211<br>
+              Views/DiemSo/Index.cshtml:255<br>
+              Views/Shared/_Layout.cshtml:10<br>
+              Views/Shared/_LayoutAdmin.cshtml:10<br>
+              Views/Shared/_LayoutGiangVien.cshtml:10<br>
+              Views/Shared/_LayoutHocVien.cshtml:10
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Code Smells Summary -->
+  <div class="card">
+    <div class="card-title">🔧 Code Smells (377 vấn đề — Top categories)</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead><tr><th width="12%">Mức độ</th><th width="35%">Rule</th><th width="35%">Mô tả</th><th width="18%">Số lượng</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-critical">CRITICAL</span></td>
+            <td>S6967</td>
+            <td>ModelState.IsValid chưa được kiểm tra trong controller actions</td>
+            <td>~30 files</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-major">MAJOR</span></td>
+            <td>S6934</td>
+            <td>Thiếu RouteAttribute khi dùng HttpMethodAttribute</td>
+            <td>ThanhToanController.cs</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-major">MAJOR</span></td>
+            <td>S6588</td>
+            <td>DateTime thiếu DateTimeKind (Utc/Local)</td>
+            <td>AdminController.cs x2</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-minor">MINOR</span></td>
+            <td>S3358</td>
+            <td>Nested ternary operator lồng nhau — khó đọc</td>
+            <td>LichHoc/CuaToi.cshtml, LopHoc/Index.cshtml, LopHoc/Details.cshtml</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-minor">MINOR</span></td>
+            <td>S1135</td>
+            <td>TODO comment còn trong code</td>
+            <td>Nhiều file</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Hướng dẫn fix -->
+  <div class="card">
+    <div class="card-title">🔧 Hướng Dẫn Khắc Phục Ưu Tiên</div>
+    <div class="card-body">
+      <div class="warn-box">
+        ⚡ <b>CRITICAL: Hardcoded password trong appsettings.json:25</b> — Chuyển thông tin nhạy cảm vào User Secrets hoặc Environment Variables
+      </div>
+
+      <div class="fix-box">
+        <h4>1. Fix SRI cho CDN resources trong Layout files (_Layout.cshtml, _LayoutAdmin.cshtml, v.v):</h4>
+        <code>&lt;link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      integrity="sha384-tViUnnbYAV00GntAiPulivAtGs2ZbRFEFejJ4qLfBRIC7XKiiJjkfFTdOnBPMNK"
+      crossorigin="anonymous" /&gt;</code>
+      </div>
+
+      <div class="fix-box">
+        <h4>2. Fix ModelState.IsValid trong Controller actions (CRITICAL):</h4>
+        <code>public async Task&lt;IActionResult&gt; Create(KhoaHocViewModel model)
+{
+    if (!ModelState.IsValid)           // ← THÊM DÒNG NÀY
+        return View(model);            // ← THÊM DÒNG NÀY
+    // ... code xử lý ...
+}</code>
+      </div>
+
+      <div class="fix-box">
+        <h4>3. Fix DateTime thiếu Kind trong AdminController.cs:</h4>
+        <code>// Thay:
+new DateTime(2026, 1, 1)
+// Thành:
+new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)</code>
+      </div>
+
+      <div class="fix-box">
+        <h4>4. Fix Interactive div thiếu keyboard handler (_Layout.cshtml:101):</h4>
+        <code>&lt;!-- Thêm role và tabindex để accessibility --&gt;
+&lt;div class="chat-widget" onclick="toggleChat()"
+     role="button" tabindex="0"
+     onkeydown="if(event.key==='Enter') toggleChat()"&gt;</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics detail -->
+  <div class="card">
+    <div class="card-title">📋 Chi Tiết Metrics</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <thead><tr><th>Metric</th><th>Giá trị</th><th>Đánh giá</th></tr></thead>
+        <tbody>
+          <tr><td>Lines of Code (NCLOC)</td><td>14,411</td><td>Dự án vừa (medium-size)</td></tr>
+          <tr><td>Total Lines</td><td>16,516</td><td>—</td></tr>
+          <tr><td>Files</td><td>137 files</td><td>—</td></tr>
+          <tr><td>Bugs</td><td>10</td><td>⚠ Cần fix (Rating C)</td></tr>
+          <tr><td>Vulnerabilities</td><td>10</td><td>⚠ Cần fix (Rating C)</td></tr>
+          <tr><td>Code Smells</td><td>377</td><td>Technical Debt ~12 giờ</td></tr>
+          <tr><td>Coverage</td><td>0%</td><td>❌ Chưa có Unit Test</td></tr>
+          <tr><td>Duplications</td><td>0.5%</td><td>✅ Rất tốt (&lt;3%)</td></tr>
+          <tr><td>Cyclomatic Complexity</td><td>2,417</td><td>Trung bình ~17/file — có thể cải thiện</td></tr>
+          <tr><td>Cognitive Complexity</td><td>632</td><td>Trung bình ~4.6/file — tốt</td></tr>
+          <tr><td>Debt Ratio</td><td>0.4%</td><td>✅ Tốt (&lt;5% = Rating A)</td></tr>
+          <tr><td>Maintainability Rating</td><td>A</td><td>✅ Code dễ bảo trì</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Kết luận -->
+  <div class="card">
+    <div class="card-title">✅ Kết Luận</div>
+    <div class="card-body">
+      <div class="info-box">
+        <h4>💪 Điểm mạnh</h4>
+        Duplications rất thấp (0.5%), Maintainability Rating A, Cognitive Complexity tốt (632). Code C# có cấu trúc rõ ràng, ít lặp lại.
+      </div>
+      <div class="warn-box">
+        ⚠ <b>Cần cải thiện:</b><br>
+        • <b>Security (Rating C)</b>: 10 vulnerabilities — chủ yếu là thiếu SRI cho CDN + 1 hardcoded password<br>
+        • <b>Reliability (Rating C)</b>: 10 bugs — chủ yếu là HTML accessibility issues<br>
+        • <b>Coverage 0%</b>: Chưa có unit test — cần thêm xUnit/NUnit để cải thiện<br>
+        • <b>377 Code Smells</b>: Nhiều nhất là ModelState.IsValid checks còn thiếu
+      </div>
+      <div class="info-box">
+        <h4>🎯 Dashboard trực tiếp</h4>
+        Xem kết quả chi tiết tại: <a href="http://localhost:9000/dashboard?id=QuanLyKhoaHoc5">http://localhost:9000/dashboard?id=QuanLyKhoaHoc5</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="footer">
+  Báo cáo tạo tự động bởi SonarQube 26.5.0 + Claude Code &nbsp;|&nbsp; QuanLyKhoaHoc5 &nbsp;|&nbsp; 27/05/2026
+</div>
+</body>
+</html>
