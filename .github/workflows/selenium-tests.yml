@@ -65,7 +65,8 @@ jobs:
             --no-restore \
             --collect:"XPlat Code Coverage" \
             --results-directory ./TestResults \
-            --logger "junit;LogFilePath=./TestResults/test-results.xml" \
+            --logger "trx;LogFileName=test-results.trx" \
+            --logger "console;verbosity=minimal" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: "📊 Publish Test Results"
@@ -73,8 +74,8 @@ jobs:
         if: always()
         with:
           name: "Unit Tests – xUnit (531)"
-          path: "TestResults/test-results.xml"
-          reporter: java-junit
+          path: "TestResults/*.trx"
+          reporter: dotnet-trx
           fail-on-error: false
 
       - name: "📈 Coverage Summary"

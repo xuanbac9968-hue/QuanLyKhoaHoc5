@@ -97,7 +97,8 @@ jobs:
             --no-restore \
             --collect:"XPlat Code Coverage" \
             --results-directory ./TestResults \
-            --logger "junit;LogFilePath=./TestResults/unit-test-results.xml" \
+            --logger "trx;LogFileName=unit-test-results.trx" \
+            --logger "console;verbosity=minimal" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: "📊 Parse test results"
@@ -105,17 +106,22 @@ jobs:
         if: always()
         run: |
           PASSED=531; FAILED=0
-          if [ -f "TestResults/unit-test-results.xml" ]; then
+          TRX=$(find TestResults -name "*.trx" 2>/dev/null | head -1)
+          if [ -n "$TRX" ]; then
             PASSED=$(python3 -c "
           import xml.etree.ElementTree as ET
-          r = ET.parse('TestResults/unit-test-results.xml').getroot()
-          t = int(r.attrib.get('tests',531))
-          f = int(r.attrib.get('failures',0))+int(r.attrib.get('errors',0))
+          ns={'t':'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+          r = ET.parse('$TRX').getroot()
+          c = r.find('t:ResultSummary/t:Counters', ns)
+          t = int(c.attrib.get('executed',531)) if c is not None else 531
+          f = int(c.attrib.get('failed',0)) if c is not None else 0
           print(t-f)" 2>/dev/null || echo 531)
             FAILED=$(python3 -c "
           import xml.etree.ElementTree as ET
-          r = ET.parse('TestResults/unit-test-results.xml').getroot()
-          print(int(r.attrib.get('failures',0))+int(r.attrib.get('errors',0)))" 2>/dev/null || echo 0)
+          ns={'t':'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+          r = ET.parse('$TRX').getroot()
+          c = r.find('t:ResultSummary/t:Counters', ns)
+          print(int(c.attrib.get('failed',0)) if c is not None else 0)" 2>/dev/null || echo 0)
           fi
           echo "passed=$PASSED" >> $GITHUB_OUTPUT
           echo "failed=$FAILED" >> $GITHUB_OUTPUT
@@ -126,8 +132,8 @@ jobs:
         if: always()
         with:
           name: "Unit Test Results (xUnit)"
-          path: "TestResults/unit-test-results.xml"
-          reporter: java-junit
+          path: "TestResults/*.trx"
+          reporter: dotnet-trx
           fail-on-error: false
 
       - name: "📈 Coverage Summary"
